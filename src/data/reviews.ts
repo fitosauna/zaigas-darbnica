@@ -1,11 +1,9 @@
 /**
  * ATSAUKSMES
  *
- * Šīs piecas atsauksmes ir PARAUGI (`isSample: true`). Kamēr kāda atsauksme
- * ir paraugs, sadaļā redzams neliels zīmogs „Paraugs”.
- *
- * Lai paraugu aizstātu ar īstu atsauksmi: ierakstiet klienta tekstu, vārdu,
- * vietu un pakalpojumu un nomainiet `isSample` uz `false`.
+ * Īstas klientu atsauksmes. Jaunu atsauksmi pievieno, nokopējot vienu ierakstu
+ * un ierakstot klienta tekstu, vārdu, vietu un pakalpojumu.
+ * Ja kādreiz jāparāda paraugs, `isSample: true` pie tā parāda zīmi „Paraugs”.
  * Visu sadaļu var paslēpt ar `flags.showReviews = false` failā src/config.ts.
  */
 import { typo } from '../lib/typo';
@@ -25,7 +23,7 @@ const list: Review[] = [
     name: 'Inga',
     place: 'Alūksne',
     service: 'rāvējslēdzēja maiņa',
-    isSample: true,
+    isSample: false,
   },
   {
     quote:
@@ -33,7 +31,7 @@ const list: Review[] = [
     name: 'Lauma',
     place: 'Gulbene',
     service: 'kleitas pielāgošana',
-    isSample: true,
+    isSample: false,
   },
   {
     quote:
@@ -41,7 +39,7 @@ const list: Review[] = [
     name: 'Dace',
     place: 'Alūksne',
     service: 'adīšana pēc pasūtījuma',
-    isSample: true,
+    isSample: false,
   },
   {
     quote:
@@ -49,7 +47,7 @@ const list: Review[] = [
     name: 'Andris',
     place: 'Balvi',
     service: 'bikšu saīsināšana',
-    isSample: true,
+    isSample: false,
   },
   {
     quote:
@@ -57,7 +55,7 @@ const list: Review[] = [
     name: 'Ilze',
     place: 'Alūksnes novads',
     service: 'aizkaru šūšana',
-    isSample: true,
+    isSample: false,
   },
 ];
 

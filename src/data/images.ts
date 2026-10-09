@@ -77,7 +77,8 @@ export const images = {
   adisanaDzijas: { src: adisanaDzijas, alt: 'Dažādu krāsu vilnas dzijas kamoli pītā grozā' },
   aizkariGaldauts: { src: aizkariGaldauts, alt: 'Lina galdauts uz apaļa galda gaišā ēdamistabā' },
   cenasDarbnicasGalds: { src: cenasDarbnicasGalds, alt: 'Darba galds ar misiņa šķērēm, mērlenti, diega spolēm un auduma paraugiem' },
-  kontaktiMaja: { src: kontaktiMaja, alt: 'Gaiša māja ar brūnu jumtu pie ielas saulainā dienā' },
+  /** Īpašniece apstiprināja: īstā māja Tālavas ielā 18. */
+  kontaktiMaja: { src: kontaktiMaja, alt: 'Zaigas darbnīcas māja Tālavas ielā 18, Alūksnē' },
 } satisfies Record<string, SiteImage>;
 
 export const logos = {

@@ -78,7 +78,7 @@ Failā **`src/config.ts`**:
 - tālrunis, WhatsApp, e-pasts, adrese, darba laiks, domēns;
 - **`showReviews`** - `true` rāda atsauksmju sadaļu, `false` to paslēpj;
 - **`galleryIllustrative`** - `true` zem galerijas un „pirms / pēc” bildes parāda
-  „Attēli ir ilustratīvi” (ieteicams, kamēr nav īstu darbu bilžu);
+  „Attēli ir ilustratīvi” (pašlaik `false`);
 - **`googleReviewUrl`** - ja ierakstīta Google uzņēmuma profila atsauksmju saite, parādās teikums
   „Ja jau esam strādājuši kopā…” un poga „Atstāt atsauksmi”;
 - **`ga4Id`** - tukšs = nav apmeklējumu statistikas un nav sīkdatņu joslas.
@@ -87,14 +87,12 @@ Failā **`src/config.ts`**:
 
 ## Atsauksmes
 
-Failā `src/data/reviews.ts` ir piecas **paraugu** atsauksmes (`isSample: true`). Kamēr kāda
-atsauksme ir paraugs, lapā redzama zīme „Paraugs”.
+Failā `src/data/reviews.ts` ir piecas īstas klientu atsauksmes. Jaunu atsauksmi pievieno,
+nokopējot vienu ierakstu (no `{` līdz `},`) un ierakstot klienta tekstu, vārdu, vietu un
+pakalpojumu. Pirmā atsauksme sarakstā ir izcelta lielāka.
 
-Lai paraugu aizstātu ar īstu atsauksmi: ierakstiet klienta tekstu, vārdu, vietu un pakalpojumu
-un nomainiet `isSample` uz `false`.
-
-> **Svarīgi:** pirms lapa tiek publicēta, paraugi jāaizstāj ar īstām atsauksmēm vai sadaļa
-> jāpaslēpj (`showReviews: false`). Izdomātas atsauksmes nedrīkst uzdot par īstām.
+Ja kādreiz vajag parādīt paraugu, pie tā ieraksta `isSample: true`, un lapā parādās zīme „Paraugs”.
+Izdomātas atsauksmes nedrīkst uzdot par īstām.
 
 ---
 

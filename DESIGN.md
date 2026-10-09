@@ -79,11 +79,11 @@ verifier against the source text. 47 findings survived; the relevant ones are be
 | --- | --- | --- |
 | 1 | Part B lists a **top info bar** (address · hours · phone); A4 §2 wants a compact floating pill that does not eat space. | No separate bar. Its content is distributed: hero info line (address, hours, area), header phone digits on wide desktop (≥1240 px, where a `tel:` link may not dial), „Zvanīt Zaigai” pill, menu sheet, mobile bottom bar, footer. |
 | 2 | Part B §1.6 says „6 attēlu režģis”; A8/A7 forbid uniform grids. | Six captioned pieces hang from a thread with pegs and kraft tags (desktop: two lines of three; mobile: swipe row with peek). |
-| 3 | A8 forbids presenting AI images as real client work; Part B captions read as finished jobs; `galleryIllustrative` defaults to `false`. | Captions kept verbatim (A12). Alt texts describe only what is visible (never „klienta”, „Zaigas darbs”, „darbnīcā”). The flag also adds the line under the before/after. **Owner decision recommended:** set `galleryIllustrative: true` until real photos replace `darbi-*` and `pirms/pec`. |
-| 4 | Sample reviews (A11) under „Ko saka klienti” could read as real testimonials. | „Paraugs” stamp at the heading **and** a small „Paraugs” label in every attribution (AA contrast, ≥13 px). No review schema. **Must** be replaced with real reviews or hidden (`showReviews: false`) before going live: presenting invented reviews as real is an unfair commercial practice under EU consumer law. |
+| 3 | A8 forbids presenting AI images as real client work; Part B captions read as finished jobs; `galleryIllustrative` defaults to `false`. | Captions kept verbatim (A12). Alt texts describe only what is visible (never „klienta”, „Zaigas darbs”, „darbnīcā”). **Owner decision:** `galleryIllustrative` stays `false` (no „ilustratīvi” line). The flag still works if real photos are ever mixed with illustrations. |
+| 4 | A11 calls the five reviews samples; they could read as real testimonials. | **Owner confirmed the five reviews are real** → `isSample: false`, no „Paraugs” marks. The stamp mechanism stays in code for any future sample. No review schema (self-served reviews are not eligible for rich results). |
 | 5 | A9 asks for JSON-LD type `["LocalBusiness","Tailor"]`; schema.org has **no `Tailor` type**. | `@type: "LocalBusiness"` with every field A9 lists, plus `knowsAbout` with the five services. |
 | 6 | Part B /apgerbu-remonts meta: „Zvani 26 423 325” (informal „Tu”) vs A12 „Jūs everywhere”. | A12 wins: „Zvaniet +371 26 423 325.” (inner-page phase). |
-| 7 | Home „Apģērbu remonts … Cenas no 3,50 €” is not the table minimum (buttons 0,50 €, slider 3 €). | Kept as written: 3,50 € is the cheapest of the repairs that sentence names. The blurb references the price row id `cauruma-salabosana`, so it can never drift (A12.1). **Owner may confirm.** |
+| 7 | Home „Apģērbu remonts … Cenas no 3,50 €” is not the table minimum (buttons 0,50 €, slider 3 €). | Kept as written: 3,50 € is the cheapest of the repairs that sentence names. The blurb references the price row id `cauruma-salabosana`, so it can never drift (A12.1). **Owner confirmed 3,50 €.** |
 | 8 | „Pakalpojumi” has no page of its own. | Desktop: a `<button aria-expanded>` disclosure (click, keyboard, Esc; hover only as enhancement) with five real links. Mobile sheet: services always listed. Breadcrumbs on inner pages will be two-level („Sākums › Apģērbu remonts”). |
 | 9 | Mobile hero must fit 390×844 with first button visible; photo 45-55 %; bottom bar on every page. | Photo `clamp(320px, 50svh, 560px)`; H1 overlaps the fade over the empty tabletop; H1, lead, both buttons and the full info line fit at 390×844. **The bottom bar is on every page but steps aside while the page's own call/WhatsApp buttons are visible** (hero, final call to action, footer), so contact buttons never appear twice and the first screen stays clean. Without JS it is always visible. |
 | 10 | Header 16-24 px inset, 56-64 px tall on mobile, 48 px tap targets. | Mobile: 10 px top inset + 52 px pill = 62 px; round buttons have a 48 px hit area with a 42 px visible circle. Desktop: 18 px inset, 64 px pill, shrinks to 58 px on scroll. |
@@ -250,12 +250,13 @@ src/layouts/BaseLayout.astro
 
 ## 9. Questions for the owner
 
-1. Approve the homepage design (screenshots in `screenshots/`)?
-2. Turn on `galleryIllustrative` until real photos exist? (recommended)
-3. Real reviews: replace the five samples, or hide the section (`showReviews: false`) at launch?
-4. Is „Apģērbu remonts … no 3,50 €” intended (cheapest listed repair), or should it say „no 0,50 €”?
-5. Does `kontakti-maja.webp` show the real Tālavas iela 18 house, and where does it come from? (It looks
-   like a street-level capture; if it is not the real house it must not be used for wayfinding.)
-6. Google Business Profile link for the review button, if one exists.
-7. A larger export (≥2880 px wide) of `hero-darbnica.webp`, if available, for sharper retina screens.
-8. Privacy policy publication date (`[publicēšanas datums]`).
+Answered 2026-10-09: homepage approved; reviews are real (labels removed); no „ilustratīvi” line;
+„no 3,50 €” stays; `kontakti-maja.webp` is the real Tālavas iela 18 house (used on /kontakti).
+
+Still open, none blocking:
+
+1. Google Business Profile link for the review button, if one exists (`flags.googleReviewUrl`).
+2. A larger export (≥2880 px wide) of `hero-darbnica.webp`, if available, for sharper retina screens.
+3. Privacy policy publication date (`[publicēšanas datums]`, `site.privacyDate` in `src/config.ts`).
+4. At publishing time: SiteGround SSH access + the mailbox password for the form (goes only into
+   `config.php` on the server, never into Git).
