@@ -8,7 +8,6 @@ import '../styles/tokens.css';
 import '../styles/base.css';
 
 import frauncesUrl from '../fonts/fraunces-var.woff2?url';
-import frauncesItalicUrl from '../fonts/fraunces-italic-400.woff2?url';
 import mulishUrl from '../fonts/mulish-var.woff2?url';
 
 import Seo from '../components/Seo.astro';
@@ -45,7 +44,6 @@ const structured = [localBusiness(schemaLogo.src), ...schema];
     <Seo title={title} description={description} path={path} noindex={noindex} />
 
     <link rel="preload" href={frauncesUrl} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={frauncesItalicUrl} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={mulishUrl} as="font" type="font/woff2" crossorigin />
     <slot name="head" />
 
