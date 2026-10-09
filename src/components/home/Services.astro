@@ -72,7 +72,13 @@ const fabricShape = pinkedPolygon(30, 30, 6);
     --from: var(--cream);
     --tone: var(--cream);
     --to: var(--linen);
-    padding: var(--section-tight) 0 var(--section);
+    padding: var(--section-tight) 0;
+  }
+
+  @media (min-width: 64rem) {
+    .services {
+      padding-bottom: var(--section);
+    }
   }
 
   .services__head {

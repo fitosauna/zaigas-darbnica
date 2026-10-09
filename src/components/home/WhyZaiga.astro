@@ -105,7 +105,13 @@ const reasons = [
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    padding: var(--section) 0 var(--section-tight);
+    padding: var(--section-tight) 0;
+  }
+
+  @media (min-width: 64rem) {
+    .why {
+      padding-top: var(--section);
+    }
   }
 
   .why__sheet {
