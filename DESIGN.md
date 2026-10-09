@@ -194,18 +194,52 @@ click-to-load map preview instead).
 
 ## 6. Signature moment per page
 
-| Page | Signature moment (max 1-2) |
+| Page | Signature moment (as built) |
 | --- | --- |
 | `/` | Hero (masked atelier photo + drawn thread) and the services swatch moodboard. |
-| `/apgerbu-remonts` | Before/after jacket slider. |
-| `/apgerbu-parsusana` | Fitting photo of Zaiga (`pielagosana-pielaikosana`) in an arch, with pinned-hem detail. |
-| `/individuala-susana` | Five-step process laid out like a pattern sheet (reuse of idea 2). |
-| `/adisana-pec-pasutijuma` | Knit-texture swatch band with Latvian-pattern mittens. |
-| `/aizkaru-susana` | Tall, full-height curtain photograph as a calm vertical moment. |
-| `/cenas` | Price lists as tailor's tickets with dotted leaders. |
-| `/par-mani` | Arched portrait + story; hands-knitting photo. |
-| `/kontakti` | Order-slip form + click-to-load map preview. |
-| `/privatuma-politika`, 404 | No signature moment; quiet text pages (404 may use `cenas-darbnicas-galds`). |
+| `/apgerbu-remonts` | Before/after jacket slider under the price ticket. |
+| `/apgerbu-parsusana` | Zaiga fitting a dress (`pielagosana-pielaikosana`) in the arched mirror frame beside the benefits. |
+| `/individuala-susana` | Five steps on a pattern-sheet grid with Zaiga at the sewing machine. |
+| `/adisana-pec-pasutijuma` | Knit swatch hero, three knitted prints (sweater, socks, Latvian-pattern mittens), Zaiga's hands in the arch at the close. |
+| `/aizkaru-susana` | Tall curtain photograph on a sheer swatch; measuring steps. |
+| `/cenas` | All five price lists as tailor's tickets (twine, eyelet, dotted leaders) on one board. |
+| `/par-mani` | Arched portrait + story; one large italic sentence about her joy in the work. |
+| `/kontakti` | Business-card contact block, hours on a ticket, illustrated map preview, order-slip form. |
+| `/privatuma-politika`, 404 | Quiet text pages; the 404 has an outlined „404” like the homepage „20”. |
+
+### Inner pages - decisions (after approval)
+
+- **One template, typed data.** The five service pages are `src/data/pages/*.ts` (Part B text) rendered by
+  `src/layouts/ServicePage.astro`. Blocks: list, bullets, benefits, steps, prices, compare, examples, FAQ.
+  `/cenas`, `/par-mani`, `/kontakti` reuse the same blocks with their own data files.
+- **H1 thread.** Each service H1 ends with „Alūksnē”; it sits on its own line in italic with the same swoop as
+  the homepage (drawn once). `/cenas` underlines „cenas”, `/par-mani` „Jūsu lietas”. Kontakti, privacy and
+  404 have no swoop. This is the only thread moment on inner pages, so example photos are laid out as prints
+  with kraft tags (no clothesline, no pegs).
+- **Tonal flow.** Hero cream, then blocks alternate linen / cream; image-only blocks keep the previous tone;
+  the FAQ melts into blush, the closing call to action is blush, then the chocolate footer.
+- **Grid.** Same 12 columns: H2 (and an optional photo under it) in columns 1-5, content from column 6-7.
+  A section can mirror (photo on the right) so consecutive photos alternate sides (`/par-mani`).
+- **Price lists** are real `<table>`s (column headers „Darbs/Adījums”, „Cena”) on a paper ticket; prices only
+  from `src/data/prices.ts`. Text-only prices („pēc vienošanās”) wrap to two short lines. The common
+  price note appears under each service ticket (Part B per-page notes) and once under the `/cenas` board.
+- **Meta descriptions** use `price('<id>')`, so „no 4 €/m” renders as „no 4 € / m” (same as the tables).
+- **Buttons.** First action is filled, second outlined. „→ forma” buttons link to
+  `/kontakti?pakalpojums=<id>#forma`; the form preselects that service. Every hero/CTA button row counts as
+  the page's own contact buttons, so the mobile bottom bar steps aside while it is visible.
+- **Breadcrumbs** „Sākums › <page>” (two levels, Pakalpojumi has no page) + BreadcrumbList; FAQPage on
+  pages with questions.
+- **Contact form.** Fields, errors and messages exactly as Part B §9.6. Small additions in the polite Jūs
+  form, kept minimal: „(nav obligāts)”, „Izvēlieties”, the photo hint „JPG, PNG, WebP vai HEIC, līdz 10 MB”,
+  an e-mail error and two photo errors. Field order follows Part B; „Kad tas vajadzīgs?” follows „Kas jādara?”.
+  Works without JS (POST → `/kontakti#paldies` / `#kluda`). `formConfig.web3formsKey` switches to Web3Forms
+  (photo field hidden, free plan has no attachments).
+- **Map.** Illustrated, deliberately abstract preview + „Rādīt karti”; the Google iframe loads only after the
+  click, with a one-line note that Google may then set cookies. „Atvērt Google Maps” is always there.
+- **Privacy policy.** Part B text plus one sentence about the click-to-load Google map (accuracy).
+  „Spēkā no” shows only when `site.privacyDate` is filled. **Owner/lawyer may want to review.**
+- **404**: `noindex`, no canonical. „pakalpojumus” links to `/#pakalpojumi`.
+- **Consent banner** (Part B §11) exists but renders only when `flags.ga4Id` is set; GA loads after „Piekrītu”.
 
 ## 7. Architecture
 
@@ -223,7 +257,12 @@ src/lib/typo.ts             NBSP rules, tel:/WhatsApp linking
 src/lib/schema.ts           LocalBusiness, FAQPage, BreadcrumbList JSON-LD
 src/components/             Header (+ menu sheet), BottomBar, Footer, Button, Picture, Icon, Faq, SwipeHint, Seo
 src/components/home/        Hero, Services, WhyZaiga, Mend, About, Gallery, Reviews, Process, Area, FinalCta
-src/layouts/BaseLayout.astro
+src/components/page/        inner-page kit: heroes, breadcrumbs, H1 swoop, blocks, price ticket, CTA
+src/components/contact/     contact card, map preview, order-slip form
+src/data/pages/             Part B text per inner page (typed)
+src/layouts/BaseLayout.astro, ServicePage.astro
+public/send.php, public/lib/ contact form handler + vendored PHPMailer (web access denied)
+public/.htaccess            HTTPS, clean URLs, caching, security headers, CSP (hashes filled at build)
 ```
 
 - Astro 7, static output, `build.format: 'file'`, `trailingSlash: 'never'` → `dist/cenas.html` served
@@ -231,7 +270,8 @@ src/layouts/BaseLayout.astro
 - Vanilla JS only (header state, dropdown, `<dialog>` menu, bottom-bar reveal, slider, swipe hint,
   final heart reveal). Everything is real HTML and readable without JS.
 - CI: `.github/workflows/ci.yml` runs `astro check` and `astro build` and fails on any U+2013/U+2014 in
-  the built HTML. **No deploy workflow yet** (deployment phase, manual `workflow_dispatch` only).
+  the built HTML. Deploy: `.github/workflows/deploy.yml`, manual `workflow_dispatch` only (never run
+  during development).
 
 ## 8. Plan after approval
 

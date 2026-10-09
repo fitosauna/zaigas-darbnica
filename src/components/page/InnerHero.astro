@@ -63,6 +63,11 @@ const hasMedia = Astro.slots.has('media');
     gap: var(--s-6);
   }
 
+  /* Pavelkamas rindas (piem. /cenas ātrās saites) nedrīkst izplest kolonnu */
+  .ihero__grid > * {
+    min-width: 0;
+  }
+
   .ihero__head :global(.crumbs) {
     margin-bottom: clamp(1.25rem, 0.9rem + 1.4vw, 2.25rem);
   }
