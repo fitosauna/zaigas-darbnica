@@ -8,6 +8,7 @@ import Picture from '../Picture.astro';
 import { images } from '../../data/images';
 import { homeGallery } from '../../data/gallery';
 import { flags } from '../../config';
+import SwipeHint from '../SwipeHint.astro';
 ---
 
 <section class="gallery" aria-labelledby="gallery-title">
@@ -17,7 +18,7 @@ import { flags } from '../../config';
     <p class="gallery__intro">Labāk par vārdiem runā rezultāts.</p>
   </div>
 
-  <ul role="list" class="line">
+  <ul role="list" class="line" id="darbu-galerija">
     {
       homeGallery.map((item, i) => (
         <li class="hang" style={`--i: ${i}`}>
@@ -36,6 +37,8 @@ import { flags } from '../../config';
       ))
     }
   </ul>
+
+  <SwipeHint target="darbu-galerija" count={homeGallery.length} />
 
   {flags.galleryIllustrative && <p class="container gallery__note">Attēli ir ilustratīvi</p>}
 </section>

@@ -9,7 +9,8 @@ import { mainNav } from '../data/navigation';
 import { buildLogo } from '../lib/picture';
 import Icon from './Icon.astro';
 
-const logo = await buildLogo(logos.fullCream.src, 132);
+// logo-cream.png ir ~16% caurspīdīgas malas augšā/apakšā; tās nogriežam ar object-fit (bez pārzīmēšanas).
+const logo = await buildLogo(logos.fullCream.src, 150);
 const year = new Date().getFullYear();
 const services = mainNav.find((n) => n.children)?.children ?? [];
 const pages = mainNav.filter((n) => !n.children);
@@ -31,7 +32,7 @@ const pages = mainNav.filter((n) => !n.children);
         />
       </a>
       <p>
-        {site.name} - šūšana un adīšana Alūksnē. Apģērbu remonts un pielāgošana, individuālā šūšana, adīšana pēc
+        {site.name}&nbsp;- šūšana un adīšana Alūksnē. Apģērbu remonts un pielāgošana, individuālā šūšana, adīšana pēc
         pasūtījuma, aizkari un mājas tekstils.
       </p>
     </div>
@@ -161,8 +162,10 @@ const pages = mainNav.filter((n) => !n.children);
   }
 
   .footer__logo img {
-    width: auto;
-    height: 112px;
+    width: 200px;
+    height: 107px;
+    object-fit: cover;
+    object-position: 50% 50%;
   }
 
   .footer__brand p {

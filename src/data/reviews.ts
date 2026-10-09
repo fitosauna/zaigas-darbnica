@@ -8,6 +8,8 @@
  * vietu un pakalpojumu un nomainiet `isSample` uz `false`.
  * Visu sadaļu var paslēpt ar `flags.showReviews = false` failā src/config.ts.
  */
+import { typo } from '../lib/typo';
+
 export type Review = {
   quote: string;
   name: string;
@@ -16,7 +18,7 @@ export type Review = {
   isSample: boolean;
 };
 
-export const reviews: Review[] = [
+const list: Review[] = [
   {
     quote:
       'Ziemas jakai saplīsa rāvējslēdzējs, un jau domāju pirkt jaunu. Zaiga to nomainīja dažu dienu laikā, un jaka izskatās kā jauna. Cena bija tāda, kādu pateica jau sākumā.',
@@ -58,5 +60,7 @@ export const reviews: Review[] = [
     isSample: true,
   },
 ];
+
+export const reviews: Review[] = list.map((r) => ({ ...r, quote: typo(r.quote) }));
 
 export const hasSampleReviews = reviews.some((r) => r.isSample);

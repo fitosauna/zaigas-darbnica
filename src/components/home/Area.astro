@@ -1,14 +1,15 @@
 ---
 /** 1.9 Teritorija - Alūksne, Gulbene, Balvi. */
 import { contact } from '../../config';
+import { typo } from '../../lib/typo';
 ---
 
 <section class="area tone" aria-labelledby="area-title">
   <div class="container area__grid">
     <div class="area__copy">
-      <h2 id="area-title">Šuvēja Alūksnē - arī Gulbenes un Balvu klientiem</h2>
+      <h2 id="area-title">Šuvēja Alūksnē&nbsp;- arī Gulbenes un Balvu klientiem</h2>
       <p>
-        Mana darbnīca atrodas Alūksnē, {contact.address.streetLocative}. Pie manis brauc klienti arī no Gulbenes, Balviem
+        Mana darbnīca atrodas Alūksnē, {typo(contact.address.streetLocative)}. Pie manis brauc klienti arī no Gulbenes, Balviem
         un apkārtējiem pagastiem. Ja braucat no tālienes, vispirms atsūtiet foto, lai jau iepriekš zinātu, vai darbu var
         izdarīt un cik tas maksās. Ja iespējams, atvediet vairākas lietas uzreiz.
       </p>

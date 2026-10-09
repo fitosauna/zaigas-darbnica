@@ -6,7 +6,7 @@
 import Picture from '../Picture.astro';
 import Button from '../Button.astro';
 import Icon from '../Icon.astro';
-import { links } from '../../config';
+import { flags, links } from '../../config';
 import { images } from '../../data/images';
 
 const sizes = '(min-width: 64rem) 46vw, 92vw';
@@ -41,13 +41,14 @@ const widths = [420, 640, 860, 1100, 1254];
           aria-valuetext="Redzama puse: pirms un pēc"
         />
       </div>
+      {flags.galleryIllustrative && <p class="compare__note">Attēli ir ilustratīvi</p>}
     </div>
 
     <div class="mend__copy">
       <h2 id="mend-title">Ne vienmēr vajag pirkt jaunu</h2>
       <p>
         Mīļākā jaka ar salauztu rāvējslēdzēju, kleita, kas vairs neder kā agrāk, vai labas bikses, kurām tikai
-        jāsaīsina garums - bieži pietiek ar nelielu šūšanas darbu, lai lieta atkal kalpotu gadiem. Tas maksā tikai daļu
+        jāsaīsina garums&nbsp;- bieži pietiek ar nelielu šūšanas darbu, lai lieta atkal kalpotu gadiem. Tas maksā tikai daļu
         no jaunas lietas cenas, un Jums paliek apģērbs, kas jau patīk.
       </p>
       <Button href={links.whatsapp} icon="whatsapp" external>Atsūtīt foto un uzzināt cenu</Button>
@@ -202,6 +203,12 @@ const widths = [420, 640, 860, 1100, 1254];
 
   .compare:has(.compare__range:active) .compare__knob {
     transform: translate(-50%, -50%) scale(1.06);
+  }
+
+  .compare__note {
+    margin-top: var(--s-3);
+    font-size: var(--fs-small);
+    color: var(--ink-soft);
   }
 
   .mend__copy h2 {

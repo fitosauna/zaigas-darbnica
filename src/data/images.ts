@@ -34,7 +34,6 @@ import adisanaDzijas from '../../assets/adisana-dzijas.webp';
 import aizkariGaldauts from '../../assets/aizkari-galdauts.webp';
 import cenasDarbnicasGalds from '../../assets/cenas-darbnicas-galds.webp';
 import kontaktiMaja from '../../assets/kontakti-maja.webp';
-import ogFons from '../../assets/og-fons.webp';
 
 import logoHeader from '../../assets/logo-header-transparent.png';
 import logoHeaderCream from '../../assets/logo-header-cream.png';
@@ -79,8 +78,6 @@ export const images = {
   aizkariGaldauts: { src: aizkariGaldauts, alt: 'Lina galdauts uz apaļa galda gaišā ēdamistabā' },
   cenasDarbnicasGalds: { src: cenasDarbnicasGalds, alt: 'Darba galds ar misiņa šķērēm, mērlenti, diega spolēm un auduma paraugiem' },
   kontaktiMaja: { src: kontaktiMaja, alt: 'Gaiša māja ar brūnu jumtu pie ielas saulainā dienā' },
-  /** Netiek rādīts lapā - tikai og attēla fonam. */
-  ogFons: { src: ogFons, alt: '' },
 } satisfies Record<string, SiteImage>;
 
 export const logos = {

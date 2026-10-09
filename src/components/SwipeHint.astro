@@ -1,0 +1,74 @@
+---
+/**
+ * Pavelkamas rindas indikators: mazi „dūrieni”, aktīvais - diega krāsā.
+ * Redzams tikai tad, ja rindu tiešām var ritināt sāniski (telefonā).
+ */
+interface Props {
+  /** Ritināmā elementa id. */
+  target: string;
+  count: number;
+}
+const { target, count } = Astro.props;
+---
+
+<div class="swipe-hint" data-swipe-hint={target} aria-hidden="true" hidden>
+  {Array.from({ length: count }, (_, i) => <span class:list={['stitch', { 'is-on': i === 0 }]} />)}
+</div>
+
+<style>
+  .swipe-hint {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: var(--s-2);
+  }
+
+  .swipe-hint[hidden] {
+    display: none;
+  }
+
+  .stitch {
+    width: 14px;
+    height: 2px;
+    border-radius: 2px;
+    background: rgb(82 27 16 / 0.22);
+    transition:
+      width var(--dur) var(--ease-out),
+      background-color var(--dur) var(--ease-out);
+  }
+
+  .stitch.is-on {
+    width: 26px;
+    background: var(--thread);
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-swipe-hint]').forEach((hint) => {
+    const row = document.getElementById(hint.dataset.swipeHint ?? '');
+    if (!row) return;
+    const stitches = [...hint.querySelectorAll<HTMLElement>('.stitch')];
+    const update = () => {
+      const max = row.scrollWidth - row.clientWidth;
+      hint.hidden = max < 8;
+      if (max < 8) return;
+      const i = Math.round((row.scrollLeft / max) * (stitches.length - 1));
+      stitches.forEach((s, k) => s.classList.toggle('is-on', k === i));
+    };
+    let ticking = false;
+    row.addEventListener(
+      'scroll',
+      () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          update();
+          ticking = false;
+        });
+      },
+      { passive: true },
+    );
+    new ResizeObserver(update).observe(row);
+    update();
+  });
+</script>

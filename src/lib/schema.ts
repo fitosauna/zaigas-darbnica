@@ -5,7 +5,8 @@ import { faqPlainText, type Faq } from '../data/faq';
 export function localBusiness(logoUrl: string) {
   return {
     '@context': 'https://schema.org',
-    '@type': ['LocalBusiness', 'Tailor'],
+    // schema.org nav tipa „Tailor”; lietojam LocalBusiness + knowsAbout (sk. DESIGN.md).
+    '@type': 'LocalBusiness',
     '@id': `${absoluteUrl('/')}#darbnica`,
     name: site.name,
     description: 'Šūšana un adīšana Alūksnē: apģērbu remonts un pielāgošana, individuālā šūšana, adīšana pēc pasūtījuma, aizkari un mājas tekstils.',
@@ -33,6 +34,13 @@ export function localBusiness(logoUrl: string) {
     ],
     areaServed: contact.areaServed.map((name) => ({ '@type': 'City', name })),
     priceRange: '€',
+    knowsAbout: [
+      'Apģērbu remonts',
+      'Apģērbu pielāgošana un pāršūšana',
+      'Individuālā šūšana',
+      'Adīšana pēc pasūtījuma',
+      'Aizkaru un mājas tekstila šūšana',
+    ],
   };
 }
 

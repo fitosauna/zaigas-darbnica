@@ -5,6 +5,7 @@
  */
 import Picture from '../Picture.astro';
 import { images } from '../../data/images';
+import { typo } from '../../lib/typo';
 
 const reasons = [
   {
@@ -86,8 +87,8 @@ const reasons = [
         {
           reasons.map((r) => (
             <li>
-              <h3>{r.title}</h3>
-              <p>{r.text}</p>
+              <h3>{typo(r.title)}</h3>
+              <p>{typo(r.text)}</p>
             </li>
           ))
         }
@@ -184,7 +185,7 @@ const reasons = [
   .why__list li {
     position: relative;
     padding-top: var(--s-4);
-    border-top: 1px dashed rgb(82 27 16 / 0.28);
+    border-top: 1px solid var(--hairline-strong);
   }
 
   .why__list h3 {

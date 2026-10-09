@@ -4,6 +4,7 @@
  */
 import { price } from './prices';
 import { images, type ImageKey } from './images';
+import { typo } from '../lib/typo';
 
 export type Service = {
   slug: string;
@@ -18,7 +19,7 @@ export type Service = {
   swatch: 'denim' | 'linen' | 'silk' | 'knit' | 'sheer';
 };
 
-export const services: Service[] = [
+const list: Service[] = [
   {
     slug: 'apgerbu-remonts',
     href: '/apgerbu-remonts',
@@ -60,6 +61,8 @@ export const services: Service[] = [
     swatch: 'sheer',
   },
 ];
+
+export const services: Service[] = list.map((s) => ({ ...s, summary: typo(s.summary) }));
 
 export function serviceImage(service: Service) {
   return images[service.image];

@@ -5,6 +5,7 @@
  * Poga „Atstāt atsauksmi” tikai tad, ja konfigurācijā ir Google saite.
  */
 import Button from '../Button.astro';
+import SwipeHint from '../SwipeHint.astro';
 import { flags } from '../../config';
 import { reviews, hasSampleReviews } from '../../data/reviews';
 
@@ -19,7 +20,7 @@ const [featured, ...rest] = reviews;
       {
         hasSampleReviews && (
           <p class="stamp">
-            Paraugs<span class="visually-hidden"> - šīs ir atsauksmju paraugi</span>
+            Paraugs<span class="visually-hidden">: atsauksmju paraugi</span>
           </p>
         )
       }
@@ -42,10 +43,11 @@ const [featured, ...rest] = reviews;
       <figcaption>
         <span class="quote__name">{featured.name}, {featured.place}</span>
         <span class="quote__service">{featured.service}</span>
+        {featured.isSample && <span class="quote__sample">Paraugs</span>}
       </figcaption>
     </figure>
 
-    <ul role="list" class="reviews__rest">
+    <ul role="list" class="reviews__rest" id="atsauksmju-saraksts">
       {
         rest.map((r) => (
           <li>
@@ -58,12 +60,14 @@ const [featured, ...rest] = reviews;
                   {r.name}, {r.place}
                 </span>
                 <span class="quote__service">{r.service}</span>
+                {r.isSample && <span class="quote__sample">Paraugs</span>}
               </figcaption>
             </figure>
           </li>
         ))
       }
     </ul>
+    <SwipeHint target="atsauksmju-saraksts" count={rest.length} />
   </div>
 </section>
 
@@ -154,6 +158,21 @@ const [featured, ...rest] = reviews;
     margin-right: 10px;
     vertical-align: middle;
     background: var(--thread);
+  }
+
+  .quote__sample {
+    display: inline-block;
+    padding: 1px 7px 0;
+    border: 1px solid currentColor;
+    border-radius: 4px;
+    color: var(--rose-ink);
+    font-family: var(--font-display);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    font-variation-settings: 'opsz' 12;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    line-height: 1.5;
   }
 
   .reviews__rest {

@@ -70,6 +70,8 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
       </ul>
     </nav>
 
+    <a class="phone" href={links.tel}>{contact.phoneDisplay}</a>
+
     <a class="call" href={links.tel}>
       <Icon name="phone" size={19} />
       <span>Zvanīt Zaigai</span>
@@ -218,7 +220,8 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
   }
 
   .nav,
-  .call {
+  .call,
+  .phone {
     display: none;
   }
 
@@ -438,6 +441,33 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
     .dropdown__link:focus-visible .dropdown__arrow {
       opacity: 1;
       transform: none;
+    }
+
+    .phone {
+      display: none;
+      align-items: center;
+      min-height: 48px;
+      padding: 0 4px;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--chocolate);
+      text-decoration: none;
+      white-space: nowrap;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+
+    .phone:hover {
+      color: var(--rose-ink);
+    }
+
+    @media (min-width: 77.5rem) {
+      .phone {
+        display: inline-flex;
+      }
+
+      .nav {
+        margin-inline: auto 8px;
+      }
     }
 
     .call {

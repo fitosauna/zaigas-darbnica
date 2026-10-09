@@ -6,6 +6,7 @@
  */
 import Picture from '../Picture.astro';
 import Icon from '../Icon.astro';
+import SwipeHint from '../SwipeHint.astro';
 import { services } from '../../data/services';
 import { images } from '../../data/images';
 import { pinkedPolygon } from '../../lib/shapes';
@@ -22,12 +23,12 @@ const fabricShape = pinkedPolygon(30, 30, 6);
     <p class="label">Pakalpojumi</p>
     <h2 id="services-title">Ar ko varu Jums palīdzēt?</h2>
     <p class="services__intro">
-      No maza ielāpa līdz ar rokām adītam džemperim - visu dara viena meistare, ar kuru varat runāt tieši.
+      No maza ielāpa līdz ar rokām adītam džemperim&nbsp;- visu dara viena meistare, ar kuru varat runāt tieši.
     </p>
   </div>
 
   <div class="services__board-wrap">
-    <ul role="list" class="board">
+    <ul role="list" class="board" id="pakalpojumu-saraksts">
       {
         services.map((s, i) => {
           const img = images[s.image];
@@ -62,6 +63,7 @@ const fabricShape = pinkedPolygon(30, 30, 6);
         })
       }
     </ul>
+    <SwipeHint target="pakalpojumu-saraksts" count={services.length} />
   </div>
 </section>
 

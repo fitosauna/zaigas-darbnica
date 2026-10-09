@@ -2,6 +2,7 @@
 /** 1.8 Kā notiek sadarbība - trīs soļi ar lieliem cipariem. */
 import Button from '../Button.astro';
 import { contact } from '../../config';
+import { linkContacts, typo } from '../../lib/typo';
 
 const steps = [
   {
@@ -35,9 +36,9 @@ const steps = [
             </span>
             <h3 class="step__title">
               <span class="visually-hidden">{i + 1}. </span>
-              {s.title}
+              {typo(s.title)}
             </h3>
-            <p>{s.text}</p>
+            <p set:html={linkContacts(s.text)} />
           </li>
         ))
       }
@@ -110,7 +111,7 @@ const steps = [
     .step {
       grid-template-columns: 1fr;
       padding-top: var(--s-5);
-      border-top: 1px dashed rgb(82 27 16 / 0.3);
+      border-top: 1px solid var(--hairline-strong);
     }
 
     .step:nth-child(2) {

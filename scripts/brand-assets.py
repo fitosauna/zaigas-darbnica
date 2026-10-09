@@ -79,23 +79,27 @@ def build_og() -> None:
     veil = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     vpx = veil.load()
     for x in range(W):
-        a = int(150 * max(0.0, 1 - x / (W * 0.72)))
+        a = int(150 * max(0.0, 1 - abs(x - 560) / (W * 0.5)))
         for y in range(H):
             vpx[x, y] = (250, 245, 238, a)
     bg.alpha_composite(veil)
 
     logo = Image.open(ASSETS / "logo-transparent.png").convert("RGBA")
-    logo = logo.crop(logo.getbbox())
-    logo.thumbnail((540, 330), Image.LANCZOS)
-    left = 92
-    top = 92
-    bg.alpha_composite(logo, (left, top))
+    # Logo ir ~16% caurspīdīgas malas un vāja alfa „migla” līdz malām - apgriežam pēc alfa >= 8.
+    alpha = logo.getchannel("A").point(lambda a: 255 if a >= 8 else 0)
+    logo = logo.crop(alpha.getbbox())
+    logo.thumbnail((460, 250), Image.LANCZOS)
+    # Kompozīcija centrēta ap x=560, lai arī kvadrātveida priekšskatījumā (x 285-915) redzams logo un teksts.
+    cx = 560
+    top = 120
+    bg.alpha_composite(logo, (cx - logo.width // 2, top))
 
-    font = ImageFont.truetype(str(FONT), 58)
+    font = ImageFont.truetype(str(FONT), 56)
     font.set_variation_by_axes([96, 400])
     draw = ImageDraw.Draw(bg)
-    text_y = top + logo.height + 34
-    draw.text((left + 6, text_y), "Zaigas darbnīca Alūksnē", font=font, fill=CHOCOLATE)
+    text = "Zaigas darbnīca Alūksnē"
+    text_w = draw.textlength(text, font=font)
+    draw.text((cx - text_w / 2, top + logo.height + 40), text, font=font, fill=CHOCOLATE)
 
     bg.convert("RGB").save(PUBLIC / "og-image.jpg", quality=86, optimize=True, progressive=True)
 
