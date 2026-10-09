@@ -1,0 +1,111 @@
+---
+/**
+ * Mobilā apakšējā josla: „Zvanīt” un „WhatsApp” (A4 §3).
+ * Parādās, kad lapas augšas pogas vairs nav redzamas (elements ar
+ * [data-primary-actions]); bez JavaScript - redzama vienmēr.
+ * Respektē env(safe-area-inset-bottom); izvēlnes laikā paslēpta.
+ */
+import { links } from '../config';
+import Icon from './Icon.astro';
+---
+
+<div class="bottom-bar" data-bottom-bar>
+  <a class="bb bb--call" href={links.tel}>
+    <Icon name="phone" size={21} />
+    <span>Zvanīt</span>
+  </a>
+  <a class="bb bb--wa" href={links.whatsapp} target="_blank" rel="noopener noreferrer">
+    <Icon name="whatsapp" size={21} />
+    <span>WhatsApp</span>
+  </a>
+</div>
+
+<style>
+  .bottom-bar {
+    position: fixed;
+    z-index: 90;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+    background: var(--cream);
+    box-shadow:
+      0 -1px 0 rgb(82 27 16 / 0.1),
+      0 -14px 30px -18px rgb(82 27 16 / 0.35);
+    transition:
+      transform 420ms var(--ease-out),
+      visibility 0s linear 0s;
+  }
+
+  .bb {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 52px;
+    border-radius: var(--r-pill);
+    font-weight: 750;
+    font-size: 1.0625rem;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .bb--call {
+    background: var(--rose-cta);
+    color: #fff;
+  }
+
+  .bb--call::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    z-index: -1;
+    border-radius: inherit;
+    border: 1px dashed rgb(255 255 255 / 0.4);
+  }
+
+  .bb--wa {
+    color: var(--chocolate);
+    box-shadow: inset 0 0 0 1.5px rgb(82 27 16 / 0.55);
+  }
+
+  /* JS: paslēpta, kamēr redzamas lapas augšas pogas */
+  :global(html.js) .bottom-bar.is-hidden {
+    transform: translateY(110%);
+    visibility: hidden;
+    transition:
+      transform 420ms var(--ease-out),
+      visibility 0s linear 420ms;
+  }
+
+  :global(html.menu-open) .bottom-bar {
+    visibility: hidden;
+  }
+
+  @media (min-width: 64rem) {
+    .bottom-bar {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('[data-bottom-bar]');
+  const anchor = document.querySelector<HTMLElement>('[data-primary-actions]');
+  if (bar && anchor && 'IntersectionObserver' in window) {
+    bar.classList.add('is-hidden');
+    new IntersectionObserver(
+      ([entry]) => {
+        // Rāda joslu, kad augšas pogas ir aizritinātas augšup ārpus ekrāna.
+        const above = entry.boundingClientRect.bottom < 0;
+        bar.classList.toggle('is-hidden', entry.isIntersecting || !above);
+      },
+      { threshold: 0 },
+    ).observe(anchor);
+  }
+</script>
