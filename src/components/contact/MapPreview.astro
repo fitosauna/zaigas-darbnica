@@ -1,0 +1,150 @@
+---
+/**
+ * Karte, kas ielādējas tikai pēc klikšķa (A9): līdz tam - zīmēts priekšskatījums
+ * (stilizēts, nevis precīza karte) un poga. Bez JS pogas nav; saite
+ * „Atvērt Google Maps” vienmēr ir blakus.
+ */
+import { contact } from '../../config';
+import { kontakti } from '../../data/pages/kontakti';
+
+const address = `${contact.address.street}, ${contact.address.city}, ${contact.address.postalCode}`;
+const embed = `https://www.google.com/maps?q=${encodeURIComponent(address)}&output=embed`;
+---
+
+<div class="map" data-map data-src={embed} data-title={kontakti.find.mapTitle}>
+  <div class="map__frame">
+    <svg class="map__art" viewBox="0 0 640 480" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid slice">
+      <rect width="640" height="480" fill="#efe4d6"></rect>
+      <!-- Ezers -->
+      <path d="M420-10c30 50 110 40 160 90 40 40 30 110 80 150V-10Z" fill="#e2d6c8"></path>
+      <path d="M470 30c30 10 60 22 85 42M520 80c20 10 40 22 55 40" stroke="#cbbba9" stroke-width="2" fill="none" stroke-linecap="round"
+      ></path>
+      <!-- Kvartāli -->
+      <g fill="#f6eee4">
+        <path d="M40 60h150l-10 110H30Z"></path>
+        <path d="M230 40h140l-20 120H220Z"></path>
+        <path d="M60 230h120l10 120H40Z"></path>
+        <path d="M400 250h170l-10 110H390Z"></path>
+        <path d="M230 300h120l-10 120H215Z"></path>
+      </g>
+      <!-- Ielas -->
+      <g fill="none" stroke-linecap="round">
+        <g stroke="#d7c6b2" stroke-width="22">
+          <path d="M-20 205C120 195 260 215 340 230s220 10 320-10"></path>
+          <path d="M205-20c5 120 0 220 -5 300s10 150 20 220"></path>
+          <path d="M380 500c0-90 10-170 0-270s-30-160-20-250"></path>
+        </g>
+        <g stroke="#fffaf3" stroke-width="16">
+          <path d="M-20 205C120 195 260 215 340 230s220 10 320-10"></path>
+          <path d="M205-20c5 120 0 220 -5 300s10 150 20 220"></path>
+          <path d="M380 500c0-90 10-170 0-270s-30-160-20-250"></path>
+        </g>
+        <path d="M-20 400c120-20 220 0 300-10" stroke="#fffaf3" stroke-width="10"></path>
+        <path d="M480 500c10-60 60-110 180-130" stroke="#fffaf3" stroke-width="10"></path>
+      </g>
+      <!-- Diega punktiņš līdz darbnīcai -->
+      <path d="M40 440C120 380 200 330 290 270" fill="none" stroke="#b8605a" stroke-width="3" stroke-dasharray="8 8" stroke-linecap="round"
+      ></path>
+      <!-- Adata/piespraude -->
+      <g transform="translate(300 252)">
+        <ellipse cx="0" cy="34" rx="16" ry="5" fill="rgb(82 27 16 / 0.18)"></ellipse>
+        <path d="M0 34C-4 18-18 8-18-8a18 18 0 0 1 36 0c0 16-14 26-18 42Z" fill="#9e4a45"></path>
+        <circle cx="0" cy="-8" r="6.5" fill="#faf5ee"></circle>
+      </g>
+    </svg>
+    <span class="map__tag" aria-hidden="true">Tālavas iela&nbsp;18</span>
+    <button type="button" class="map__load" data-map-load>{kontakti.find.loadMap}</button>
+  </div>
+  <p class="map__note">{kontakti.find.mapNote}</p>
+</div>
+
+<style>
+  .map__frame {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--r-l);
+    background: var(--linen);
+    box-shadow: var(--shadow-lift), inset 0 0 0 1px var(--hairline);
+  }
+
+  .map__art,
+  .map__frame :global(iframe) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .map__tag {
+    position: absolute;
+    left: 50%;
+    top: 34%;
+    padding: 6px 12px 6px 22px;
+    border-radius: 3px 8px 8px 3px;
+    background:
+      radial-gradient(circle at 10px 50%, var(--cream) 0 3px, rgb(82 27 16 / 0.35) 3px 4px, transparent 4.5px),
+      linear-gradient(180deg, #ecdcc7, #e3cdb2);
+    color: var(--chocolate);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    box-shadow: var(--shadow-paper);
+    clip-path: polygon(8px 0, 100% 0, 100% 100%, 8px 100%, 0 50%);
+    transform: translate(12%, -50%) rotate(-3deg);
+    white-space: nowrap;
+  }
+
+  .map__load {
+    position: absolute;
+    left: 50%;
+    bottom: 22px;
+    min-height: 52px;
+    padding: 10px 26px;
+    border: 0;
+    border-radius: var(--r-pill);
+    background: var(--cream);
+    color: var(--chocolate);
+    font-weight: 700;
+    box-shadow: var(--shadow-lift), inset 0 0 0 1.5px rgb(82 27 16 / 0.55);
+    transform: translateX(-50%);
+    transition: background-color var(--dur) var(--ease-out);
+  }
+
+  .map__load:hover {
+    background: #fff;
+  }
+
+  :global(html.no-js) .map__load {
+    display: none;
+  }
+
+  .map.is-loaded .map__art,
+  .map.is-loaded .map__tag,
+  .map.is-loaded .map__load {
+    display: none;
+  }
+
+  .map__note {
+    margin-top: var(--s-3);
+    font-size: var(--fs-small);
+    color: var(--ink-soft);
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-map]').forEach((map) => {
+    const btn = map.querySelector<HTMLButtonElement>('[data-map-load]');
+    btn?.addEventListener('click', () => {
+      const frame = document.createElement('iframe');
+      frame.src = map.dataset.src ?? '';
+      frame.title = map.dataset.title ?? '';
+      frame.loading = 'lazy';
+      frame.referrerPolicy = 'no-referrer-when-downgrade';
+      frame.allowFullscreen = true;
+      map.querySelector('.map__frame')?.appendChild(frame);
+      map.classList.add('is-loaded');
+      frame.focus();
+    });
+  });
+</script>

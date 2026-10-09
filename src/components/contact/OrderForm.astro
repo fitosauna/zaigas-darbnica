@@ -1,0 +1,622 @@
+---
+/**
+ * Kontaktforma (Part B §9.6) kā drēbnieka pasūtījuma zīmīte.
+ *  - Ar JS: sūta ar fetch(), rāda Part B kļūdas pie laukiem un ziņu pēc nosūtīšanas.
+ *  - Bez JS: parasts POST uz /send.php, kas pāradresē uz #paldies vai #kluda.
+ *  - formConfig.web3formsKey (src/config.ts) pārslēdz uz Web3Forms (bez foto lauka).
+ * Lauku nosaukumi sakrīt ar public/send.php.
+ */
+import Button from '../Button.astro';
+import Icon from '../Icon.astro';
+import { absoluteUrl, formConfig } from '../../config';
+import { kontakti } from '../../data/pages/kontakti';
+import { linkContacts } from '../../lib/typo';
+
+const f = kontakti.form;
+const web3 = Boolean(formConfig.web3formsKey);
+const action = web3 ? 'https://api.web3forms.com/submit' : '/send.php';
+const failureHtml = linkContacts(f.failure);
+---
+
+<div class="slip">
+  <div class="slip__head" aria-hidden="true">
+    <span class="slip__brand">Zaigas darbnīca</span>
+    <span class="slip__tagline">Šūšana un adīšana</span>
+  </div>
+
+  <div id="paldies" class="slip__msg slip__msg--ok" tabindex="-1" role="status">
+    <p>{f.success}</p>
+  </div>
+  <div id="kluda" class="slip__msg slip__msg--err" tabindex="-1" role="alert">
+    <p set:html={failureHtml} />
+  </div>
+
+  <form
+    class="slip__form"
+    action={action}
+    method="post"
+    enctype="multipart/form-data"
+    accept-charset="UTF-8"
+    data-order-form
+    data-errors={JSON.stringify(f.errors)}
+    data-sending={f.labels.sending}
+  >
+    {
+      web3 && (
+        <>
+          <input type="hidden" name="access_key" value={formConfig.web3formsKey} />
+          <input type="hidden" name="subject" value="Jauns pieprasījums no mājaslapas" />
+          <input type="hidden" name="from_name" value="Zaigas darbnīca" />
+          <input type="hidden" name="redirect" value={absoluteUrl('/kontakti') + '#paldies'} />
+        </>
+      )
+    }
+
+    <div class="slip__grid">
+      <div class="field">
+        <label for="f-vards">{f.labels.name}</label>
+        <input
+          id="f-vards"
+          name="vards"
+          type="text"
+          autocomplete="name"
+          maxlength="100"
+          required
+          aria-describedby="e-vards"
+        />
+        <p class="field__error" id="e-vards" data-error-for="vards"></p>
+      </div>
+
+      <div class="field">
+        <label for="f-talrunis">{f.labels.phone}</label>
+        <input
+          id="f-talrunis"
+          name="talrunis"
+          type="tel"
+          inputmode="tel"
+          autocomplete="tel"
+          maxlength="40"
+          required
+          aria-describedby="e-talrunis"
+        />
+        <p class="field__error" id="e-talrunis" data-error-for="talrunis"></p>
+      </div>
+
+      <div class="field">
+        <label for="f-epasts">{f.labels.email} <span class="field__opt">({f.labels.optional})</span></label>
+        <input id="f-epasts" name="epasts" type="email" autocomplete="email" maxlength="150" aria-describedby="e-epasts" />
+        <p class="field__error" id="e-epasts" data-error-for="epasts"></p>
+      </div>
+
+      <div class="field">
+        <label for="f-vieta">{f.labels.place}</label>
+        <select id="f-vieta" name="vieta">
+          <option value="">{f.labels.choose}</option>
+          {f.places.map((p) => <option value={p.value}>{p.label}</option>)}
+        </select>
+      </div>
+
+      <div class="field field--full">
+        <label for="f-pakalpojums">{f.labels.service}</label>
+        <select id="f-pakalpojums" name="pakalpojums">
+          <option value="">{f.labels.choose}</option>
+          {f.services.map((s) => <option value={s.value}>{s.label}</option>)}
+        </select>
+      </div>
+
+      <div class="field field--full">
+        <label for="f-apraksts">{f.labels.what}</label>
+        <textarea
+          id="f-apraksts"
+          name="apraksts"
+          rows="5"
+          maxlength="3000"
+          required
+          placeholder={f.placeholders.what}
+          aria-describedby="e-apraksts"></textarea>
+        <p class="field__error" id="e-apraksts" data-error-for="apraksts"></p>
+      </div>
+
+      <div class="field field--full">
+        <label for="f-termins">{f.labels.when} <span class="field__opt">({f.labels.optional})</span></label>
+        <input id="f-termins" name="termins" type="text" maxlength="200" placeholder={f.placeholders.when} />
+      </div>
+
+      {
+        !web3 && (
+          <div class="field field--full">
+            <input
+              class="file__input visually-hidden"
+              id="f-foto"
+              name="foto"
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.heic,.heif"
+              aria-describedby="h-foto e-foto"
+              data-max="10485760"
+            />
+            <label class="file" for="f-foto">
+              <Icon name="camera" size={24} />
+              <span class="file__text">
+                <span class="file__title">
+                  {f.labels.photo} <span class="field__opt">({f.labels.optional})</span>
+                </span>
+                <span class="file__hint" id="h-foto">
+                  {f.labels.photoHint}
+                </span>
+                <span class="file__name" data-file-name />
+              </span>
+            </label>
+            <p class="field__error" id="e-foto" data-error-for="foto" />
+          </div>
+        )
+      }
+
+      <div class="field field--full field--check">
+        <div class="check">
+          <input
+            id="f-piekrisana"
+            name="piekrisana"
+            type="checkbox"
+            value="1"
+            required
+            aria-describedby="e-piekrisana"
+          />
+          <label for="f-piekrisana">{f.labels.consent}</label>
+        </div>
+        <a class="check__link" href="/privatuma-politika">{f.labels.privacy}</a>
+        <p class="field__error" id="e-piekrisana" data-error-for="piekrisana"></p>
+      </div>
+
+      <div class="hp" aria-hidden="true">
+        {
+          web3 ? (
+            <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" />
+          ) : (
+            <>
+              <label for="f-vietne">Vietne</label>
+              <input id="f-vietne" name="vietne" type="text" tabindex="-1" autocomplete="off" />
+            </>
+          )
+        }
+      </div>
+    </div>
+
+    <div class="slip__submit">
+      <Button type="submit" size="lg" arrow class="slip__button">{f.labels.submit}</Button>
+    </div>
+    <div class="slip__status" data-form-status aria-live="polite"></div>
+  </form>
+</div>
+
+<style>
+  .slip {
+    position: relative;
+    padding: 0 clamp(18px, 0.5rem + 3vw, 48px) clamp(24px, 1rem + 2vw, 44px);
+    border-radius: 6px 6px var(--r-m) var(--r-m);
+    background:
+      linear-gradient(180deg, rgb(241 230 216 / 0.5), rgb(241 230 216 / 0) 140px),
+      var(--paper);
+    box-shadow: var(--shadow-lift);
+  }
+
+  /* Perforācija augšā, kā no bloknota noplēsta zīmīte */
+  .slip::before {
+    content: '';
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    top: 14px;
+    height: 8px;
+    background: radial-gradient(circle, var(--linen) 0 3px, rgb(82 27 16 / 0.18) 3px 3.6px, transparent 4px) 0 0 / 18px 8px
+      repeat-x;
+  }
+
+  .slip__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 16px;
+    padding: 44px 0 16px;
+    margin-bottom: var(--s-6);
+    background: repeating-linear-gradient(90deg, rgb(184 96 90 / 0.55) 0 6px, transparent 6px 11px) 0 100% / 100% 1.5px
+      no-repeat;
+  }
+
+  .slip__brand {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-style: italic;
+    color: var(--chocolate);
+  }
+
+  .slip__tagline {
+    font-family: var(--font-display);
+    font-size: var(--fs-label);
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--rose-ink);
+  }
+
+  .slip__grid {
+    display: grid;
+    gap: var(--s-5);
+  }
+
+  .field {
+    display: grid;
+    gap: 6px;
+    align-content: start;
+  }
+
+  .field label,
+  .file__title {
+    font-weight: 750;
+    color: var(--chocolate);
+  }
+
+  .field__opt {
+    font-weight: 450;
+    color: var(--ink-soft);
+  }
+
+  .field input:not([type='checkbox']),
+  .field select,
+  .field textarea {
+    width: 100%;
+    min-height: 52px;
+    padding: 12px 14px;
+    border: 1px solid rgb(82 27 16 / 0.32);
+    border-radius: 10px;
+    background: rgb(250 245 238 / 0.75);
+    color: var(--ink);
+    font-size: 1rem;
+    line-height: 1.4;
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      background-color var(--dur-fast) var(--ease-out);
+  }
+
+  .field textarea {
+    min-height: 140px;
+    resize: vertical;
+  }
+
+  .field ::placeholder {
+    color: #8a736b;
+    opacity: 1;
+  }
+
+  .field select {
+    appearance: none;
+    padding-right: 44px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none' stroke='%23521B10' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6.5 9.5 5.5 5.5 5.5-5.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+
+  .field input:hover,
+  .field select:hover,
+  .field textarea:hover {
+    border-color: rgb(82 27 16 / 0.55);
+  }
+
+  .field input:focus-visible,
+  .field select:focus-visible,
+  .field textarea:focus-visible {
+    border-color: var(--focus);
+    background-color: #fff;
+  }
+
+  .field [aria-invalid='true'] {
+    border-color: var(--rose-ink) !important;
+    box-shadow: inset 0 0 0 1px var(--rose-ink);
+  }
+
+  .field__error {
+    font-size: var(--fs-small);
+    font-weight: 650;
+    color: var(--rose-ink);
+  }
+
+  .field__error:empty {
+    display: none;
+  }
+
+  /* Foto: iešūta kabatiņa ar raustītu malu */
+  .field .file {
+    font-weight: 450;
+  }
+
+  .file {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 72px;
+    padding: 14px 16px;
+    border: 1.5px dashed rgb(184 96 90 / 0.6);
+    border-radius: 12px;
+    background: rgb(250 245 238 / 0.6);
+    cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+  }
+
+  .file :global(svg) {
+    flex: none;
+    color: var(--thread);
+  }
+
+  .file:hover {
+    background: #fff;
+    border-color: var(--rose-ink);
+  }
+
+  .file__input:focus-visible + .file {
+    outline: 2.5px solid var(--focus);
+    outline-offset: 3px;
+  }
+
+  .file__text {
+    display: grid;
+    gap: 2px;
+  }
+
+  .file__hint {
+    font-size: var(--fs-small);
+    color: var(--ink-soft);
+  }
+
+  .file__name {
+    font-size: var(--fs-small);
+    font-weight: 700;
+    color: var(--chocolate);
+    overflow-wrap: anywhere;
+  }
+
+  .file__name:empty {
+    display: none;
+  }
+
+  /* Piekrišana */
+  .check {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .check input {
+    flex: none;
+    appearance: none;
+    width: 26px;
+    height: 26px;
+    margin: 0;
+    border: 1.5px solid rgb(82 27 16 / 0.55);
+    border-radius: 6px;
+    background: var(--cream);
+    cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease-out);
+  }
+
+  .check input:checked {
+    border-color: var(--rose-cta);
+    background: var(--rose-cta)
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5.5 12.5 4 4 9-9'/%3E%3C/svg%3E")
+      center / 18px no-repeat;
+  }
+
+  .check label {
+    padding-top: 1px;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .check__link {
+    justify-self: start;
+    margin-left: 38px;
+    padding: 10px 0;
+    margin-block: -8px -6px;
+    font-size: var(--fs-small);
+    font-weight: 700;
+  }
+
+  /* Medus pods: neredzams cilvēkiem */
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .slip__submit {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-4) var(--s-6);
+    margin-top: var(--s-7);
+    padding-top: var(--s-6);
+    background: repeating-linear-gradient(90deg, rgb(82 27 16 / 0.2) 0 6px, transparent 6px 11px) 0 0 / 100% 1px no-repeat;
+  }
+
+  .slip__submit :global(.slip__button) {
+    min-width: 12rem;
+  }
+
+  .slip__submit :global(.slip__button[aria-busy='true']) {
+    opacity: 0.75;
+    cursor: progress;
+  }
+
+  /* Ziņas: bez JS parādās ar :target (#paldies / #kluda), ar JS - ar klasi */
+  .slip__msg {
+    display: none;
+    margin-bottom: var(--s-6);
+    padding: var(--s-5);
+    border-radius: 12px;
+    font-weight: 650;
+  }
+
+  .slip__msg:target,
+  .slip__msg.is-shown {
+    display: block;
+  }
+
+  .slip__msg--ok {
+    background: #e8efe2;
+    color: #2f4a26;
+    box-shadow: inset 0 0 0 1px rgb(47 74 38 / 0.25);
+  }
+
+  .slip__msg--err {
+    background: #f6e1dc;
+    color: #7a2f2a;
+    box-shadow: inset 0 0 0 1px rgb(143 63 58 / 0.3);
+  }
+
+  .slip__msg--err :global(a) {
+    color: inherit;
+    font-weight: 750;
+  }
+
+  .slip__msg:focus {
+    outline: none;
+  }
+
+  .slip__msg:focus-visible {
+    outline: 2.5px solid var(--focus);
+    outline-offset: 3px;
+  }
+
+  @media (min-width: 43.75rem) {
+    .slip__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--s-5) var(--s-6);
+    }
+
+    .field--full {
+      grid-column: 1 / -1;
+    }
+  }
+</style>
+
+<script>
+  type Errors = Record<string, string>;
+  const form = document.querySelector<HTMLFormElement>('[data-order-form]');
+
+  if (form) {
+    const errors: Errors = JSON.parse(form.dataset.errors ?? '{}');
+    const ok = document.getElementById('paldies');
+    const fail = document.getElementById('kluda');
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const label = button?.querySelector('.btn__label');
+    const idle = label?.textContent ?? '';
+    const file = form.querySelector<HTMLInputElement>('input[type="file"]');
+    const fileName = form.querySelector<HTMLElement>('[data-file-name]');
+    const max = Number(file?.dataset.max ?? 10485760);
+    const okTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
+
+    // Mūsu kļūdu ziņas Part B tekstā, nevis pārlūka noklusētās
+    form.noValidate = true;
+
+    // Poga „Pieteikt pielaikošanu” u.c. iepriekš izvēlas pakalpojumu: /kontakti?pakalpojums=pielagosana#forma
+    const wanted = new URLSearchParams(location.search).get('pakalpojums');
+    const select = form.querySelector<HTMLSelectElement>('select[name="pakalpojums"]');
+    if (wanted && select && [...select.options].some((o) => o.value === wanted)) select.value = wanted;
+
+    const field = (name: string) => form.elements.namedItem(name) as HTMLInputElement | null;
+    const setError = (name: string, message: string) => {
+      const input = field(name);
+      const out = form.querySelector<HTMLElement>(`[data-error-for="${name}"]`);
+      if (out) out.textContent = message;
+      if (input) {
+        if (message) input.setAttribute('aria-invalid', 'true');
+        else input.removeAttribute('aria-invalid');
+      }
+    };
+
+    const fileError = (): string => {
+      const f = file?.files?.[0];
+      if (!f) return '';
+      if (f.size > max) return errors.fotoSize;
+      const heic = /\.(heic|heif)$/i.test(f.name);
+      if (!okTypes.includes(f.type) && !heic) return errors.fotoType;
+      return '';
+    };
+
+    const validate = (): string[] => {
+      const bad: string[] = [];
+      const check = (name: string, valid: boolean, message: string) => {
+        setError(name, valid ? '' : message);
+        if (!valid) bad.push(name);
+      };
+      check('vards', Boolean(field('vards')?.value.trim()), errors.vards);
+      check('talrunis', Boolean(field('talrunis')?.value.trim()), errors.talrunis);
+      const email = field('epasts')?.value.trim() ?? '';
+      check('epasts', !email || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email), errors.epasts);
+      check('apraksts', Boolean(field('apraksts')?.value.trim()), errors.apraksts);
+      if (file) {
+        const fe = fileError();
+        check('foto', !fe, fe);
+      }
+      check('piekrisana', Boolean(field('piekrisana')?.checked), errors.piekrisana);
+      return bad;
+    };
+
+    // Kļūdu notīra, tiklīdz lauks izlabots
+    form.addEventListener('input', (e) => {
+      const t = e.target as HTMLInputElement;
+      if (t.name && t.getAttribute('aria-invalid') === 'true') validate();
+    });
+
+    file?.addEventListener('change', () => {
+      const f = file.files?.[0];
+      if (fileName) fileName.textContent = f ? `${f.name} (${(f.size / 1048576).toFixed(1).replace('.', ',')} MB)` : '';
+      const fe = fileError();
+      setError('foto', fe);
+    });
+
+    const show = (el: HTMLElement | null) => {
+      [ok, fail].forEach((m) => m?.classList.remove('is-shown'));
+      if (!el) return;
+      el.classList.add('is-shown');
+      el.focus({ preventScroll: true });
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const bad = validate();
+      if (bad.length) {
+        (field(bad[0]) as HTMLElement | null)?.focus();
+        return;
+      }
+      button?.setAttribute('aria-busy', 'true');
+      if (button) button.disabled = true;
+      if (label) label.textContent = form.dataset.sending ?? idle;
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && (data.ok || data.success)) {
+          form.reset();
+          if (fileName) fileName.textContent = '';
+          show(ok);
+        } else {
+          if (data.errors) Object.entries(data.errors as Errors).forEach(([k, v]) => setError(k, v));
+          show(fail);
+        }
+      } catch {
+        show(fail);
+      } finally {
+        button?.removeAttribute('aria-busy');
+        if (button) button.disabled = false;
+        if (label) label.textContent = idle;
+      }
+    });
+  }
+</script>
