@@ -20,7 +20,7 @@ import { contact, hours, links } from '../../config';
     <p class="final__lead">
       Piezvaniet vai uzrakstiet man. Pateikšu, vai to var izdarīt, cik tas maksās un kad būs gatavs.
     </p>
-    <div class="final__actions">
+    <div class="final__actions" data-primary-actions>
       <Button href={links.tel} icon="phone" size="lg">Zvanīt Zaigai</Button>
       <Button href={links.whatsapp} icon="whatsapp" variant="secondary" size="lg" external>Rakstīt WhatsApp</Button>
     </div>
@@ -52,7 +52,6 @@ import { contact, hours, links } from '../../config';
     width: max(100%, 46rem);
     max-width: 75rem;
     height: auto;
-    margin: 0 auto;
     position: relative;
     left: 50%;
     transform: translateX(-50%);
@@ -134,7 +133,10 @@ import { contact, hours, links } from '../../config';
       flex-direction: column;
       align-self: stretch;
     }
+  }
 
+  /* Līdz 960 px fakti stāv viens zem otra, bez atdalītājiem rindas sākumā */
+  @media (max-width: 59.99rem) {
     .final__info {
       flex-direction: column;
     }

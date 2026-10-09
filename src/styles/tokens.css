@@ -88,6 +88,12 @@
   --header-h: 52px;
   --bottom-bar-h: 0px;
 
+  /* Drošās malas (iPhone guļus: kamera / noapaļoti stūri) */
+  --safe-l: env(safe-area-inset-left, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+  --page-gutter-l: max(var(--gutter), calc(var(--safe-l) + 12px));
+  --page-gutter-r: max(var(--gutter), calc(var(--safe-r) + 12px));
+
   /* Graudainums (lina/papīra faktūra) */
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .32 0 0 0 0 .2 0 0 0 0 .14 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
@@ -96,6 +102,15 @@
 @media (max-width: 63.99rem) {
   :root {
     --bottom-bar-h: calc(72px + env(safe-area-inset-bottom));
+  }
+}
+
+/* Telefons guļus: kompaktāka galvene un josla, lai paliek vieta saturam */
+@media (orientation: landscape) and (max-height: 32.5rem) and (max-width: 63.99rem) {
+  :root {
+    --header-top: 6px;
+    --header-h: 48px;
+    --bottom-bar-h: calc(60px + env(safe-area-inset-bottom));
   }
 }
 

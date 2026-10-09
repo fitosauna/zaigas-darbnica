@@ -89,7 +89,7 @@ const { picture } = Astro.props;
   .hero__media {
     position: relative;
     z-index: -1;
-    height: clamp(330px, 53svh, 560px);
+    height: clamp(320px, 50svh, 560px);
     overflow: hidden;
     -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 50%, rgb(0 0 0 / 0.55) 72%, transparent 96%);
     mask-image: linear-gradient(180deg, #000 0%, #000 50%, rgb(0 0 0 / 0.55) 72%, transparent 96%);
@@ -178,7 +178,7 @@ const { picture } = Astro.props;
   }
 
   .hero__lead {
-    margin-top: clamp(1.75rem, 1.2rem + 1.8vw, 2.5rem);
+    margin-top: clamp(1.5rem, 1.1rem + 1.6vw, 2.5rem);
     max-width: 34ch;
     font-size: var(--fs-lead);
     line-height: 1.5;
@@ -195,8 +195,8 @@ const { picture } = Astro.props;
   .hero__info {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    margin-top: var(--s-5);
+    gap: 4px;
+    margin-top: var(--s-4);
     font-size: var(--fs-small);
     line-height: 1.45;
     color: var(--ink-soft);
@@ -233,14 +233,24 @@ const { picture } = Astro.props;
     }
   }
 
-  /* Planšete: plats kadrējums, joprojām vertikāls izkārtojums */
+  /* Planšete: joprojām vertikāls izkārtojums */
   @media (min-width: 43.75rem) {
     .hero__media {
-      height: clamp(380px, 56vh, 620px);
+      height: clamp(380px, 52vh, 620px);
     }
+  }
 
+  /* Guļus planšetē - plats kadrējums */
+  @media (min-width: 43.75rem) and (orientation: landscape) {
     .hero__picture :global(img) {
       object-position: 78% 50%;
+    }
+  }
+
+  /* Stāvus planšetē - vertikālais kadrējums, šujmašīna un dzija paliek kadrā */
+  @media (min-width: 43.75rem) and (max-width: 63.99rem) and (orientation: portrait) {
+    .hero__picture :global(img) {
+      object-position: 50% 28%;
     }
   }
 
@@ -277,8 +287,8 @@ const { picture } = Astro.props;
       left: 0;
       right: 0;
       bottom: 0;
-      height: clamp(120px, 18vh, 200px);
-      background: linear-gradient(180deg, rgb(250 245 238 / 0), var(--cream));
+      height: clamp(180px, 28vh, 300px);
+      background: linear-gradient(180deg, rgb(250 245 238 / 0), rgb(250 245 238 / 0.7) 55%, var(--cream));
       pointer-events: none;
     }
 
@@ -294,8 +304,30 @@ const { picture } = Astro.props;
       max-width: 34rem;
     }
 
+    /* Fonta nomaiņa nepārlauž virsrakstu (CLS) */
+    .hero__name {
+      white-space: nowrap;
+    }
+
+    .hero__lead {
+      max-width: 30rem;
+      font-size: clamp(1.1875rem, 1rem + 0.5vw, 1.3125rem);
+    }
+
     .hero__actions {
       margin-top: var(--s-7);
+    }
+
+    /* Virs fotogrāfijas sekundārā poga ar gandrīz necaurspīdīgu fonu */
+    .hero__actions :global(.btn--secondary) {
+      background: rgb(250 245 238 / 0.92);
+    }
+  }
+
+  /* Mazāki ekrāni: foto sākas tālāk pa labi, lai pogas stāv uz tīra fona */
+  @media (min-width: 64rem) and (max-width: 89.99rem) {
+    .hero__media {
+      width: 64%;
     }
   }
 
@@ -311,7 +343,7 @@ const { picture } = Astro.props;
     .hero__media {
       position: absolute;
       inset: 0 0 0 auto;
-      width: 62%;
+      width: 56%;
       height: 100%;
       -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.5) 22%, #000 44%);
       mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.5) 22%, #000 44%);
@@ -326,32 +358,39 @@ const { picture } = Astro.props;
     }
 
     .hero__copy {
-      max-width: 48%;
+      max-width: 54%;
     }
 
     .hero__title {
-      font-size: clamp(2rem, 6.4vh + 0.5rem, 2.75rem);
+      font-size: clamp(2.25rem, 9.5vh, 2.75rem);
     }
 
     .hero__lead {
-      margin-top: 1.1rem;
+      margin-top: 0.9rem;
+      max-width: 40ch;
       font-size: 1.0625rem;
     }
 
     .hero__actions {
       flex-direction: row;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       gap: 10px;
       margin-top: 1rem;
     }
 
     .hero__actions :global(.btn) {
       --btn-h: 48px;
-      --btn-px: 18px;
+      --btn-px: 16px;
       font-size: 1rem;
     }
 
     .hero__info {
+      flex-direction: row;
+      gap: 18px;
+      margin-top: 10px;
+    }
+
+    .hero__info li:nth-child(3) {
       display: none;
     }
   }

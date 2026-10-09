@@ -1,15 +1,16 @@
 ---
 /**
  * Mobilā apakšējā josla: „Zvanīt” un „WhatsApp” (A4 §3).
- * Parādās, kad lapas augšas pogas vairs nav redzamas (elements ar
- * [data-primary-actions]); bez JavaScript - redzama vienmēr.
+ * Paslēpta, kamēr redzama kāda lapas pašas „Zvanīt / WhatsApp” pogu grupa
+ * ([data-primary-actions]: hero, noslēgums, kājene), lai pogas nedublējas;
+ * bez JavaScript - redzama vienmēr.
  * Respektē env(safe-area-inset-bottom); izvēlnes laikā paslēpta.
  */
 import { links } from '../config';
 import Icon from './Icon.astro';
 ---
 
-<div class="bottom-bar" data-bottom-bar>
+<nav class="bottom-bar" data-bottom-bar aria-label="Ātrā saziņa">
   <a class="bb bb--call" href={links.tel}>
     <Icon name="phone" size={21} />
     <span>Zvanīt</span>
@@ -18,7 +19,7 @@ import Icon from './Icon.astro';
     <Icon name="whatsapp" size={21} />
     <span>WhatsApp</span>
   </a>
-</div>
+</nav>
 
 <style>
   .bottom-bar {
@@ -30,7 +31,7 @@ import Icon from './Icon.astro';
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
-    padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+    padding: 10px max(12px, var(--safe-r)) calc(10px + env(safe-area-inset-bottom)) max(12px, var(--safe-l));
     background: var(--cream);
     box-shadow:
       0 -1px 0 rgb(82 27 16 / 0.1),
@@ -87,6 +88,16 @@ import Icon from './Icon.astro';
     visibility: hidden;
   }
 
+  @media (orientation: landscape) and (max-height: 32.5rem) {
+    .bottom-bar {
+      padding-block: 6px calc(6px + env(safe-area-inset-bottom));
+    }
+
+    .bb {
+      min-height: 48px;
+    }
+  }
+
   @media (min-width: 64rem) {
     .bottom-bar {
       display: none;
@@ -96,16 +107,35 @@ import Icon from './Icon.astro';
 
 <script>
   const bar = document.querySelector<HTMLElement>('[data-bottom-bar]');
-  const anchor = document.querySelector<HTMLElement>('[data-primary-actions]');
-  if (bar && anchor && 'IntersectionObserver' in window) {
+  const groups = [...document.querySelectorAll<HTMLElement>('[data-primary-actions]')];
+  if (bar && groups.length && 'IntersectionObserver' in window) {
+    const first = groups[0];
+    const visible = new Set<Element>();
+    let firstScrolledPast = false;
+    const update = () => bar.classList.toggle('is-hidden', !firstScrolledPast || visible.size > 0);
     bar.classList.add('is-hidden');
     new IntersectionObserver(
-      ([entry]) => {
-        // Rāda joslu, kad augšas pogas ir aizritinātas augšup ārpus ekrāna.
-        const above = entry.boundingClientRect.bottom < 0;
-        bar.classList.toggle('is-hidden', entry.isIntersecting || !above);
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) visible.add(entry.target);
+          else visible.delete(entry.target);
+          // Josla parādās tikai pēc tam, kad pirmā pogu grupa (hero) aizritināta augšup.
+          if (entry.target === first) firstScrolledPast = !entry.isIntersecting && entry.boundingClientRect.bottom < 0;
+        }
+        update();
       },
       { threshold: 0 },
-    ).observe(anchor);
+    ).observe(first);
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) visible.add(entry.target);
+          else visible.delete(entry.target);
+        }
+        update();
+      },
+      { threshold: 0.4 },
+    );
+    groups.slice(1).forEach((g) => io.observe(g));
   }
 </script>

@@ -44,16 +44,26 @@ const reasons = [
       <pattern id="why-grid-major" width="120" height="120" patternUnits="userSpaceOnUse">
         <path d="M120 0H0v120" fill="none" stroke="rgb(82 27 16 / 0.07)" stroke-width="1.2"></path>
       </pattern>
+      <!-- Piegrieztnes līnijas izgaist teksta pusē; aiz teksta paliek tikai režģis -->
+      <linearGradient id="why-fade" x1="0" x2="1440" y1="0" y2="0" gradientUnits="userSpaceOnUse">
+        <stop offset="0.3" stop-color="#fff"></stop>
+        <stop offset="0.44" stop-color="#fff" stop-opacity="0"></stop>
+        <stop offset="0.9" stop-color="#fff" stop-opacity="0"></stop>
+        <stop offset="1" stop-color="#fff" stop-opacity="0.8"></stop>
+      </linearGradient>
+      <mask id="why-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="1440" height="1000">
+        <rect width="1440" height="1000" fill="url(#why-fade)"></rect>
+      </mask>
     </defs>
     <rect width="1440" height="1000" fill="url(#why-grid)"></rect>
     <rect width="1440" height="1000" fill="url(#why-grid-major)"></rect>
-    <g fill="none" stroke="rgb(184 96 90 / 0.3)" stroke-width="1.5" stroke-dasharray="9 7" stroke-linecap="round">
+    <g mask="url(#why-mask)" fill="none" stroke="rgb(184 96 90 / 0.3)" stroke-width="1.5" stroke-dasharray="9 7" stroke-linecap="round">
       <!-- Piedurknes piegrieztne -->
       <path d="M90 140c90-70 250-80 330 0 30 30 40 90 60 160l60 520H40l50-520c10-70 0-130 0-160Z"></path>
       <!-- Žaketes priekšas piegrieztne -->
       <path d="M1190 70c40 30 90 40 140 30l90-20 30 110c-40 40-50 100-40 170l20 380h-240l20-380c10-90 10-190-20-290Z"></path>
     </g>
-    <g fill="none" stroke="rgb(82 27 16 / 0.18)" stroke-width="1.2">
+    <g mask="url(#why-mask)" fill="none" stroke="rgb(82 27 16 / 0.18)" stroke-width="1.2">
       <!-- Iegriezumi (notches) -->
       <path d="M262 108v16M246 110l4 14M48 520h16M1426 330h-16M1300 820v-16"></path>
       <!-- Diega virziena bulta -->
@@ -62,7 +72,7 @@ const reasons = [
     </g>
   </svg>
 
-  <div class="container why__grid">
+  <div class="container why__grid grid-12">
     <div class="why__head">
       <p class="label">Kāpēc Zaiga</p>
       <h2 id="why-title">Kāpēc klienti uztic savas lietas Zaigai?</h2>
@@ -71,7 +81,6 @@ const reasons = [
     <div class="why__aside">
       <p class="why__number" aria-hidden="true">
         <span class="why__twenty">20</span>
-        <span class="why__note hand">gadu pieredze</span>
       </p>
       <figure class="why__photo">
         <Picture
@@ -127,6 +136,7 @@ const reasons = [
 
   .why__grid {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--s-7);
   }
 
@@ -137,6 +147,7 @@ const reasons = [
   .why__number {
     position: relative;
     display: flex;
+    flex-wrap: wrap;
     align-items: flex-end;
     gap: var(--s-3);
     line-height: 0.8;
@@ -151,15 +162,6 @@ const reasons = [
     color: transparent;
     -webkit-text-stroke: 1.6px var(--thread);
     paint-order: stroke;
-  }
-
-  .why__note {
-    position: relative;
-    z-index: 1;
-    bottom: 1.15em;
-    font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.4rem);
-    transform: rotate(-6deg);
-    white-space: nowrap;
   }
 
   .why__photo {
@@ -206,38 +208,50 @@ const reasons = [
 
   @media (min-width: 43.75rem) {
     .why__list {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     }
   }
 
   @media (min-width: 64rem) {
     .why__grid {
-      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-      grid-template-areas:
-        'aside head'
-        'aside main';
+      grid-template-columns: repeat(12, minmax(0, 1fr));
       grid-template-rows: auto 1fr;
-      gap: var(--s-7) clamp(3rem, 6vw, 6rem);
+      gap: var(--s-7) var(--s-6);
       align-items: start;
     }
 
     .why__head {
-      grid-area: head;
+      grid-column: 6 / -1;
+      grid-row: 1;
     }
 
     .why__main {
-      grid-area: main;
+      grid-column: 6 / -1;
+      grid-row: 2;
     }
 
     .why__aside {
-      grid-area: aside;
+      grid-column: 1 / span 4;
+      grid-row: 1 / span 2;
       position: sticky;
       top: calc(var(--header-top) + var(--header-h) + 40px);
     }
 
+
     .why__photo {
       margin-left: 0;
       margin-right: -1rem;
+    }
+  }
+
+  /* Mazi klēpjdatori: viena kolonna, lai rindas garums 55-75 rakstzīmes */
+  @media (min-width: 64rem) and (max-width: 79.99rem) {
+    .why__list {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .why__list p {
+      max-width: 54ch;
     }
   }
 </style>

@@ -13,12 +13,11 @@ import SwipeHint from '../SwipeHint.astro';
 
 <section class="gallery" aria-labelledby="gallery-title">
   <div class="container gallery__head">
-    <p class="label">Paveiktie darbi</p>
     <h2 id="gallery-title">Ko radu Zaigas darbnīcā?</h2>
     <p class="gallery__intro">Labāk par vārdiem runā rezultāts.</p>
   </div>
 
-  <ul role="list" class="line" id="darbu-galerija">
+  <ul role="list" class="line" id="darbu-galerija" aria-labelledby="gallery-title">
     {
       homeGallery.map((item, i) => (
         <li class="hang" style={`--i: ${i}`}>
@@ -51,9 +50,7 @@ import SwipeHint from '../SwipeHint.astro';
     overflow: hidden;
   }
 
-  .gallery__head h2 {
-    margin-top: var(--s-3);
-  }
+
 
   .gallery__intro {
     margin-top: var(--s-4);
@@ -70,12 +67,17 @@ import SwipeHint from '../SwipeHint.astro';
     grid-auto-columns: min(66vw, 17rem);
     gap: var(--gap);
     margin-top: var(--s-7);
-    padding: 0 var(--gutter) 40px;
+    padding: 0 var(--page-gutter-r) 24px var(--page-gutter-l);
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
-    scroll-padding-inline: var(--gutter);
+    scroll-padding-inline: var(--page-gutter-l) var(--page-gutter-r);
     scrollbar-width: none;
+  }
+
+  .line:focus-visible {
+    outline-offset: -4px;
+    border-radius: 14px;
   }
 
   .line::-webkit-scrollbar {
@@ -176,8 +178,19 @@ import SwipeHint from '../SwipeHint.astro';
 
   .hang__print :global(img) {
     width: 100%;
-    aspect-ratio: 4 / 5;
+    aspect-ratio: var(--ratio, 4 / 5);
     object-fit: cover;
+  }
+
+  /* Dažādi formāti, lai darbi neizskatās kā vienādu kartīšu režģis */
+  .hang:nth-child(2),
+  .hang:nth-child(5) {
+    --ratio: 1 / 1;
+  }
+
+  .hang:nth-child(3),
+  .hang:nth-child(4) {
+    --ratio: 3 / 4;
   }
 
   /* Kraft birka ar parakstu */
@@ -220,11 +233,29 @@ import SwipeHint from '../SwipeHint.astro';
       grid-auto-flow: row;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       grid-auto-columns: auto;
+      align-items: start;
       row-gap: var(--s-8);
-      width: min(100% - 2 * var(--gutter), 66rem);
+      width: min(100% - var(--page-gutter-l) - var(--page-gutter-r), var(--container));
       margin-inline: auto;
       padding: 0;
       overflow: visible;
+    }
+
+    /* Smagāki darbi auklu nospriež dziļāk: katram posmam savs ieliekums */
+    .hang:nth-child(2) {
+      --line-y: 50px;
+    }
+
+    .hang:nth-child(3) {
+      --line-y: 36px;
+    }
+
+    .hang:nth-child(4) {
+      --line-y: 40px;
+    }
+
+    .hang:nth-child(5) {
+      --line-y: 56px;
     }
 
     /* Aukla turpinās līdz lapas malām */

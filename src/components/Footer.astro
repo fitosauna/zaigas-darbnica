@@ -17,7 +17,10 @@ const pages = mainNav.filter((n) => !n.children);
 ---
 
 <footer class="footer" id="kajene">
-  <div class="footer__seam" aria-hidden="true"></div>
+  <svg class="footer__seam" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <path class="footer__seam-fill" d="M0 56 Q720 -40 1440 56 V80 H0 Z"></path>
+    <path class="footer__seam-stitch" d="M0 70 Q720 -26 1440 70"></path>
+  </svg>
   <div class="container footer__grid">
     <div class="footer__brand">
       <a href="/" class="footer__logo">
@@ -49,7 +52,7 @@ const pages = mainNav.filter((n) => !n.children);
           E-pasts: <a href={links.mail}>{contact.email}</a>
         </p>
       </address>
-      <ul role="list" class="footer__quick">
+      <ul role="list" class="footer__quick" data-primary-actions>
         <li>
           <a href={links.tel}><Icon name="phone" size={18} /> Zvanīt</a>
         </li>
@@ -106,31 +109,33 @@ const pages = mainNav.filter((n) => !n.children);
     line-height: 1.6;
   }
 
-  /* Maigi izliekta vīle ar dūrieniem */
+  /* Maigi izliekta vīle ar dūrieniem: viena līkne no malas līdz malai */
   .footer__seam {
     position: absolute;
     left: 0;
-    right: 0;
+    width: 100%;
     top: calc(-1 * var(--curve));
-    height: calc(var(--curve) * 2);
-    background: var(--chocolate);
-    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    height: calc(var(--curve) * 80 / 56);
+    overflow: visible;
     pointer-events: none;
   }
 
-  .footer__seam::after {
-    content: '';
-    position: absolute;
-    inset: 13px 0 auto;
-    height: calc(var(--curve) * 2);
-    border-top: 1.5px dashed rgb(227 181 172 / 0.55);
-    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  .footer__seam-fill {
+    fill: var(--chocolate);
+  }
+
+  .footer__seam-stitch {
+    fill: none;
+    stroke: rgb(227 181 172 / 0.55);
+    stroke-width: 1.5;
+    stroke-dasharray: 6 6;
+    vector-effect: non-scaling-stroke;
   }
 
   .footer__grid {
     position: relative;
     display: grid;
-    gap: var(--s-7) var(--s-6);
+    gap: var(--s-6);
   }
 
   .footer p + p,
@@ -214,9 +219,18 @@ const pages = mainNav.filter((n) => !n.children);
   }
 
   .footer__links--pages {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: var(--s-5);
     margin-top: var(--s-4);
     padding-top: var(--s-3);
     border-top: 1px solid rgb(250 245 238 / 0.14);
+  }
+
+  @media (min-width: 64rem) {
+    .footer__links--pages {
+      display: block;
+    }
   }
 
   .footer__base {

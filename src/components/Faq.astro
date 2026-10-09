@@ -15,7 +15,7 @@ const { title, items, id = 'buj', label } = Astro.props;
 ---
 
 <section class="faq tone" aria-labelledby={`${id}-title`}>
-  <div class="container faq__grid">
+  <div class="container faq__grid grid-12">
     <div class="faq__head">
       {label && <p class="label">{label}</p>}
       <h2 id={`${id}-title`}>{title}</h2>
@@ -50,8 +50,11 @@ const { title, items, id = 'buj', label } = Astro.props;
   }
 
   .faq__head h2 {
-    margin-top: var(--s-3);
     max-width: 12ch;
+  }
+
+  .faq__head .label + h2 {
+    margin-top: var(--s-3);
   }
 
   .faq__list {
@@ -81,6 +84,10 @@ const { title, items, id = 'buj', label } = Astro.props;
 
   .faq__item summary::-webkit-details-marker {
     display: none;
+  }
+
+  .faq__q {
+    text-wrap: balance;
   }
 
   .faq__item summary:hover .faq__q {
@@ -126,14 +133,19 @@ const { title, items, id = 'buj', label } = Astro.props;
 
   @media (min-width: 64rem) {
     .faq__grid {
-      grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
-      gap: clamp(3rem, 6vw, 6rem);
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 0 var(--s-6);
       align-items: start;
     }
 
     .faq__head {
+      grid-column: 1 / span 4;
       position: sticky;
       top: calc(var(--header-top) + var(--header-h) + 40px);
+    }
+
+    .faq__list {
+      grid-column: 6 / -1;
     }
   }
 </style>

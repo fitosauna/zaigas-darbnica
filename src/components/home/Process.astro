@@ -23,7 +23,6 @@ const steps = [
 <section class="process" aria-labelledby="process-title">
   <div class="container">
     <div class="process__head">
-      <p class="label">Sadarbība</p>
       <h2 id="process-title">Kā pieteikt darbu? Tikai trīs soļi</h2>
     </div>
 
@@ -56,7 +55,6 @@ const steps = [
   }
 
   .process__head h2 {
-    margin-top: var(--s-3);
     max-width: 18ch;
   }
 
@@ -105,7 +103,13 @@ const steps = [
   @media (min-width: 64rem) {
     .steps {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: clamp(2rem, 4vw, 4rem);
+      gap: var(--s-6);
+    }
+
+    /* Poga noslēdz „kāpnes” zem trešā soļa */
+    .process__cta {
+      margin-top: var(--s-7);
+      padding-left: calc((100% + var(--s-6)) * 2 / 3);
     }
 
     .step {

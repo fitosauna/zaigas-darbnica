@@ -22,8 +22,8 @@ import { faqPage } from '../lib/schema';
 const title = 'Šuvēja Alūksnē - šūšana un adīšana | Zaigas darbnīca';
 const description = `Zaigas darbnīca Alūksnē - 20 gadu pieredze: apģērbu remonts, bikšu saīsināšana ${price('bikses-saisinasana')}, rāvējslēdzēja maiņa, individuālā šūšana un adīšana pēc pasūtījuma.`;
 
-/** Hero attēls: telefonā vertikāls kadrējums, planšetē/datorā - plats. */
-const MOBILE = '(max-width: 699px)';
+/** Hero attēls: telefonā un stāvus planšetē vertikāls kadrējums, citur - plats. */
+const MOBILE = '(max-width: 1023px) and (orientation: portrait)';
 const heroPicture = await buildPicture({
   src: images.heroDarbnica.src,
   widths: [820, 1100, 1400, 1672],
@@ -43,7 +43,7 @@ const preloads = heroPicture.sources.filter((s) => s.type === 'image/avif');
           type={s.type}
           imagesrcset={s.srcset}
           imagesizes={s.sizes}
-          media={s.media ?? '(min-width: 700px)'}
+          media={s.media ?? '(min-width: 1024px), (orientation: landscape)'}
           fetchpriority="high"
         />
       ))
@@ -59,6 +59,6 @@ const preloads = heroPicture.sources.filter((s) => s.type === 'image/avif');
   {flags.showReviews && <Reviews />}
   <Process />
   <Area />
-  <Faq title="Biežāk uzdotie jautājumi" items={homeFaq} label="Jautājumi" />
+  <Faq title="Biežāk uzdotie jautājumi" items={homeFaq} />
   <FinalCta />
 </BaseLayout>

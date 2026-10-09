@@ -19,8 +19,8 @@ const { target, count } = Astro.props;
   .swipe-hint {
     display: flex;
     justify-content: center;
-    gap: 6px;
-    margin-top: var(--s-2);
+    gap: 8px;
+    margin-top: var(--s-4);
   }
 
   .swipe-hint[hidden] {
@@ -28,17 +28,17 @@ const { target, count } = Astro.props;
   }
 
   .stitch {
-    width: 14px;
-    height: 2px;
+    width: 18px;
+    height: 3px;
     border-radius: 2px;
-    background: rgb(82 27 16 / 0.22);
+    background: rgb(82 27 16 / 0.38);
     transition:
       width var(--dur) var(--ease-out),
       background-color var(--dur) var(--ease-out);
   }
 
   .stitch.is-on {
-    width: 26px;
+    width: 32px;
     background: var(--thread);
   }
 </style>
@@ -49,9 +49,13 @@ const { target, count } = Astro.props;
     if (!row) return;
     const stitches = [...hint.querySelectorAll<HTMLElement>('.stitch')];
     const update = () => {
+      const ox = getComputedStyle(row).overflowX;
       const max = row.scrollWidth - row.clientWidth;
-      hint.hidden = max < 8;
-      if (max < 8) return;
+      const scrollable = (ox === 'auto' || ox === 'scroll') && max >= 8;
+      hint.hidden = !scrollable;
+      // Ritināmā rinda ir sasniedzama ar tastatūru (bultiņas ritina).
+      row.tabIndex = scrollable ? 0 : -1;
+      if (!scrollable) return;
       const i = Math.round((row.scrollLeft / max) * (stitches.length - 1));
       stitches.forEach((s, k) => s.classList.toggle('is-on', k === i));
     };

@@ -13,9 +13,8 @@ const [featured, ...rest] = reviews;
 ---
 
 <section class="reviews tone" aria-labelledby="reviews-title">
-  <div class="container reviews__grid">
+  <div class="container reviews__grid grid-12">
     <div class="reviews__head">
-      <p class="label">Atsauksmes</p>
       <h2 id="reviews-title">Ko saka klienti</h2>
       {
         hasSampleReviews && (
@@ -47,7 +46,7 @@ const [featured, ...rest] = reviews;
       </figcaption>
     </figure>
 
-    <ul role="list" class="reviews__rest" id="atsauksmju-saraksts">
+    <ul role="list" class="reviews__rest" id="atsauksmju-saraksts" aria-label="Citas atsauksmes">
       {
         rest.map((r) => (
           <li>
@@ -84,9 +83,7 @@ const [featured, ...rest] = reviews;
     gap: var(--s-7);
   }
 
-  .reviews__head h2 {
-    margin-top: var(--s-3);
-  }
+
 
   /* Gumijas zīmoga stils, diskrēts */
   .stamp {
@@ -103,7 +100,6 @@ const [featured, ...rest] = reviews;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     transform: rotate(-5deg);
-    opacity: 0.88;
   }
 
   .reviews__ask {
@@ -136,7 +132,8 @@ const [featured, ...rest] = reviews;
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: 2px 10px;
+    gap: 4px 0;
+    column-gap: 10px;
     margin-top: var(--s-4);
     font-size: var(--fs-small);
   }
@@ -150,14 +147,12 @@ const [featured, ...rest] = reviews;
     color: var(--ink-soft);
   }
 
+  /* Part B: „Inga, Alūksne · rāvējslēdzēja maiņa” */
   .quote__service::before {
-    content: '';
-    display: inline-block;
-    width: 18px;
-    height: 1.5px;
+    content: '·';
     margin-right: 10px;
-    vertical-align: middle;
-    background: var(--thread);
+    color: var(--thread);
+    font-weight: 700;
   }
 
   .quote__sample {
@@ -179,14 +174,19 @@ const [featured, ...rest] = reviews;
     position: relative;
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: min(82vw, 22rem);
-    gap: var(--s-6);
-    margin-inline: calc(-1 * var(--gutter));
-    padding: var(--s-2) var(--gutter) var(--s-4);
+    grid-auto-columns: min(74vw, 20rem);
+    gap: var(--s-5);
+    margin-inline: calc(-1 * var(--page-gutter-l)) calc(-1 * var(--page-gutter-r));
+    padding: var(--s-2) var(--page-gutter-r) var(--s-2) var(--page-gutter-l);
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    scroll-padding-inline: var(--gutter);
+    scroll-padding-inline: var(--page-gutter-l) var(--page-gutter-r);
     scrollbar-width: none;
+  }
+
+  .reviews__rest:focus-visible {
+    outline-offset: -4px;
+    border-radius: 14px;
   }
 
   .reviews__rest::-webkit-scrollbar {
@@ -217,16 +217,22 @@ const [featured, ...rest] = reviews;
 
   @media (min-width: 64rem) {
     .reviews__grid {
-      grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
-      column-gap: clamp(3rem, 6vw, 6rem);
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--s-6);
       row-gap: var(--s-8);
     }
 
     .reviews__head {
+      grid-column: 1 / span 4;
       grid-row: span 2;
       align-self: start;
       position: sticky;
       top: calc(var(--header-top) + var(--header-h) + 40px);
+    }
+
+    .quote--featured,
+    .reviews__rest {
+      grid-column: 6 / -1;
     }
   }
 </style>

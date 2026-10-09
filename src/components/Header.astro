@@ -70,7 +70,7 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
       </ul>
     </nav>
 
-    <a class="phone" href={links.tel}>{contact.phoneDisplay}</a>
+    <a class="phone" href={links.tel}><Icon name="phone" size={16} />{contact.phoneDisplay}</a>
 
     <a class="call" href={links.tel}>
       <Icon name="phone" size={19} />
@@ -101,7 +101,7 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
       </button>
     </div>
 
-    <nav class="sheet__nav" aria-label="Izvēlne">
+    <nav class="sheet__nav" aria-label="Lapas">
       <ul role="list">
         {
           mainNav.map((item) =>
@@ -139,7 +139,12 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
         <Icon name="whatsapp" size={22} />
         <span>WhatsApp</span>
       </a>
-      <p class="sheet__meta">{contact.address.street}, {contact.address.city} · {hours.short}</p>
+      <p class="sheet__meta">
+        {contact.address.street}, {contact.address.city} · <span class="nowrap"
+          ><span aria-hidden="true">{hours.daysShort}</span><span class="visually-hidden">{hours.daysLong}</span>
+          {hours.time}</span
+        >
+      </p>
     </div>
   </div>
 </dialog>
@@ -149,8 +154,8 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
     position: fixed;
     z-index: 100;
     top: var(--header-top);
-    left: var(--header-side);
-    right: var(--header-side);
+    left: max(var(--header-side), var(--safe-l));
+    right: max(var(--header-side), var(--safe-r));
     max-width: var(--container);
     margin-inline: auto;
     pointer-events: none;
@@ -173,6 +178,11 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
 
   .site-header.is-scrolled::before {
     opacity: 1;
+  }
+
+  /* Virs tumšās kājenes plīvurs kļūst šokolādes krāsā */
+  .site-header.is-over-dark::before {
+    background: linear-gradient(180deg, rgb(82 27 16 / 0.92) 0%, rgb(82 27 16 / 0.6) 55%, rgb(82 27 16 / 0) 100%);
   }
 
   .bar {
@@ -217,6 +227,15 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
     height: 34px;
     width: auto;
     transition: height var(--dur) var(--ease-out);
+  }
+
+  /* Ritinot josla nedaudz sarūk (pogu pieskāriena laukums paliek 48 px) */
+  .site-header.is-scrolled .bar {
+    height: 48px;
+  }
+
+  .site-header.is-scrolled .brand img {
+    height: 31px;
   }
 
   .nav,
@@ -389,7 +408,7 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
       height: 16px;
     }
 
-    .nav__item--has-menu:focus-within .dropdown,
+    :global(html.no-js) .nav__item--has-menu:focus-within .dropdown,
     .nav__item--has-menu.is-open .dropdown {
       opacity: 1;
       visibility: visible;
@@ -444,16 +463,33 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
     }
 
     .phone {
+      position: relative;
       display: none;
       align-items: center;
+      gap: 7px;
       min-height: 48px;
-      padding: 0 4px;
+      padding: 0 4px 0 20px;
       font-weight: 700;
       font-size: 1rem;
       color: var(--chocolate);
       text-decoration: none;
       white-space: nowrap;
       font-variant-numeric: lining-nums tabular-nums;
+    }
+
+    .phone::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 1px;
+      height: 22px;
+      translate: 0 -50%;
+      background: var(--hairline-strong);
+    }
+
+    .phone :global(svg) {
+      color: var(--thread);
     }
 
     .phone:hover {
@@ -463,10 +499,6 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
     @media (min-width: 77.5rem) {
       .phone {
         display: inline-flex;
-      }
-
-      .nav {
-        margin-inline: auto 8px;
       }
     }
 
@@ -713,6 +745,15 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
     );
   }
 
+  // 1b) Virs tumšās kājenes plīvurs maina krāsu.
+  const footer = document.getElementById('kajene');
+  if (header && footer && 'IntersectionObserver' in window) {
+    new IntersectionObserver(
+      ([entry]) => header.classList.toggle('is-over-dark', entry.isIntersecting),
+      { rootMargin: '0px 0px -94% 0px' },
+    ).observe(footer);
+  }
+
   // 2) „Pakalpojumi” nolaižamā izvēlne (klikšķis, tastatūra, Escape).
   document.querySelectorAll<HTMLElement>('[data-dropdown]').forEach((item) => {
     const toggle = item.querySelector<HTMLButtonElement>('button');
@@ -722,7 +763,9 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
       toggle.setAttribute('aria-expanded', String(open));
     };
     toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
-    item.addEventListener('mouseenter', () => toggle.setAttribute('aria-expanded', 'true'));
+    item.addEventListener('mouseenter', () => {
+      if (window.matchMedia('(hover: hover)').matches) setOpen(true);
+    });
     item.addEventListener('mouseleave', () => setOpen(false));
     item.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
@@ -742,14 +785,24 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
   const sheet = document.querySelector<HTMLDialogElement>('[data-menu]');
   const openers = document.querySelectorAll<HTMLElement>('[data-menu-open]');
   if (sheet && typeof sheet.showModal === 'function') {
-    openers.forEach((opener) =>
+    openers.forEach((opener) => {
+      // Ar JS saite kļūst par pogu (bez JS tā ved uz kājenes izvēlni).
+      opener.setAttribute('role', 'button');
+      opener.setAttribute('aria-expanded', 'false');
+      opener.removeAttribute('aria-controls');
       opener.addEventListener('click', (e) => {
         e.preventDefault();
         sheet.showModal();
         document.documentElement.classList.add('menu-open');
         opener.setAttribute('aria-expanded', 'true');
-      }),
-    );
+      });
+      opener.addEventListener('keydown', (e) => {
+        if (e.key === ' ') {
+          e.preventDefault();
+          opener.click();
+        }
+      });
+    });
     const close = () => sheet.close();
     sheet.querySelector('[data-menu-close]')?.addEventListener('click', close);
     sheet.addEventListener('click', (e) => {

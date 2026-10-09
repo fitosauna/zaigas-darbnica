@@ -9,7 +9,7 @@ import { images } from '../../data/images';
 ---
 
 <section class="about tone" aria-labelledby="about-title">
-  <div class="container about__grid">
+  <div class="container about__grid grid-12">
     <figure class="about__portrait">
       <div class="arch">
         <div class="arch__glass">
@@ -24,7 +24,6 @@ import { images } from '../../data/images';
     </figure>
 
     <div class="about__copy">
-      <p class="label">Par mani</p>
       <h2 id="about-title">Iepazīsimies! Esmu Zaiga</h2>
       <p class="about__text">
         Adīt iemācījos jau bērnībā&nbsp;- vakaros adījām kopā ar mammu, kamēr viņa stāstīja stāstus. Šūšanas amatu apguvu
@@ -100,7 +99,7 @@ import { images } from '../../data/images';
   }
 
   .about__copy h2 {
-    margin-top: var(--s-3);
+    max-width: 14ch;
   }
 
   .about__text {
@@ -116,14 +115,20 @@ import { images } from '../../data/images';
 
   @media (min-width: 64rem) {
     .about__grid {
-      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
-      gap: clamp(3rem, 8vw, 8rem);
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 0 var(--s-6);
     }
 
+    /* Portrets pārkāpj vīli uz iepriekšējo sadaļu, kā uz dēļa uzlikta fotogrāfija */
     .about__portrait {
+      grid-column: 1 / span 5;
       width: 100%;
       max-width: 27rem;
-      margin: 0 0 0 auto;
+      margin: calc(-1 * var(--s-9)) 0 0 auto;
+    }
+
+    .about__copy {
+      grid-column: 7 / -1;
     }
   }
 </style>
