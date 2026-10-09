@@ -14,7 +14,8 @@ import Seo from '../components/Seo.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import BottomBar from '../components/BottomBar.astro';
-import { site } from '../config';
+import CookieBanner from '../components/CookieBanner.astro';
+import { flags, site } from '../config';
 import { logos } from '../data/images';
 import { jsonLd, localBusiness } from '../lib/schema';
 import { buildLogo } from '../lib/picture';
@@ -64,5 +65,6 @@ const structured = [localBusiness(schemaLogo.src), ...schema];
     </main>
     <Footer />
     <BottomBar />
+    {flags.ga4Id && <CookieBanner />}
   </body>
 </html>

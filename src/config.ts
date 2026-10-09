@@ -10,6 +10,11 @@ export const site = {
   tagline: 'Šūšana un adīšana',
   locale: 'lv_LV',
   lang: 'lv',
+  /**
+   * Privātuma politikas „Spēkā no” datums, piem. '1. novembra'
+   * → „Spēkā no: 2026. gada 1. novembra.” Tukšs = rinda netiek rādīta.
+   */
+  privacyDate: '',
 } as const;
 
 export const owner = {
@@ -65,6 +70,16 @@ export const flags = {
   googleReviewUrl: '',
   /** GA4 mērījuma ID (piem. „G-XXXXXXX”). Tukšs = nav analītikas un nav sīkdatņu joslas. */
   ga4Id: '',
+} as const;
+
+/**
+ * Kontaktforma. Parasti tā sūta uz /send.php (SiteGround, e-pasts caur SMTP).
+ * Ja PHP e-pasts nedarbojas uzticami, ierakstiet šeit Web3Forms piekļuves atslēgu
+ * (https://web3forms.com): forma sūtīs caur Web3Forms. Bezmaksas plānā foto
+ * pievienot nevar, tāpēc foto lauks tad netiek rādīts.
+ */
+export const formConfig = {
+  web3formsKey: '',
 } as const;
 
 /** Palīgfunkcijas saitēm. */

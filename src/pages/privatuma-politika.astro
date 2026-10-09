@@ -1,0 +1,112 @@
+---
+/**
+ * /privatuma-politika - Part B §10. Klusa teksta lapa.
+ * „Spēkā no” rinda parādās tikai tad, kad src/config.ts ierakstīts site.privacyDate.
+ * Papildināts viens teikums par karti lapā /kontakti (tā ielādējas no Google pēc klikšķa).
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import InnerHero from '../components/page/InnerHero.astro';
+import { contact, links, owner, site } from '../config';
+import { breadcrumbs } from '../lib/schema';
+import { typo } from '../lib/typo';
+
+const title = 'Privātuma politika | Zaigas darbnīca';
+const description = 'Kā Zaigas darbnīca apstrādā kontaktformā un saziņā sniegtos personas datus.';
+const mail = `<a href="${links.mail}">${contact.email}</a>`;
+const tel = `<a href="${links.tel}">${contact.phoneDisplay}</a>`;
+
+const parts: { lead: string; html: string }[] = [
+  {
+    lead: 'Pārzinis.',
+    html: `Personas datus apstrādā ${owner.name} (${site.name}), ${typo(contact.address.street)}, ${contact.address.city}, <span class="nowrap">${contact.address.postalCode}</span>, e-pasts ${mail}, tālrunis ${tel}.`,
+  },
+  {
+    lead: 'Kādus datus apstrādāju.',
+    html: 'Vārdu, tālruņa numuru, e-pasta adresi, ziņas saturu un fotogrāfijas, ko nosūtāt kontaktformā, pa e-pastu, WhatsApp vai telefoniski.',
+  },
+  {
+    lead: 'Kāpēc.',
+    html: 'Lai atbildētu uz Jūsu pieprasījumu, sagatavotu cenas novērtējumu un izpildītu pasūtījumu.',
+  },
+  {
+    lead: 'Tiesiskais pamats.',
+    html: 'Jūsu piekrišana un pasākumi, ko veic pēc Jūsu pieprasījuma pirms līguma noslēgšanas un tā izpildei (Vispārīgās datu aizsardzības regulas 6.&nbsp;panta 1.&nbsp;punkta a) un b) apakšpunkts).',
+  },
+  {
+    lead: 'Cik ilgi.',
+    html: 'Datus glabāju tikai tik ilgi, cik nepieciešams, lai atbildētu uz pieprasījumu un izpildītu pasūtījumu, un pēc tam tos dzēšu, ja vien likums neprasa tos glabāt ilgāk.',
+  },
+  {
+    lead: 'Kam datus nododu.',
+    html: 'Datus nepārdodu un nenododu trešajām personām mārketinga nolūkos. Tehniski tie var tikt apstrādāti mājaslapas mitināšanas un e-pasta pakalpojumu sniedzēju sistēmās tikai ziņas nogādāšanai.',
+  },
+  {
+    lead: 'Sīkdatnes.',
+    html: 'Mājaslapa izmanto tikai tās darbībai nepieciešamās sīkdatnes. Apmeklējumu statistikas sīkdatnes tiek izmantotas tikai tad, ja tām piekrītat. Karte lapā „Kontakti” tiek ielādēta no Google tikai pēc Jūsu klikšķa; tad Google var apstrādāt Jūsu IP adresi un saglabāt savas sīkdatnes.',
+  },
+  {
+    lead: 'Jūsu tiesības.',
+    html: `Jūs varat pieprasīt piekļuvi saviem datiem, to labošanu vai dzēšanu, kā arī atsaukt piekrišanu, rakstot uz ${mail}. Ja uzskatāt, ka Jūsu dati apstrādāti nepareizi, varat iesniegt sūdzību Datu valsts inspekcijā (<a href="https://www.dvi.gov.lv" rel="noopener">www.dvi.gov.lv</a>).`,
+  },
+];
+
+const schema = [
+  breadcrumbs([
+    { name: 'Sākums', path: '/' },
+    { name: 'Privātuma politika', path: '/privatuma-politika' },
+  ]),
+];
+---
+
+<BaseLayout title={title} description={description} path="/privatuma-politika" schema={schema}>
+  <InnerHero crumb="Privātuma politika" title="Privātuma politika" class="policy-hero">
+    <div class="policy">
+      {
+        parts.map((p) => (
+          <p>
+            <strong>{p.lead}</strong> <Fragment set:html={p.html} />
+          </p>
+        ))
+      }
+      {
+        site.privacyDate && (
+          <p class="policy__date">
+            <strong>Spēkā no:</strong> 2026.&nbsp;gada {site.privacyDate}.
+          </p>
+        )
+      }
+    </div>
+  </InnerHero>
+</BaseLayout>
+
+<style>
+  .policy {
+    max-width: 64ch;
+    margin-top: var(--s-4);
+  }
+
+  .policy p {
+    max-width: none;
+  }
+
+  .policy p + p {
+    margin-top: 1.1em;
+  }
+
+  .policy strong {
+    color: var(--chocolate);
+  }
+
+  .policy a {
+    font-weight: 650;
+  }
+
+  .policy__date {
+    padding-top: var(--s-5);
+    color: var(--ink-soft);
+  }
+
+  :global(.policy-hero) {
+    padding-bottom: var(--section);
+  }
+</style>
