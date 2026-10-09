@@ -1,7 +1,8 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-import { site } from './src/config.ts';
+import { site, flags, formConfig } from './src/config.ts';
 import pruneUnusedImages from './integrations/prune-unused-images.mjs';
+import cspHtaccess from './integrations/csp-htaccess.mjs';
 
 // https://docs.astro.build/en/reference/configuration-reference/
 export default defineConfig({
@@ -16,6 +17,9 @@ export default defineConfig({
     responsiveStyles: false,
   },
   compressHTML: true,
-  integrations: [pruneUnusedImages()],
+  integrations: [
+    pruneUnusedImages(),
+    cspHtaccess({ ga4: Boolean(flags.ga4Id), web3forms: Boolean(formConfig.web3formsKey) }),
+  ],
   devToolbar: { enabled: false },
 });

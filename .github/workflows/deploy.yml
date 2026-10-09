@@ -1,0 +1,195 @@
+# Publicēšana uz SiteGround - TIKAI ar roku: GitHub → Actions → Deploy → „Run workflow”.
+# Manual deploy only: builds the site and uploads dist/ to SiteGround over SSH (rsync --delete).
+# Nekas netiek publicēts automātiski (nav push, pull_request vai schedule).
+#
+# Repository secrets (Settings → Secrets and variables → Actions):
+#   SG_HOST, SG_USER, SG_PORT, SG_SSH_KEY, SG_PATH (piem. ~/www/zaigasdarbnica.lv/public_html/)
+#   SG_SSH_PASSPHRASE - neobligāts: SSH atslēgas parole, ja atslēgai tāda ir.
+# Ja kāds no pieciem obligātajiem noslēpumiem nav iestatīts, darbs beidzas zaļš ar paziņojumu
+# un neko nepublicē (missing secrets -> green, skipped).
+
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Izmēģinājums: tikai parādīt, kas mainītos, neko neaugšupielādējot (dry run)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and upload to SiteGround
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Pārbaudīt SiteGround noslēpumus / check secrets
+        id: secrets
+        env:
+          SG_HOST: ${{ secrets.SG_HOST }}
+          SG_USER: ${{ secrets.SG_USER }}
+          SG_PORT: ${{ secrets.SG_PORT }}
+          SG_SSH_KEY: ${{ secrets.SG_SSH_KEY }}
+          SG_PATH: ${{ secrets.SG_PATH }}
+        run: |
+          missing=""
+          for name in SG_HOST SG_USER SG_PORT SG_SSH_KEY SG_PATH; do
+            value="${!name}"
+            if [ -z "$(printf '%s' "$value" | tr -d '[:space:]')" ]; then
+              missing="$missing $name"
+            fi
+          done
+
+          if [ -n "$missing" ]; then
+            missing="${missing# }"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::warning title=Deploy izlaists / skipped::Trūkst GitHub noslēpumu (secrets): $missing. Lapa NETIKA publicēta. Pievienojiet tos: Settings → Secrets and variables → Actions (sk. README). / Missing secrets: $missing. Nothing was deployed."
+            {
+              echo "## Publicēšana izlaista / Deploy skipped"
+              echo ""
+              echo "Trūkst šo GitHub noslēpumu (secrets): **$missing**."
+              echo "Lapa netika publicēta. Pievienojiet tos sadaļā Settings → Secrets and variables → Actions"
+              echo "un palaidiet Deploy vēlreiz (norādījumi README.md, sadaļā „Publicēšana”)."
+              echo ""
+              echo "Missing repository secrets: **$missing**. Nothing was deployed; add them under"
+              echo "Settings → Secrets and variables → Actions and run Deploy again."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          # Atstarpes vai jauna rinda, kas iekopēta kopā ar vērtību, netiek ņemtas vērā.
+          trim() { local v="$1"; v="${v#"${v%%[![:space:]]*}"}"; v="${v%"${v##*[![:space:]]}"}"; printf '%s' "$v"; }
+          host="$(trim "$SG_HOST")"; user="$(trim "$SG_USER")"; port="$(trim "$SG_PORT")"; path="$(trim "$SG_PATH")"
+
+          # Kļūdaini iestatījumi ir kļūda (sarkans), nevis klusa izlaišana. Vērtības netiek drukātas.
+          if ! [[ "$host" =~ ^[A-Za-z0-9.-]+$ ]]; then
+            echo "::error title=SG_HOST::SG_HOST jābūt tikai servera nosaukumam (Hostname no SSH Credentials), bez ssh://, @ vai atstarpēm. / SG_HOST must be a plain hostname."
+            exit 1
+          fi
+          if ! [[ "$user" =~ ^[A-Za-z0-9._][A-Za-z0-9._-]*$ ]]; then
+            echo "::error title=SG_USER::SG_USER jābūt lietotājvārdam (Username no SSH Credentials). / SG_USER must be a plain username."
+            exit 1
+          fi
+          if ! [[ "$port" =~ ^[0-9]{1,5}$ ]] || [ "$((10#$port))" -lt 1 ] || [ "$((10#$port))" -gt 65535 ]; then
+            echo "::error title=SG_PORT::SG_PORT jābūt skaitlim, piem. 18765. / SG_PORT must be a number."
+            exit 1
+          fi
+          # Drošības pārbaude: rsync --delete drīkst rakstīt tikai mapē public_html, nekur citur.
+          # "~/www/..." -> "www/...": rsync relatīvu ceļu skaita no lietotāja mājas mapes.
+          path="${path#\~/}"
+          while [ "${path%/}" != "$path" ]; do path="${path%/}"; done
+          path_error=""
+          [[ "$path" =~ ^/?[A-Za-z0-9._/-]+$ ]] || path_error=1
+          [ "${path##*/}" = "public_html" ] || path_error=1
+          case "/${path#/}/" in */../*|*/./*|*//*) path_error=1 ;; esac
+          if [ -n "$path_error" ]; then
+            echo "::error title=SG_PATH::SG_PATH jābeidzas ar mapi public_html, bez .. un atstarpēm, piem. ~/www/zaigasdarbnica.lv/public_html/ / SG_PATH must end with the public_html folder (no .., no spaces)."
+            exit 1
+          fi
+
+          # Pārbaudītās vērtības nākamajiem soļiem (privāts fails, darba beigās izdzēsts).
+          umask 077
+          {
+            printf 'SG_HOST=%q\n' "$host"
+            printf 'SG_USER=%q\n' "$user"
+            printf 'SG_PORT=%q\n' "$((10#$port))"
+            printf 'SG_REMOTE_PATH=%q\n' "$path/"
+          } > "$RUNNER_TEMP/sg-deploy.env"
+          echo "ready=true" >> "$GITHUB_OUTPUT"
+
+      - name: Instalēt atkarības
+        if: steps.secrets.outputs.ready == 'true'
+        run: npm ci
+
+      - name: Būvēt lapu (astro build)
+        if: steps.secrets.outputs.ready == 'true'
+        run: npx astro build
+
+      - name: Pārbaudīt dist/
+        if: steps.secrets.outputs.ready == 'true'
+        run: |
+          for f in dist/index.html dist/404.html dist/.htaccess dist/send.php dist/sitemap.xml dist/robots.txt; do
+            if [ ! -f "$f" ]; then
+              echo "::error::Trūkst $f - publicēšana apturēta. / $f is missing, deploy stopped."
+              exit 1
+            fi
+          done
+          if grep -q '__CSP__' dist/.htaccess; then
+            echo "::error::dist/.htaccess CSP nav aizpildīts. / CSP placeholder was not filled."
+            exit 1
+          fi
+
+      - name: Sagatavot SSH atslēgu un known_hosts
+        if: steps.secrets.outputs.ready == 'true'
+        env:
+          SG_SSH_KEY: ${{ secrets.SG_SSH_KEY }}
+          SG_SSH_PASSPHRASE: ${{ secrets.SG_SSH_PASSPHRASE }}
+        run: |
+          . "$RUNNER_TEMP/sg-deploy.env"
+          umask 077
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SG_SSH_KEY" | tr -d '\r' > ~/.ssh/siteground_deploy
+          chmod 600 ~/.ssh/siteground_deploy
+          # SiteGround atslēgām parasti ir parole: noņem to tikai šajā īslaicīgajā darbā.
+          if [ -n "$SG_SSH_PASSPHRASE" ]; then
+            if ! ssh-keygen -p -q -P "$SG_SSH_PASSPHRASE" -N '' -f ~/.ssh/siteground_deploy > /dev/null 2>&1; then
+              echo "::error::SG_SSH_PASSPHRASE neder šai atslēgai. / Wrong SSH key passphrase."
+              exit 1
+            fi
+          fi
+          if ! ssh-keygen -y -P '' -f ~/.ssh/siteground_deploy > /dev/null 2>&1; then
+            echo "::error::SG_SSH_KEY nav derīga privātā atslēga vai tai ir parole (pievienojiet SG_SSH_PASSPHRASE). / Invalid private key or passphrase-protected key without SG_SSH_PASSPHRASE."
+            exit 1
+          fi
+          ssh-keyscan -p "$SG_PORT" -H "$SG_HOST" > ~/.ssh/sg_known_hosts 2> /dev/null || true
+          if [ ! -s ~/.ssh/sg_known_hosts ]; then
+            echo "::error::Neizdevās sazināties ar serveri (ssh-keyscan). Pārbaudiet SG_HOST un SG_PORT. / Could not reach the SSH host (check SG_HOST and SG_PORT)."
+            exit 1
+          fi
+          cat ~/.ssh/sg_known_hosts >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Augšupielādēt dist/ uz SiteGround (rsync)
+        if: steps.secrets.outputs.ready == 'true'
+        env:
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          . "$RUNNER_TEMP/sg-deploy.env"
+          dry=""
+          if [ "$DRY_RUN" = "true" ]; then
+            dry="--dry-run"
+            echo "::notice::Izmēģinājums (dry run): nekas netiek mainīts serverī."
+          fi
+          # --delete izdzēš serverī failus, kuru vairs nav dist/. Aizsargāts: .well-known/ (SSL),
+          # .user.ini un php.ini (SiteGround PHP iestatījumi).
+          rsync -az --delete --itemize-changes --stats $dry \
+            --filter='P .well-known/' \
+            --filter='P .user.ini' \
+            --filter='P php.ini' \
+            -e "ssh -p $SG_PORT -i $HOME/.ssh/siteground_deploy -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts" \
+            dist/ "$SG_USER@$SG_HOST:$SG_REMOTE_PATH"
+          if [ "$DRY_RUN" != "true" ]; then
+            echo "## Publicēts / Deployed: https://zaigasdarbnica.lv" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Izdzēst SSH atslēgu
+        if: always() && steps.secrets.outputs.ready == 'true'
+        run: rm -f ~/.ssh/siteground_deploy ~/.ssh/sg_known_hosts "$RUNNER_TEMP/sg-deploy.env"
