@@ -11,8 +11,10 @@ import Icon from './Icon.astro';
 
 type IconName = 'phone' | 'whatsapp' | 'arrow' | 'mail';
 
-interface Props extends Omit<HTMLAttributes<'a'>, 'class'> {
-  href: string;
+interface Props extends Omit<HTMLAttributes<'a'>, 'class' | 'type'> {
+  /** Bez `href` tiek veidota <button> (piem. formas „Nosūtīt”). */
+  href?: string;
+  type?: 'submit' | 'button';
   variant?: 'primary' | 'secondary' | 'quiet' | 'light';
   size?: 'md' | 'lg';
   icon?: IconName;
@@ -24,6 +26,7 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'class'> {
 
 const {
   href,
+  type = 'button',
   variant = 'primary',
   size = 'md',
   icon,
@@ -35,10 +38,12 @@ const {
 } = Astro.props;
 
 const externalAttrs = external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+const Tag = href ? 'a' : 'button';
+const tagAttrs = href ? { href } : { type };
 ---
 
-<a
-  href={href}
+<Tag
+  {...tagAttrs}
   class:list={['btn', `btn--${variant}`, `btn--${size}`, { 'btn--block': block }, className]}
   {...externalAttrs}
   {...rest}
@@ -46,7 +51,7 @@ const externalAttrs = external ? { target: '_blank', rel: 'noopener noreferrer' 
   {icon && <Icon name={icon} size={size === 'lg' ? 22 : 20} class="btn__icon" />}
   <span class="btn__label"><slot /></span>
   {arrow && <Icon name="arrow" size={20} class="btn__arrow" />}
-</a>
+</Tag>
 
 <style>
   .btn {
@@ -60,6 +65,7 @@ const externalAttrs = external ? { target: '_blank', rel: 'noopener noreferrer' 
     gap: 10px;
     min-height: var(--btn-h);
     padding: 10px var(--btn-px);
+    border: 0;
     border-radius: var(--r-pill);
     font-family: var(--font-body);
     font-size: 1.0625rem;

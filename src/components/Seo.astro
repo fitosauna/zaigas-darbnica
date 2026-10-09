@@ -17,15 +17,14 @@ const ogImage = absoluteUrl('/og-image.jpg');
 
 <title>{title}</title>
 <meta name="description" content={description} />
-<link rel="canonical" href={canonical} />
-{noindex && <meta name="robots" content="noindex, follow" />}
+{noindex ? <meta name="robots" content="noindex, follow" /> : <link rel="canonical" href={canonical} />}
 
 <meta property="og:type" content="website" />
 <meta property="og:locale" content={site.locale} />
 <meta property="og:site_name" content={site.name} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:url" content={canonical} />
+{!noindex && <meta property="og:url" content={canonical} />}
 <meta property="og:image" content={ogImage} />
 <meta property="og:image:type" content="image/jpeg" />
 <meta property="og:image:width" content="1200" />

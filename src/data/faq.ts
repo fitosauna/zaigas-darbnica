@@ -9,9 +9,9 @@ import { linkContacts } from '../lib/typo';
 export type Faq = { q: string; a: string; html?: boolean };
 
 /** Visas atbildes iet caur linkContacts(): nedalāmas atstarpes + tel:/WhatsApp saites. */
-const prepare = (items: Faq[]): Faq[] => items.map((f) => ({ q: f.q, a: linkContacts(f.a), html: true }));
+export const prepareFaq = (items: Faq[]): Faq[] => items.map((f) => ({ q: f.q, a: linkContacts(f.a), html: true }));
 
-export const homeFaq: Faq[] = prepare([
+export const homeFaq: Faq[] = prepareFaq([
   {
     q: 'Cik maksā apģērbu labošana?',
     a: `Cena atkarīga no apģērba un darba apjoma. Piemēram, bikšu saīsināšana maksā ${price('bikses-saisinasana')}, rāvējslēdzēja maiņa biksēm ${price('ravejsledzejs-bikses')}, bet jakai ${price('ravejsledzejs-jaka')}. Materiāli jau ir iekļauti cenā. Visas cenas atradīsiet lapā <a href="/cenas">„Cenas”</a>.`,

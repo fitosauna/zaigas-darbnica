@@ -10,11 +10,14 @@ interface Props {
   items: Faq[];
   id?: string;
   label?: string;
+  /** Fona toņi (iekšlapās pēc iepriekšējās sadaļas). Noklusēti: krēms → rožains. */
+  tones?: { from: string; tone: string; to: string };
 }
-const { title, items, id = 'buj', label } = Astro.props;
+const { title, items, id = 'buj', label, tones } = Astro.props;
+const style = tones ? `--from: var(--${tones.from}); --tone: var(--${tones.tone}); --to: var(--${tones.to})` : undefined;
 ---
 
-<section class="faq tone" aria-labelledby={`${id}-title`}>
+<section class="faq tone" aria-labelledby={`${id}-title`} style={style}>
   <div class="container faq__grid grid-12">
     <div class="faq__head">
       {label && <p class="label">{label}</p>}
