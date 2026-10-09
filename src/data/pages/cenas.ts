@@ -1,9 +1,8 @@
 /**
  * /cenas - Part B §7. Cenas pašas tabulās nāk no src/data/prices.ts.
- * Vienīgā atkāpe: meta aprakstā „no 4 €/m” rakstīts kā tabulā („no 4 € / m”).
  */
 import { contact } from '../../config';
-import { price, type PriceGroupId } from '../prices';
+import { price, priceCompact, type PriceGroupId } from '../prices';
 import type { Action } from './types';
 import type { Faq } from '../faq';
 
@@ -12,7 +11,7 @@ export const cenas = {
   name: 'Cenas',
   seo: {
     title: 'Šūšanas un adīšanas cenas Alūksnē | Zaigas darbnīca',
-    description: `Cenrādis: bikšu saīsināšana ${price('bikses-saisinasana')}, rāvējslēdzēja maiņa ${price('ravejsledzejs-bikses')}, aizkaru saīsināšana ${price('aizkaru-saisinasana')}, adītas zeķes ${price('zeku-paris')}. Šuvēja un adītāja Alūksnē.`,
+    description: `Cenrādis: bikšu saīsināšana ${price('bikses-saisinasana')}, rāvējslēdzēja maiņa ${price('ravejsledzejs-bikses')}, aizkaru saīsināšana ${priceCompact('aizkaru-saisinasana')}, adītas zeķes ${price('zeku-paris')}. Šuvēja un adītāja Alūksnē.`,
   },
   h1: 'Šūšanas un adīšanas pakalpojumu cenas',
   intro:

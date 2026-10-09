@@ -136,3 +136,8 @@ export function formatPrice(item: PriceItem, withFrom = true): string {
 export function price(id: string, withFrom = true): string {
   return formatPrice(priceItem(id), withFrom);
 }
+
+/** Kā price(), bet mērvienība bez atstarpēm: „no 4 €/m” (meta aprakstiem, kā Part B). */
+export function priceCompact(id: string): string {
+  return price(id).replace(`${NBSP}/${NBSP}`, '/');
+}

@@ -1,10 +1,9 @@
 /**
  * /aizkaru-susana - Part B §6. Teksts burtiski no Part B (A12), cenas no prices.ts.
- * Vienīgā atkāpe: meta aprakstā „no 4 €/m” → „no 4 € / m” (price('aizkaru-saisinasana'),
- * tāds pats formāts kā cenu birkā).
+ * Meta aprakstā cena „no 4 €/m” nāk no priceCompact('aizkaru-saisinasana') (bez atstarpēm kā Part B).
  */
 import { contact } from '../../config';
-import { price } from '../prices';
+import { price, priceCompact } from '../prices';
 import type { ServicePageData } from './types';
 
 export const page: ServicePageData = {
@@ -12,7 +11,7 @@ export const page: ServicePageData = {
   name: 'Aizkari un mājas tekstils',
   seo: {
     title: 'Aizkaru šūšana un saīsināšana Alūksnē | Zaigas darbnīca',
-    description: `Aizkaru šūšana un saīsināšana Alūksnē ${price('aizkaru-saisinasana')}, aizkaru lentes piešūšana, galdauti un pārvalki pēc Jūsu izmēriem. Varu atbraukt nomērīt logus.`,
+    description: `Aizkaru šūšana un saīsināšana Alūksnē ${priceCompact('aizkaru-saisinasana')}, aizkaru lentes piešūšana, galdauti un pārvalki pēc Jūsu izmēriem. Varu atbraukt nomērīt logus.`,
   },
   h1: 'Aizkaru un mājas tekstila šūšana Alūksnē',
   hero: {

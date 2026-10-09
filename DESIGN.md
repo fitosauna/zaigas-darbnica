@@ -229,7 +229,8 @@ click-to-load map preview instead).
 - **Price lists** are real `<table>`s (column headers „Darbs/Adījums”, „Cena”) on a paper ticket; prices only
   from `src/data/prices.ts`. Text-only prices („pēc vienošanās”) wrap to two short lines. The common
   price note appears under each service ticket (Part B per-page notes) and once under the `/cenas` board.
-- **Meta descriptions** use `price('<id>')`, so „no 4 €/m” renders as „no 4 € / m” (same as the tables).
+- **Meta descriptions** use `price('<id>')` / `priceCompact('<id>')`, so they match Part B exactly
+  („no 4 €/m”) while every amount still comes from `src/data/prices.ts`.
 - **Mobile bottom bar** is visible on every page except while the page's own call/WhatsApp buttons are on
   screen (hero, closing call to action, contact card, footer). Service heroes on phones show their buttons
   right under the photo.
