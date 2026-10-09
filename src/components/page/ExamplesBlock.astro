@@ -1,0 +1,181 @@
+---
+/**
+ * Darbu piemēri: fotogrāfijas ar papīra malu un kraft birkām, izliktas uz galda
+ * (bez auklas - iekšlapās vienīgais diega brīdis ir H1 vijums). Telefonā -
+ * pavelkama rinda. Paraksti tikai no Part B, bez „pirms / pēc” apgalvojumiem.
+ */
+import Picture from '../Picture.astro';
+import SwipeHint from '../SwipeHint.astro';
+import type { Tones } from './Section.astro';
+import type { Block } from '../../data/pages/types';
+import { images } from '../../data/images';
+
+interface Props {
+  id: string;
+  block: Extract<Block, { type: 'examples' }>;
+  tones: Tones;
+}
+
+const { id, block, tones } = Astro.props;
+const style = `--from: var(--${tones.from}); --tone: var(--${tones.tone}); --to: var(--${tones.to})`;
+const rowId = `${id}-rinda`;
+---
+
+<div class="exm tone" style={style}>
+  <ul role="list" class="exm__row" id={rowId} aria-label="Darbu piemēri">
+    {
+      block.images.map((item, i) => {
+        const img = images[item.image];
+        const portrait = img.src.height > img.src.width;
+        return (
+          <li class:list={['exm__item', { 'exm__item--wide': !portrait }]} style={`--i: ${i}`}>
+            <figure>
+              <div class="exm__print">
+                <Picture
+                  image={img}
+                  widths={portrait ? [320, 480, 640, 860] : [420, 640, 860, 1100]}
+                  sizes={
+                    portrait
+                      ? '(min-width: 64rem) 22vw, (min-width: 43.75rem) 38vw, 66vw'
+                      : '(min-width: 64rem) 32vw, (min-width: 43.75rem) 52vw, 82vw'
+                  }
+                />
+              </div>
+              {item.caption && <figcaption class="exm__tag">{item.caption}</figcaption>}
+            </figure>
+          </li>
+        );
+      })
+    }
+  </ul>
+  <SwipeHint target={rowId} count={block.images.length} />
+</div>
+
+<style>
+  .exm {
+    padding: 0 0 var(--section-tight);
+    overflow: hidden;
+  }
+
+  .exm__row {
+    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: auto;
+    justify-content: start;
+    align-items: start;
+    gap: var(--s-6);
+    padding: 12px var(--page-gutter-r) 24px var(--page-gutter-l);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--page-gutter-l) var(--page-gutter-r);
+    scrollbar-width: none;
+  }
+
+  .exm__row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .exm__row:focus-visible {
+    outline-offset: -4px;
+    border-radius: 14px;
+  }
+
+  .exm__item {
+    width: min(66vw, 17rem);
+    scroll-snap-align: start;
+  }
+
+  .exm__item--wide {
+    width: min(82vw, 24rem);
+  }
+
+  .exm__item figure {
+    transform: rotate(var(--tilt, -1.2deg));
+  }
+
+  .exm__item:nth-child(2n) figure {
+    --tilt: 1.3deg;
+  }
+
+  .exm__print {
+    padding: 8px 8px 10px;
+    background: var(--paper);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .exm__print :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+
+  .exm__item--wide .exm__print :global(img) {
+    aspect-ratio: 3 / 2;
+  }
+
+  /* Kraft birka (kā sākumlapas galerijā) */
+  .exm__tag {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    max-width: calc(100% - 16px);
+    margin: -18px 0 0 18px;
+    padding: 9px 16px 10px 30px;
+    border-radius: 3px 10px 10px 3px;
+    background:
+      radial-gradient(circle at 14px 50%, var(--cream) 0 4px, rgb(82 27 16 / 0.35) 4px 5px, transparent 5.5px),
+      linear-gradient(180deg, #ecdcc7, #e3cdb2);
+    color: var(--chocolate);
+    font-size: 1rem;
+    font-weight: 650;
+    line-height: 1.35;
+    box-shadow: var(--shadow-paper);
+    transform: rotate(-2.5deg);
+    clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%);
+    text-wrap: balance;
+  }
+
+  @media (min-width: 43.75rem) {
+    .exm__item {
+      width: min(38vw, 18rem);
+    }
+
+    .exm__item--wide {
+      width: min(52vw, 26rem);
+    }
+  }
+
+  /* Darbvirsma: izdrukas izliktas rindā ar nelielām nobīdēm */
+  @media (min-width: 64rem) {
+    .exm__row {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: var(--s-8);
+      width: min(100% - var(--page-gutter-l) - var(--page-gutter-r), var(--container));
+      margin-inline: auto;
+      padding: var(--s-4) 0 var(--s-4);
+      overflow: visible;
+    }
+
+    .exm__item {
+      flex: 0 1 19rem;
+      width: auto;
+    }
+
+    .exm__item--wide {
+      flex-basis: 27rem;
+      width: auto;
+    }
+
+    .exm__item:nth-child(2) {
+      margin-top: var(--s-8);
+    }
+
+    .exm__item:nth-child(3) {
+      margin-top: var(--s-4);
+    }
+  }
+</style>

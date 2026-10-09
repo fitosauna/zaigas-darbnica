@@ -1,0 +1,116 @@
+---
+/**
+ * Bilde blakus blokam iekšlapā. Formas no sākumlapas valodas:
+ *  - arch: arkveida spoguļa rāmis (kā „Par Zaigu”);
+ *  - print: fotogrāfija ar papīra malu, nedaudz šķībi (kā darbu galerijā);
+ *  - tall: augsts kadrs ar noapaļotiem stūriem.
+ */
+import Picture from '../Picture.astro';
+import { images, type ImageKey } from '../../data/images';
+
+interface Props {
+  image: ImageKey;
+  shape?: 'arch' | 'print' | 'tall';
+  sizes?: string;
+  class?: string;
+}
+
+const {
+  image,
+  shape = 'print',
+  sizes = '(min-width: 64rem) 34vw, (min-width: 43.75rem) 60vw, 86vw',
+  class: className,
+  ...others
+} = Astro.props;
+const scope = Object.fromEntries(Object.entries(others).filter(([k]) => k.startsWith('data-astro-cid')));
+const img = images[image];
+const portrait = img.src.height > img.src.width;
+---
+
+<figure class:list={['aside', `aside--${shape}`, { 'aside--portrait': portrait }, className]} {...scope}>
+  {
+    shape === 'arch' ? (
+      <div class="aside__arch">
+        <div class="aside__glass">
+          <Picture image={img} widths={[360, 520, 720, 960, 1122]} sizes={sizes} />
+        </div>
+      </div>
+    ) : (
+      <div class="aside__frame">
+        <Picture image={img} widths={[360, 520, 720, 960, 1200]} sizes={sizes} />
+      </div>
+    )
+  }
+</figure>
+
+<style>
+  .aside {
+    position: relative;
+    margin: 0;
+  }
+
+  /* Arka (kā sākumlapā) */
+  .aside__arch {
+    padding: 12px;
+    border-radius: 999px 999px 20px 20px;
+    background: linear-gradient(160deg, rgb(255 252 247 / 0.9), rgb(241 230 216 / 0.7));
+    box-shadow:
+      inset 0 0 0 1px rgb(82 27 16 / 0.16),
+      0 1px 2px rgb(82 27 16 / 0.05),
+      0 30px 60px -36px rgb(82 27 16 / 0.55);
+  }
+
+  .aside__glass {
+    position: relative;
+    overflow: hidden;
+    border-radius: 999px 999px 12px 12px;
+    box-shadow: inset 0 0 0 1px rgb(82 27 16 / 0.12);
+  }
+
+  .aside__glass :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 5.2;
+    object-fit: cover;
+    object-position: 50% 30%;
+  }
+
+  .aside__glass::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(125deg, rgb(255 255 255 / 0.22) 0%, rgb(255 255 255 / 0) 34%);
+    pointer-events: none;
+  }
+
+  /* Izdruka ar papīra malu */
+  .aside--print .aside__frame {
+    padding: 9px 9px 11px;
+    background: var(--paper);
+    box-shadow: var(--shadow-lift);
+    transform: rotate(var(--tilt, 1.4deg));
+  }
+
+  .aside--print .aside__frame :global(img) {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+
+  .aside--print.aside--portrait .aside__frame :global(img) {
+    aspect-ratio: 4 / 5;
+  }
+
+  /* Augsts kadrs */
+  .aside--tall .aside__frame {
+    overflow: hidden;
+    border-radius: var(--r-l);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .aside--tall .aside__frame :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: 50% 40%;
+  }
+</style>

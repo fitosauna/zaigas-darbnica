@@ -1,0 +1,50 @@
+---
+/**
+ * Pakalpojuma cenas: virsraksts pa kreisi (darbvirsmā paliek redzams, kamēr
+ * ritina garu birku), cenu birka pa labi, piezīme zem birkas.
+ */
+import Section, { type Tones } from './Section.astro';
+import PriceTicket from './PriceTicket.astro';
+import type { Block } from '../../data/pages/types';
+import { typo } from '../../lib/typo';
+
+interface Props {
+  id: string;
+  block: Extract<Block, { type: 'prices' }>;
+  tones: Tones;
+}
+
+const { id, block, tones } = Astro.props;
+---
+
+<Section id={id} title={block.title} tones={tones} class="prices" wide>
+  <PriceTicket group={block.group} caption={block.title} class="prices__ticket" />
+  <p class="prices__note">{typo(block.note)}</p>
+</Section>
+
+<style>
+  .prices :global(.sec__grid) {
+    row-gap: var(--s-8);
+  }
+
+  .prices__note {
+    margin-top: var(--s-6);
+    max-width: 52ch;
+    font-size: var(--fs-small);
+    color: var(--ink-soft);
+  }
+
+  @media (min-width: 64rem) {
+    .prices :global(.sec__head) {
+      grid-row: 1 / span 2;
+      align-self: start;
+      position: sticky;
+      top: calc(var(--header-top) + var(--header-h) + 48px);
+      margin-top: var(--s-8);
+    }
+
+    .prices :global(.sec__body) {
+      padding-right: var(--s-6);
+    }
+  }
+</style>

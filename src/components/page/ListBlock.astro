@@ -1,0 +1,95 @@
+---
+/**
+ * Saraksts ar treknu ievadu („**Rāvējslēdzēja maiņa** - jakām, …”) vai vienkāršām
+ * rindām. Rindas atdala smalka dūrienu līnija, marķieris ir krustdūriens.
+ */
+import Section, { type Tones } from './Section.astro';
+import type { Block } from '../../data/pages/types';
+import { typo } from '../../lib/typo';
+
+type ListLike = Extract<Block, { type: 'list' } | { type: 'bullets' }>;
+
+interface Props {
+  id: string;
+  block: ListLike;
+  tones: Tones;
+}
+
+const { id, block, tones } = Astro.props;
+const rows =
+  block.type === 'list'
+    ? block.items.map((it) => ({ title: typo(it.title), text: it.text ? typo(it.text) : '', inline: it.inline }))
+    : block.items.map((t) => ({ title: '', text: typo(t), inline: true }));
+/** Atdalītājs starp treknu ievadu un tekstu: nedalāma atstarpe pirms defises. */
+const sep = (r: (typeof rows)[number]) => (r.title && r.text ? (r.inline ? ' ' : '\u00A0- ') : '');
+const note = block.type === 'list' ? block.note : undefined;
+---
+
+<Section id={id} title={block.title} tones={tones} aside={block.aside} wide>
+  {block.intro && <p slot="intro">{typo(block.intro)}</p>}
+  <ul role="list" class="slist">
+    {
+      rows.map((r) => (
+        <li>{r.title && <strong>{r.title}</strong>}{sep(r)}{r.text}</li>
+      ))
+    }
+  </ul>
+  {note && <p class="slist__note">{typo(note)}</p>}
+</Section>
+
+<style>
+  .slist {
+    font-size: var(--fs-body);
+  }
+
+  .slist li {
+    position: relative;
+    padding: 15px 0 15px 38px;
+    max-width: 60ch;
+    background: repeating-linear-gradient(90deg, rgb(82 27 16 / 0.22) 0 6px, transparent 6px 11px) 0 100% / 100% 1px
+      no-repeat;
+  }
+
+  .slist li:first-child {
+    padding-top: 4px;
+  }
+
+  /* Krustdūriens */
+  .slist li::before,
+  .slist li::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: calc(15px + 0.8em);
+    width: 13px;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--thread);
+    transform: rotate(45deg);
+  }
+
+  .slist li::after {
+    transform: rotate(-45deg);
+  }
+
+  .slist li:first-child::before,
+  .slist li:first-child::after {
+    top: calc(4px + 0.8em);
+  }
+
+  .slist strong {
+    font-weight: 750;
+    color: var(--chocolate);
+  }
+
+  .slist__note {
+    margin-top: var(--s-6);
+    max-width: 46ch;
+    font-family: var(--font-display);
+    font-size: clamp(1.1875rem, 1.1rem + 0.4vw, 1.4375rem);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--chocolate);
+  }
+</style>

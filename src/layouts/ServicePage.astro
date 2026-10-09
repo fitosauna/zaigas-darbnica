@@ -1,0 +1,90 @@
+---
+/**
+ * Pakalpojuma lapas veidne. Saturs - viens datu fails src/data/pages/*.ts
+ * (Part B teksts), izkārtojums - šeit. Fona toņi mijas automātiski
+ * (krēms / lins), BUJ pāriet rožainā noslēgumā, tad šokolādes kājene.
+ */
+import BaseLayout from './BaseLayout.astro';
+import ServiceHero from '../components/page/ServiceHero.astro';
+import ListBlock from '../components/page/ListBlock.astro';
+import BenefitsBlock from '../components/page/BenefitsBlock.astro';
+import StepsBlock from '../components/page/StepsBlock.astro';
+import PricesBlock from '../components/page/PricesBlock.astro';
+import CompareBlock from '../components/page/CompareBlock.astro';
+import ExamplesBlock from '../components/page/ExamplesBlock.astro';
+import InnerCta from '../components/page/InnerCta.astro';
+import Faq from '../components/Faq.astro';
+import type { Tones } from '../components/page/Section.astro';
+
+import type { ServicePageData } from '../data/pages/types';
+import { prepareFaq } from '../data/faq';
+import { breadcrumbs, faqPage } from '../lib/schema';
+
+interface Props {
+  page: ServicePageData;
+}
+
+const { page } = Astro.props;
+
+/** Toņu secība: pēc ievada lins, krēms, lins…; attēlu bloki paliek iepriekšējā tonī. */
+let prev = 'cream';
+let n = 0;
+const tones: Tones[] = page.blocks.map((b) => {
+  if (b.type === 'compare' || b.type === 'examples') return { from: prev, tone: prev, to: prev };
+  if (b.type === 'faq') {
+    const t = { from: prev, tone: 'cream', to: 'blush' };
+    prev = 'blush';
+    return t;
+  }
+  const tone = n++ % 2 === 0 ? 'linen' : 'cream';
+  const t = { from: prev, tone, to: tone };
+  prev = tone;
+  return t;
+});
+const ctaTones: Tones = { from: prev, tone: 'blush', to: 'blush' };
+
+const faqs = page.blocks.flatMap((b) => (b.type === 'faq' ? prepareFaq(b.items) : []));
+const schema = [
+  breadcrumbs([
+    { name: 'Sākums', path: '/' },
+    { name: page.name, path: page.path },
+  ]),
+  ...(faqs.length ? [faqPage(faqs)] : []),
+];
+---
+
+<BaseLayout title={page.seo.title} description={page.seo.description} path={page.path} schema={schema}>
+  <ServiceHero page={page} />
+
+  {
+    page.blocks.map((b, i) => {
+      const id = `s${i + 1}`;
+      switch (b.type) {
+        case 'list':
+        case 'bullets':
+          return <ListBlock id={id} block={b} tones={tones[i]} />;
+        case 'benefits':
+          return <BenefitsBlock id={id} block={b} tones={tones[i]} />;
+        case 'steps':
+          return <StepsBlock id={id} block={b} tones={tones[i]} />;
+        case 'prices':
+          return <PricesBlock id={id} block={b} tones={tones[i]} />;
+        case 'compare':
+          return <CompareBlock id={id} tones={tones[i]} />;
+        case 'examples':
+          return <ExamplesBlock id={id} block={b} tones={tones[i]} />;
+        case 'faq':
+          return <Faq id="buj" title={b.title} items={prepareFaq(b.items)} tones={tones[i]} />;
+      }
+    })
+  }
+
+  <InnerCta
+    title={page.cta.title}
+    text={page.cta.text}
+    actions={page.cta.actions}
+    aside={page.cta.aside}
+    related={page.related}
+    tones={ctaTones}
+  />
+</BaseLayout>

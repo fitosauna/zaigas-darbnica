@@ -1,0 +1,155 @@
+---
+/**
+ * Iekšlapas sadaļa ar plūstošu fona toni un kopīgo 12 kolonnu režģi:
+ * virsraksts (un bilde zem tā) kreisajās 5 kolonnās, saturs no 7. kolonnas -
+ * tās pašas vertikāles kā sākumlapā. Telefonā: virsraksts, saturs, bilde.
+ */
+import AsideImage from './AsideImage.astro';
+import type { Aside } from '../../data/pages/types';
+
+export type Tones = { from: string; tone: string; to: string };
+
+interface Props {
+  id: string;
+  title: string;
+  tones: Tones;
+  aside?: Aside;
+  /** Piegrieztnes lapas režģis fonā. */
+  sheet?: boolean;
+  /** Saturs sākas 6. kolonnā (plašākiem sarakstiem). */
+  wide?: boolean;
+  /** Spoguļots: virsraksts un bilde pa labi, saturs pa kreisi (lai lapa mijas). */
+  mirror?: boolean;
+  class?: string;
+}
+
+const { id, title, tones, aside, sheet = false, wide = false, mirror = false, class: className, ...others } = Astro.props;
+// Vecāka scoped CSS (piem. PricesBlock) sasniedz sadaļas elementu.
+const scope = Object.fromEntries(Object.entries(others).filter(([k]) => k.startsWith('data-astro-cid')));
+const style = `--from: var(--${tones.from}); --tone: var(--${tones.tone}); --to: var(--${tones.to})`;
+---
+
+<section
+  class:list={['sec tone', { 'sec--sheet': sheet, 'sec--wide': wide, 'sec--aside': aside, 'sec--mirror': mirror }, className]}
+  aria-labelledby={`${id}-title`}
+  style={style}
+  {...scope}
+>
+  <div class="container sec__grid">
+    <div class="sec__head">
+      <h2 id={`${id}-title`}>{title}</h2>
+      <slot name="intro" />
+    </div>
+    <div class="sec__body">
+      <slot />
+    </div>
+    {
+      aside && (
+        <AsideImage
+          image={aside.image}
+          shape={aside.shape}
+          class="sec__aside"
+          sizes="(min-width: 75rem) 470px, (min-width: 64rem) 38vw, (min-width: 43.75rem) 26rem, 80vw"
+        />
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .sec {
+    position: relative;
+    isolation: isolate;
+    padding: var(--section-tight) 0;
+  }
+
+  /* Piegrieztnes papīrs: smalks režģis, kas izgaist uz malām */
+  .sec--sheet::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background-image:
+      linear-gradient(rgb(82 27 16 / 0.065) 1.2px, transparent 1.2px),
+      linear-gradient(90deg, rgb(82 27 16 / 0.065) 1.2px, transparent 1.2px),
+      linear-gradient(rgb(82 27 16 / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(82 27 16 / 0.05) 1px, transparent 1px);
+    background-size:
+      120px 120px,
+      120px 120px,
+      24px 24px,
+      24px 24px;
+    background-position: center top;
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent);
+    mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent);
+    pointer-events: none;
+  }
+
+  .sec__grid {
+    display: grid;
+    gap: var(--s-6);
+  }
+
+  .sec__head h2 {
+    max-width: 16ch;
+  }
+
+  .sec__head > :global(p) {
+    margin-top: var(--s-5);
+    max-width: 46ch;
+  }
+
+  .sec__aside {
+    width: min(100%, 22rem);
+    margin: var(--s-4) auto 0;
+  }
+
+  @media (min-width: 43.75rem) {
+    .sec__aside {
+      width: min(100%, 26rem);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .sec__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-template-rows: auto 1fr;
+      gap: 0 var(--s-6);
+      align-items: start;
+    }
+
+    .sec__head {
+      grid-column: 1 / span 5;
+      grid-row: 1;
+    }
+
+    .sec__body {
+      grid-column: 7 / -1;
+      grid-row: 1 / span 2;
+    }
+
+    .sec--wide .sec__body {
+      grid-column: 6 / -1;
+    }
+
+    .sec__aside {
+      grid-column: 1 / span 4;
+      grid-row: 2;
+      width: 100%;
+      margin: var(--s-7) 0 0;
+    }
+
+    .sec--mirror .sec__head {
+      grid-column: 8 / -1;
+    }
+
+    .sec--mirror .sec__body {
+      grid-column: 1 / span 6;
+    }
+
+    .sec--mirror .sec__aside {
+      grid-column: 8 / span 4;
+      --tilt: -1.4deg;
+    }
+  }
+</style>

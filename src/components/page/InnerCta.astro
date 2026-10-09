@@ -1,0 +1,231 @@
+---
+/**
+ * Iekšlapas noslēguma aicinājums (Part B „Aicinājums”) + saistītās lapas.
+ * Rožains tonis kā sākumlapas noslēgumā, bet bez sirsniņas (tā pieder sākumlapai).
+ * Ar `aside` - bilde blakus tekstam (piem. Zaigas rokas adot).
+ */
+import Actions from './Actions.astro';
+import AsideImage from './AsideImage.astro';
+import Icon from '../Icon.astro';
+import { contact, hours, links } from '../../config';
+import type { Action, Aside } from '../../data/pages/types';
+import { linkContacts } from '../../lib/typo';
+import type { Tones } from './Section.astro';
+
+interface Props {
+  title: string;
+  text: string;
+  actions: Action[];
+  aside?: Aside;
+  related?: { label: string; href: string }[];
+  relatedTitle?: string;
+  tones?: Tones;
+}
+
+const {
+  title,
+  text,
+  actions,
+  aside,
+  related = [],
+  relatedTitle = 'Saistītie pakalpojumi',
+  tones = { from: 'blush', tone: 'blush', to: 'blush' },
+} = Astro.props;
+const style = `--from: var(--${tones.from}); --tone: var(--${tones.tone}); --to: var(--${tones.to})`;
+---
+
+<section class:list={['icta tone', { 'icta--aside': aside }]} aria-labelledby="aicinajums-title" style={style}>
+  <div class="container icta__grid">
+    {
+      aside && (
+        <AsideImage
+          image={aside.image}
+          shape={aside.shape}
+          class="icta__aside"
+          sizes="(min-width: 64rem) 30vw, (min-width: 43.75rem) 22rem, 70vw"
+        />
+      )
+    }
+    <div class="icta__copy">
+      <span class="icta__stitch" aria-hidden="true"></span>
+      <h2 id="aicinajums-title">{title}</h2>
+      <p class="icta__lead" set:html={linkContacts(text)} />
+      <Actions actions={actions} primary align={aside ? 'start' : 'center'} class="icta__actions" />
+      <ul role="list" class="icta__info">
+        <li>Tālrunis un WhatsApp: <a href={links.tel}>{contact.phoneDisplay}</a></li>
+        <li>{contact.address.street}, {contact.address.city}</li>
+        <li><span class="nowrap">{hours.daysLong}</span> <span class="nowrap">{hours.time}</span></li>
+      </ul>
+    </div>
+  </div>
+
+  {
+    related.length > 0 && (
+      <nav class="container related" aria-labelledby="saistitie-title">
+        <p class="label related__title" id="saistitie-title">
+          {relatedTitle}
+        </p>
+        <ul role="list" class="related__list">
+          {related.map((r) => (
+            <li>
+              <a href={r.href}>
+                {r.label}
+                <Icon name="arrow" size={18} />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    )
+  }
+</section>
+
+<style>
+  .icta {
+    padding: var(--section-tight) 0 calc(var(--section-tight) + var(--s-4));
+  }
+
+  .icta__grid {
+    display: grid;
+    gap: var(--s-7);
+  }
+
+  .icta__copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  /* Īss dūrienu motīvs virs virsraksta */
+  .icta__stitch {
+    width: 64px;
+    height: 2px;
+    margin-bottom: var(--s-5);
+    background: repeating-linear-gradient(90deg, var(--thread) 0 8px, transparent 8px 14px);
+  }
+
+  .icta__copy h2 {
+    max-width: 20ch;
+  }
+
+  .icta__lead {
+    margin-top: var(--s-5);
+    max-width: 44ch;
+    font-size: var(--fs-lead);
+    line-height: 1.5;
+  }
+
+  .icta__copy :global(.icta__actions) {
+    margin-top: var(--s-6);
+  }
+
+  .icta__info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: var(--s-6);
+    font-size: var(--fs-small);
+    color: var(--ink-soft);
+  }
+
+  .icta__info a {
+    display: inline-block;
+    padding: 12px 2px;
+    margin: -12px 0;
+    color: var(--rose-ink);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .icta__aside {
+    width: min(100%, 17rem);
+    margin-inline: auto;
+  }
+
+  /* Saistītās lapas */
+  .related {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--s-3);
+    margin-top: var(--s-8);
+    padding-top: var(--s-6);
+    background: repeating-linear-gradient(90deg, rgb(82 27 16 / 0.22) 0 6px, transparent 6px 11px) 50% 0 / min(100%, 36rem) 1px
+      no-repeat;
+    text-align: center;
+  }
+
+  .related__title {
+    color: var(--ink-soft);
+  }
+
+  .related__list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0 var(--s-6);
+  }
+
+  .related__list a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 48px;
+    font-weight: 700;
+    color: var(--rose-ink);
+    text-decoration: none;
+  }
+
+  .related__list a:hover {
+    color: var(--chocolate);
+    text-decoration: underline;
+  }
+
+  .related__list a :global(svg) {
+    transition: transform var(--dur) var(--ease-out);
+  }
+
+  .related__list a:hover :global(svg) {
+    transform: translateX(3px);
+  }
+
+  @media (min-width: 60rem) {
+    .icta__info {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .icta__info li + li::before {
+      content: '·';
+      margin: 0 0.6em;
+      color: var(--thread);
+      font-weight: 700;
+    }
+  }
+
+  /* Ar bildi: darbvirsmā bilde pa kreisi, teksts pa labi */
+  @media (min-width: 64rem) {
+    .icta--aside .icta__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 0 var(--s-6);
+      align-items: center;
+    }
+
+    .icta--aside .icta__aside {
+      grid-column: 2 / span 4;
+      width: 100%;
+    }
+
+    .icta--aside .icta__copy {
+      grid-column: 7 / -1;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .icta--aside .icta__info {
+      justify-content: flex-start;
+    }
+  }
+</style>

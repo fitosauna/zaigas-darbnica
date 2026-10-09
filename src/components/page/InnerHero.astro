@@ -1,0 +1,134 @@
+---
+/**
+ * Iekšlapas ievads (/cenas, /par-mani, /kontakti, privātuma politika, 404):
+ * ceļvedis, H1 (ar neobligātu diega vijumu), teksts un pogas kreisajā pusē,
+ * bilde labajā (slots „media”). Bez bildes - viena kolonna.
+ */
+import Breadcrumbs from './Breadcrumbs.astro';
+import PageTitle from './PageTitle.astro';
+
+interface Props {
+  /** Lapas nosaukums ceļvedī; ja nav - ceļvedis netiek rādīts (404). */
+  crumb?: string;
+  title: string;
+  accent?: string;
+  swoop?: number;
+  /** Bilde stāv vertikāli (portrets) - šaurāka kolonna. */
+  portrait?: boolean;
+  /** Teksts pirms „media” (telefonā un ekrāna lasītājiem), piem. kontaktkarte /kontakti. */
+  mediaLast?: boolean;
+  class?: string;
+}
+
+const { crumb, title, accent, swoop, portrait = false, mediaLast = false, class: className } = Astro.props;
+const hasMedia = Astro.slots.has('media');
+---
+
+<section
+  class:list={['ihero', { 'ihero--media': hasMedia, 'ihero--portrait': portrait }, className]}
+  aria-labelledby="lapas-virsraksts"
+>
+  <div class="container ihero__grid">
+    <div class="ihero__head">
+      {crumb && <Breadcrumbs items={[{ name: 'Sākums', href: '/' }, { name: crumb }]} />}
+      <PageTitle text={title} accent={accent} swoop={swoop} />
+    </div>
+    {
+      hasMedia && !mediaLast && (
+        <div class="ihero__media">
+          <slot name="media" />
+        </div>
+      )
+    }
+    <div class="ihero__body">
+      <slot />
+    </div>
+    {
+      hasMedia && mediaLast && (
+        <div class="ihero__media">
+          <slot name="media" />
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .ihero {
+    padding: calc(var(--header-top) + var(--header-h) + clamp(20px, 3vw, 40px)) 0 var(--s-8);
+  }
+
+  .ihero__grid {
+    display: grid;
+    gap: var(--s-6);
+  }
+
+  .ihero__head :global(.crumbs) {
+    margin-bottom: clamp(1.25rem, 0.9rem + 1.4vw, 2.25rem);
+  }
+
+  .ihero__head :global(.ptitle) {
+    max-width: 18ch;
+  }
+
+  .ihero__body > :global(p) {
+    max-width: 50ch;
+  }
+
+  .ihero__body > :global(p.lead) {
+    max-width: 40ch;
+  }
+
+  .ihero__body > :global(* + *) {
+    margin-top: var(--s-4);
+  }
+
+  .ihero__body > :global(.actions) {
+    margin-top: var(--s-6);
+  }
+
+  .ihero__media {
+    width: min(100%, 36rem);
+    margin-inline: auto;
+  }
+
+  .ihero--portrait .ihero__media {
+    width: min(84%, 24rem);
+  }
+
+  @media (min-width: 64rem) {
+    .ihero {
+      padding-bottom: var(--s-9);
+    }
+
+    .ihero--media .ihero__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-template-rows: auto 1fr;
+      gap: 0 var(--s-6);
+    }
+
+    .ihero--media .ihero__head {
+      grid-column: 1 / span 6;
+      grid-row: 1;
+      align-self: end;
+    }
+
+    .ihero--media .ihero__body {
+      grid-column: 1 / span 6;
+      grid-row: 2;
+      margin-top: var(--s-6);
+    }
+
+    .ihero--media .ihero__media {
+      grid-column: 7 / -1;
+      grid-row: 1 / span 2;
+      align-self: center;
+      width: 100%;
+      margin: var(--s-6) 0 0;
+    }
+
+    .ihero--portrait .ihero__media {
+      grid-column: 8 / span 4;
+    }
+  }
+</style>

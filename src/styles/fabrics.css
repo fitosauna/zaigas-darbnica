@@ -1,0 +1,44 @@
+/*
+ * Auduma paraugi zem pakalpojumu foto (džinss, lins, zīds, adījums, aizkars).
+ * Iekšlapās lieto: class="fabric fabric--denim". Sākumlapas moodboard
+ * (Services.astro) izmanto tās pašas krāsas.
+ */
+.fabric {
+  background-color: var(--fabric, var(--linen));
+  background-image: var(--weave, none);
+}
+
+.fabric--denim {
+  --fabric: #4d5f78;
+  --weave: repeating-linear-gradient(45deg, rgb(255 255 255 / 0.09) 0 1.5px, transparent 1.5px 4px),
+    repeating-linear-gradient(-45deg, rgb(0 0 0 / 0.08) 0 1px, transparent 1px 5px);
+}
+
+.fabric--linen {
+  --fabric: #e3d3bd;
+  --weave: repeating-linear-gradient(0deg, rgb(82 27 16 / 0.06) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgb(82 27 16 / 0.05) 0 1px, transparent 1px 4px);
+}
+
+.fabric--silk {
+  --fabric: #d9a49b;
+  --weave: linear-gradient(118deg, rgb(255 255 255 / 0) 20%, rgb(255 255 255 / 0.35) 42%, rgb(255 255 255 / 0) 58%),
+    linear-gradient(118deg, #cf9389, #e7bdb4 48%, #d39a90);
+}
+
+.fabric--knit {
+  --fabric: #b9675f;
+  --weave: linear-gradient(55deg, transparent 42%, rgb(255 255 255 / 0.14) 46% 54%, transparent 58%),
+    linear-gradient(-55deg, transparent 42%, rgb(0 0 0 / 0.1) 46% 54%, transparent 58%);
+  background-size: 8px 10px;
+}
+
+.fabric--sheer {
+  --fabric: #f4ede4;
+  --weave: repeating-linear-gradient(
+    90deg,
+    rgb(255 255 255 / 0.85) 0 7px,
+    rgb(226 212 196 / 0.7) 12px,
+    rgb(255 255 255 / 0.85) 19px
+  );
+}
