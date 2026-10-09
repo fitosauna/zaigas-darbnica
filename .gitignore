@@ -1,0 +1,22 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+.astro/
+
+# environment / secrets
+.env
+.env.*
+!.env.example
+config.php
+
+# logs & OS
+npm-debug.log*
+*.log
+.DS_Store
+Thumbs.db
+
+# local tooling
+/.claude/
+/scratch/

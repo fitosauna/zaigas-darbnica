@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalēt atkarības
+        run: npm ci
+
+      - name: astro check
+        run: npx astro check
+
+      - name: astro build
+        run: npx astro build
+
+      - name: Pārbaudīt, ka HTML nav garo domuzīmju (U+2013, U+2014)
+        run: |
+          DASHES="$(printf '\xe2\x80\x93\\|\xe2\x80\x94')"
+          if grep -rl "$DASHES" dist --include='*.html'; then
+            echo "Atrasta gara domuzīme - lietojiet tikai '-'"; exit 1
+          fi
