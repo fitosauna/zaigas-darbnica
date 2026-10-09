@@ -1,0 +1,65 @@
+/*
+ * Pašmitināti fonti (SIL OFL), apakškopa: Latin + Latin Extended-A/B
+ * (pilnībā sedz ā č ē ģ ī ķ ļ ņ š ū ž). Avoti: src/fonts/.
+ */
+
+@font-face {
+  font-family: 'Fraunces';
+  src: url('../fonts/fraunces-var.woff2') format('woff2');
+  font-weight: 300 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Fraunces';
+  src: url('../fonts/fraunces-italic-400.woff2') format('woff2');
+  font-weight: 300 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Mulish';
+  src: url('../fonts/mulish-var.woff2') format('woff2');
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Caveat';
+  src: url('../fonts/caveat-500.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Metriski pielāgoti rezerves fonti, lai teksts nelēkā, kamēr ielādējas fonti. */
+@font-face {
+  font-family: 'Fraunces Fallback';
+  src: local('Times New Roman'), local('Liberation Serif'), local('Tinos');
+  size-adjust: 121%;
+  ascent-override: 80.8%;
+  descent-override: 21.1%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Fraunces Fallback';
+  font-style: italic;
+  src: local('Times New Roman Italic'), local('Liberation Serif Italic'), local('Tinos Italic');
+  size-adjust: 111%;
+  ascent-override: 88.1%;
+  descent-override: 23%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Mulish Fallback';
+  src: local('Arial'), local('Liberation Sans'), local('Arimo');
+  size-adjust: 104.5%;
+  ascent-override: 96.2%;
+  descent-override: 23.9%;
+  line-gap-override: 0%;
+}
