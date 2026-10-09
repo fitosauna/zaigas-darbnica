@@ -85,7 +85,7 @@ verifier against the source text. 47 findings survived; the relevant ones are be
 | 6 | Part B /apgerbu-remonts meta: „Zvani 26 423 325” (informal „Tu”) vs A12 „Jūs everywhere”. | A12 wins: „Zvaniet +371 26 423 325.” (inner-page phase). |
 | 7 | Home „Apģērbu remonts … Cenas no 3,50 €” is not the table minimum (buttons 0,50 €, slider 3 €). | Kept as written: 3,50 € is the cheapest of the repairs that sentence names. The blurb references the price row id `cauruma-salabosana`, so it can never drift (A12.1). **Owner may confirm.** |
 | 8 | „Pakalpojumi” has no page of its own. | Desktop: a `<button aria-expanded>` disclosure (click, keyboard, Esc; hover only as enhancement) with five real links. Mobile sheet: services always listed. Breadcrumbs on inner pages will be two-level („Sākums › Apģērbu remonts”). |
-| 9 | Mobile hero must fit 390×844 with first button visible; photo 45-55 %; bottom bar on every page. | Photo `clamp(330px, 53svh, 560px)`; H1 overlaps the fade over the empty tabletop; both buttons and the info line fit at 390×844. **The bottom bar slides in once the hero's own call/WhatsApp buttons scroll away** (it is on every page, but never duplicates the hero buttons and never covers the first screen). Without JS it is always visible. |
+| 9 | Mobile hero must fit 390×844 with first button visible; photo 45-55 %; bottom bar on every page. | Photo `clamp(320px, 50svh, 560px)`; H1 overlaps the fade over the empty tabletop; H1, lead, both buttons and the full info line fit at 390×844. **The bottom bar is on every page but steps aside while the page's own call/WhatsApp buttons are visible** (hero, final call to action, footer), so contact buttons never appear twice and the first screen stays clean. Without JS it is always visible. |
 | 10 | Header 16-24 px inset, 56-64 px tall on mobile, 48 px tap targets. | Mobile: 10 px top inset + 52 px pill = 62 px; round buttons have a 48 px hit area with a 42 px visible circle. Desktop: 18 px inset, 64 px pill, shrinks to 58 px on scroll. |
 | 11 | Hyphen-only rule makes ranges break badly („9:00-” / „20:00”). | Only ASCII „-” in output. Ranges, „P.-S.”, „LV-4301” sit in `nowrap` spans; a no-break space is put **before** spaced dashes so the dash stays with the previous word (`src/lib/typo.ts`). |
 | 12 | A4 §3 suggests `hyphens: auto` on headlines; auto-hyphenating display type can break words badly. | Kept as asked, but limited with `hyphenate-limit-chars: 10 4 4` (only long words, at least 4+4 letters); `text-wrap: balance` on headings. Checked at 360 px. |
@@ -93,6 +93,8 @@ verifier against the source text. 47 findings survived; the relevant ones are be
 | 14 | Footer logo: A2 offers cream versions „for dark backgrounds / footer”; Part B says the full logo with tagline suits the footer. | Chocolate footer (the brief's „dark moment” colour) with the **full cream lockup** (`logo-cream.png`). It is the only place the „Šūšana un adīšana” lockup appears. The footer rises out of the page with a curved, stitched seam, not a flat band. |
 | 15 | Swipe rows are recommended for collections and services on mobile (A4 §3, A5) but carousels for core content are banned (A7). | Swipe rows are native horizontal scroll with snap and a visible peek: no autoplay, no arrows. A small stitch indicator under each row shows position. Everything stays reachable by keyboard. |
 | 16 | A14 has two items numbered „6”. | Read as: build remaining pages after approval, then run the final checks. |
+| 17 | Portrait tablets (700-1023 px) were to use the wide desktop photo (A8), which crops the machine and puts the H1 over the busy fabric (A4 §1 „no text over busy parts”). | Portrait screens below 1024 px get the vertical crop (`hero-darbnica-mobile.webp`) via `<picture>` art direction; all landscape screens, including landscape phones, get the wide photo. |
+| 18 | Fraunces Italic ships „wonky” b/k/l by default; WONK=0 is a glyph substitution that instancing silently dropped. | `scripts/build-fonts.py` bakes the WONK=0 substitutions into the font's character map, so quotes and „Alūksnē” use the calm italic forms that match the logo. |
 
 ---
 
@@ -124,9 +126,11 @@ Self-hosted, subset to Latin + Latin Extended-A/B (every Latvian letter checked)
 
 - **Fraunces** (display) variable, `opsz 9-144`, `wght 300-600`, instanced at `SOFT 50`, `WONK 0`
   (soft ball terminals that echo the logo's „Zaiga”). 76 KB, preloaded.
-- **Fraunces Italic** at 400 for the H1 place name and review quotes. 52 KB, preloaded.
+- **Fraunces Italic** at 400 for the H1 place name and review quotes. 49 KB, not preloaded (a metric-matched
+  fallback prevents layout shift).
 - **Mulish** variable `wght 400-800` (body, UI). 33 KB, preloaded.
-- **Caveat** 500 for at most 3-5 tiny handwritten notes. 54 KB, loaded only where used.
+- **Caveat** 500, used **once** on the homepage: the small note „Zaiga” at the portrait. 54 KB, loaded only
+  where used.
 - Metric-matched fallbacks (`size-adjust`, ascent/descent overrides) to avoid layout shift.
 
 | Role | Size (360 → 1440 px) | Notes |
@@ -137,14 +141,18 @@ Self-hosted, subset to Latin + Latin Extended-A/B (every Latvian letter checked)
 | Lead | 19 → 23 px | Mulish |
 | Body | 17 → 18 px, line-height 1.62 | Mulish 450, 55-75 characters per line |
 | Secondary | 16 px | info lines, captions, footer |
-| Label | 13 px, uppercase, 0.22em tracking | echoes „ŠŪŠANA UN ADĪŠANA” |
+| Label | 13 px, uppercase, 0.22em tracking | echoes „ŠŪŠANA UN ADĪŠANA”; used only where it adds context (Pakalpojumi, Kāpēc Zaiga, the Pirms/Pēc tags, Paraugs) |
 
 Nothing meaningful is set below 13 px; nothing body-like below 16 px.
 
 ### Space, shape, motion
 
 - 4 px spacing scale (`--s-1` … `--s-10`); section padding `72 → 128 px`, tight `48 → 88 px`;
-  gutter `20 → 48 px`; content width 1200 px.
+  gutter `20 → 48 px` (never less than the iPhone safe area + 12 px); content width 1200 px.
+- **One desktop grid** (`.grid-12`: 12 columns, 32 px gap). Section copy starts on column 7, wide content
+  (Kāpēc list, reviews, FAQ, area) on column 6, so every section shares the same two verticals. Image and
+  text alternate sides down the page (Kāpēc: image left · before/after: image right · Par mani: image left),
+  and the portrait crosses the seam into the section above.
 - Radii: pills 999 px, large 28 px. Shadows are warm and soft (chocolate-tinted).
 - Motion: slow ease-out; nothing moves just to move. `prefers-reduced-motion` disables every
   animation (thread draws appear complete, Ken Burns off, slider hint off).
@@ -171,8 +179,11 @@ Nothing meaningful is set below 13 px; nothing body-like below 16 px.
 Site-wide budget, five ideas:
 
 1. **Services as fabric swatches** (pinked edges, each on its own fabric: denim, linen, silk, knit, sheer).
-2. **„Kāpēc Zaiga” on a sewing-pattern sheet** with a large outlined „20” and a hand note „gadu pieredze”.
-3. **Before / after slider** on the jacket (keyboard and screen-reader accessible range input).
+2. **„Kāpēc Zaiga” on a sewing-pattern sheet** with a large outlined „20”; the dashed pattern pieces fade
+   out behind the text so only the faint grid sits under the copy.
+3. **Before / after slider** on the jacket (keyboard and screen-reader accessible range input). It rests at
+   62 % so the broken zipper is fully visible, the handle sits low so it never covers the zipper, and the
+   „Pirms / Pēc” tags are printed labels.
 4. **Arched, mirror-like portrait** with a small Caveat note „Zaiga”.
 5. **Gallery hanging from a thread** with wooden pegs and kraft tags.
 
