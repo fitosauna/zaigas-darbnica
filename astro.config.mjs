@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import { site } from './src/config.ts';
+import pruneUnusedImages from './integrations/prune-unused-images.mjs';
 
 // https://docs.astro.build/en/reference/configuration-reference/
 export default defineConfig({
@@ -15,5 +16,6 @@ export default defineConfig({
     responsiveStyles: false,
   },
   compressHTML: true,
+  integrations: [pruneUnusedImages()],
   devToolbar: { enabled: false },
 });
