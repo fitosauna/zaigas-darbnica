@@ -64,7 +64,6 @@ export const page: ServicePageData = {
     {
       type: 'benefits',
       title: 'Apģērbs, kas radīts ar domu par Jums',
-      aside: { image: 'darbi3', shape: 'print' },
       items: [
         {
           title: 'Der Jūsu augumam, nevis izmēru tabulai.',

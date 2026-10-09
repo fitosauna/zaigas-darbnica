@@ -46,10 +46,7 @@ const head: [string, string] = columns ?? [g?.column ?? '', 'Cena'];
           rows.map((row) => (
             <tr>
               <th scope="row">
-                <span class="ticket__row">
-                  <span>{row.label}</span>
-                  <span class="ticket__dots" aria-hidden="true" />
-                </span>
+                <span class="ticket__label">{row.label}</span>
               </th>
               {row.note ? (
                 <td class="ticket__note">
@@ -105,9 +102,7 @@ const head: [string, string] = columns ?? [g?.column ?? '', 'Cena'];
   .ticket__card {
     position: relative;
     padding: 64px clamp(16px, 0.6rem + 2.4vw, 40px) clamp(22px, 1rem + 1vw, 34px);
-    background:
-      linear-gradient(180deg, rgb(241 230 216 / 0.35), rgb(241 230 216 / 0) 40%),
-      var(--paper);
+    background: var(--paper);
     clip-path: polygon(26px 0, calc(100% - 26px) 0, 100% 26px, 100% 100%, 0 100%, 0 26px);
     -webkit-mask: radial-gradient(circle at 50% var(--hole-y), transparent 7px, #000 7.5px);
     mask: radial-gradient(circle at 50% var(--hole-y), transparent 7px, #000 7.5px);
@@ -162,6 +157,10 @@ const head: [string, string] = columns ?? [g?.column ?? '', 'Cena'];
     vertical-align: bottom;
   }
 
+  .ticket__table tbody td {
+    padding-left: 4px;
+  }
+
   .ticket__table tbody tr:first-child th,
   .ticket__table tbody tr:first-child td {
     padding-top: 16px;
@@ -173,18 +172,33 @@ const head: [string, string] = columns ?? [g?.column ?? '', 'Cena'];
     color: var(--ink);
   }
 
-  .ticket__row {
-    display: flex;
-    align-items: last baseline;
-    gap: 6px;
+  /*
+   * Punktētā līnija: zīmēta visā šūnas platumā pēdējās rindas augstumā, bet
+   * etiķetes teksts ar papīra fonu to aizsedz - punkti sākas tieši aiz pēdējā vārda,
+   * arī tad, ja nosaukums lūzt divās rindās.
+   */
+  .ticket__table tbody th {
+    position: relative;
+    overflow: hidden;
   }
 
-  .ticket__dots {
-    flex: 1 1 1em;
-    min-width: 1em;
+  .ticket__table tbody th::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 10px;
+    bottom: 0.5em;
     height: 3px;
-    margin-right: 6px;
     background: radial-gradient(circle, rgb(122 86 52 / 0.55) 1.1px, transparent 1.5px) 0 50% / 7px 3px repeat-x;
+  }
+
+  .ticket__label {
+    position: relative;
+    z-index: 1;
+    padding-right: 6px;
+    background: var(--paper);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
   }
 
   .ticket__table td {

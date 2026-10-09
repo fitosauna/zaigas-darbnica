@@ -12,12 +12,14 @@ interface Props {
   label?: string;
   /** Fona toņi (iekšlapās pēc iepriekšējās sadaļas). Noklusēti: krēms → rožains. */
   tones?: { from: string; tone: string; to: string };
+  /** Iekšlapās: virsraksts tajās pašās 5 kolonnās un izmērā kā citas sadaļas. */
+  inner?: boolean;
 }
-const { title, items, id = 'buj', label, tones } = Astro.props;
+const { title, items, id = 'buj', label, tones, inner = false } = Astro.props;
 const style = tones ? `--from: var(--${tones.from}); --tone: var(--${tones.tone}); --to: var(--${tones.to})` : undefined;
 ---
 
-<section class="faq tone" aria-labelledby={`${id}-title`} style={style}>
+<section class:list={['faq tone', { 'faq--inner': inner }]} aria-labelledby={`${id}-title`} style={style}>
   <div class="container faq__grid grid-12">
     <div class="faq__head">
       {label && <p class="label">{label}</p>}
@@ -134,7 +136,16 @@ const style = tones ? `--from: var(--${tones.from}); --tone: var(--${tones.tone}
     color: var(--ink);
   }
 
+  .faq--inner .faq__head h2 {
+    max-width: 16ch;
+    font-size: clamp(2rem, 1.55rem + 1.7vw, 3rem);
+  }
+
   @media (min-width: 64rem) {
+    .faq--inner .faq__head {
+      grid-column: 1 / span 5;
+    }
+
     .faq__grid {
       grid-template-columns: repeat(12, minmax(0, 1fr));
       gap: 0 var(--s-6);

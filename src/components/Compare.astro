@@ -199,9 +199,17 @@ const scope = Object.fromEntries(Object.entries(others).filter(([k]) => k.starts
     display: none;
   }
 
-  .compare:has(.compare__range:focus-visible) .compare__knob {
+  .compare:has(.compare__range:focus-visible) .compare__knob,
+  .compare:has(.compare__range:focus-visible) .compare__frame {
     outline: 2.5px solid var(--focus);
     outline-offset: 3px;
+  }
+
+  /* Telefons guļus: kvadrāts ietilpst ekrānā starp galveni un apakšējo joslu */
+  @media (orientation: landscape) and (max-height: 32.5rem) {
+    .compare {
+      max-width: calc(100svh - var(--header-top) - var(--header-h) - var(--bottom-bar-h) - 32px);
+    }
   }
 
   .compare:has(.compare__range:active) .compare__knob {

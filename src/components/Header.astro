@@ -11,7 +11,8 @@ import { buildLogo } from '../lib/picture';
 import Icon from './Icon.astro';
 
 const logo = await buildLogo(logos.header.src, 44);
-const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+// Būvējot ar build.format 'file', ceļš ir „/cenas.html” - noņemam „.html”, „/index” un beigu slīpsvītru.
+const path = Astro.url.pathname.replace(/(\/index)?\.html$/, '').replace(/\/$/, '') || '/';
 const isCurrent = (href: string) => (href === '/' ? path === '/' : path === href);
 const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) => isCurrent(c.href));
 ---
@@ -758,11 +759,17 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
   document.querySelectorAll<HTMLElement>('[data-dropdown]').forEach((item) => {
     const toggle = item.querySelector<HTMLButtonElement>('button');
     if (!toggle) return;
+    const panel = item.querySelector<HTMLElement>('.dropdown');
     const setOpen = (open: boolean) => {
       item.classList.toggle('is-open', open);
       toggle.setAttribute('aria-expanded', String(open));
+      // Aizvērta paneļa saites uzreiz izņem no tabulācijas (arī aizvēršanas animācijas laikā).
+      if (panel) panel.inert = !open;
     };
-    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    setOpen(false);
+    const hovering = () => window.matchMedia('(hover: hover)').matches && item.matches(':hover');
+    // Ar peli panelis jau atvērts (hover) - klikšķis to neaizver „neredzami”.
+    toggle.addEventListener('click', () => setOpen(hovering() || toggle.getAttribute('aria-expanded') !== 'true'));
     item.addEventListener('mouseenter', () => {
       if (window.matchMedia('(hover: hover)').matches) setOpen(true);
     });

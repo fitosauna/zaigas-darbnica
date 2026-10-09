@@ -5,6 +5,7 @@
  */
 import Section, { type Tones } from './Section.astro';
 import PriceTicket from './PriceTicket.astro';
+import Compare from '../Compare.astro';
 import type { Block } from '../../data/pages/types';
 import { typo } from '../../lib/typo';
 
@@ -12,14 +13,24 @@ interface Props {
   id: string;
   block: Extract<Block, { type: 'prices' }>;
   tones: Tones;
+  /** „Pirms / pēc” slīdnis kreisajā kolonnā zem virsraksta (/apgerbu-remonts). */
+  compare?: boolean;
 }
 
-const { id, block, tones } = Astro.props;
+const { id, block, tones, compare = false } = Astro.props;
 ---
 
-<Section id={id} title={block.title} tones={tones} class="prices" wide>
+<Section id={id} title={block.title} tones={tones} class={compare ? 'prices prices--compare' : 'prices'} wide>
   <PriceTicket group={block.group} caption={block.title} class="prices__ticket" />
   <p class="prices__note">{typo(block.note)}</p>
+  {
+    compare && (
+      <figure slot="aside" class="prices__compare">
+        <Compare id={`${id}-slidnis`} sizes="(min-width: 64rem) 34vw, (min-width: 43.75rem) 34rem, 92vw" />
+        <figcaption class="prices__tag">Ziemas jakai nomainīts rāvējslēdzējs</figcaption>
+      </figure>
+    )
+  }
 </Section>
 
 <style>
@@ -34,8 +45,45 @@ const { id, block, tones } = Astro.props;
     color: var(--ink-soft);
   }
 
+  .prices__compare {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: min(100%, 34rem);
+    margin: var(--s-4) auto 0;
+  }
+
+  .prices__compare :global(.compare) {
+    width: 100%;
+  }
+
+  /* Kraft birka (kā darbu galerijā) */
+  .prices__tag {
+    position: relative;
+    z-index: 1;
+    margin-top: -22px;
+    padding: 9px 18px 10px 32px;
+    border-radius: 3px 10px 10px 3px;
+    background:
+      radial-gradient(circle at 15px 50%, var(--cream) 0 4px, rgb(82 27 16 / 0.35) 4px 5px, transparent 5.5px),
+      linear-gradient(180deg, #ecdcc7, #e3cdb2);
+    color: var(--chocolate);
+    font-size: 1rem;
+    font-weight: 650;
+    line-height: 1.35;
+    box-shadow: var(--shadow-paper);
+    transform: rotate(-2deg);
+    clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%);
+    text-wrap: balance;
+  }
+
   @media (min-width: 64rem) {
-    .prices :global(.sec__head) {
+    .prices__compare {
+      width: 100%;
+      margin: var(--s-8) 0 0;
+    }
+
+    .prices:not(.prices--compare) :global(.sec__head) {
       grid-row: 1 / span 2;
       align-self: start;
       position: sticky;

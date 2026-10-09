@@ -3,16 +3,9 @@
  * Kontaktinformācija (Part B §9.2) kā vizītkarte: papīrs ar iešūtu dūrienu malu.
  * Katrs tālrunis ir tel: saite; WhatsApp - ar pogu (DESIGN.md #13).
  */
-import Actions from '../page/Actions.astro';
+import Button from '../Button.astro';
 import { contact, links } from '../../config';
 import { kontakti } from '../../data/pages/kontakti';
-import type { Action } from '../../data/pages/types';
-
-const actions: Action[] = [
-  { kind: 'tel', label: 'Zvanīt Zaigai' },
-  { kind: 'whatsapp', label: 'Rakstīt WhatsApp' },
-  { kind: 'mail', label: 'Rakstīt e-pastu' },
-];
 ---
 
 <section class="card" aria-labelledby="kontaktinformacija-title">
@@ -26,7 +19,7 @@ const actions: Action[] = [
       <dd><a href={links.tel}>{contact.phoneDisplay}</a></dd>
     </div>
     <div>
-      <dt>WhatsApp</dt>
+      <dt><a href={links.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a></dt>
       <dd><a href={links.tel}>{contact.phoneDisplay}</a>&nbsp;- {kontakti.info.whatsappNote}</dd>
     </div>
     <div>
@@ -40,7 +33,11 @@ const actions: Action[] = [
       </dd>
     </div>
   </dl>
-  <Actions actions={actions} primary size="md" class="card__actions" />
+  <div class="card__actions" data-primary-actions>
+    <Button href={links.tel} icon="phone">Zvanīt Zaigai</Button>
+    <Button href={links.whatsapp} icon="whatsapp" variant="secondary" external>Rakstīt WhatsApp</Button>
+    <Button href={links.mail} icon="mail" variant="quiet">Rakstīt e-pastu</Button>
+  </div>
 </section>
 
 <style>
@@ -105,8 +102,25 @@ const actions: Action[] = [
     white-space: nowrap;
   }
 
-  .card :global(.card__actions) {
+  .card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 14px;
     margin-top: var(--s-6);
+  }
+
+  .card__list dt a {
+    padding: 10px 0;
+    margin: -10px 0;
+    font-weight: 750;
+  }
+
+  @media (max-width: 29.99rem) {
+    .card__actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
   }
 
   @media (min-width: 30rem) {

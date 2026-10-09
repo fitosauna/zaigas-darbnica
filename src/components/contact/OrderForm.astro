@@ -10,7 +10,7 @@ import Button from '../Button.astro';
 import Icon from '../Icon.astro';
 import { absoluteUrl, formConfig } from '../../config';
 import { kontakti } from '../../data/pages/kontakti';
-import { linkContacts } from '../../lib/typo';
+import { linkContacts, typo } from '../../lib/typo';
 
 const f = kontakti.form;
 const web3 = Boolean(formConfig.web3formsKey);
@@ -38,7 +38,7 @@ const failureHtml = linkContacts(f.failure);
     enctype="multipart/form-data"
     accept-charset="UTF-8"
     data-order-form
-    data-errors={JSON.stringify(f.errors)}
+    data-errors={JSON.stringify(Object.fromEntries(Object.entries(f.errors).map(([k, v]) => [k, typo(v)])))}
     data-sending={f.labels.sending}
   >
     {
@@ -82,10 +82,18 @@ const failureHtml = linkContacts(f.failure);
         <p class="field__error" id="e-talrunis" data-error-for="talrunis"></p>
       </div>
 
-      <div class="field">
+      <div class="field field--full">
         <label for="f-epasts">{f.labels.email} <span class="field__opt">({f.labels.optional})</span></label>
         <input id="f-epasts" name="epasts" type="email" autocomplete="email" maxlength="150" aria-describedby="e-epasts" />
         <p class="field__error" id="e-epasts" data-error-for="epasts"></p>
+      </div>
+
+      <div class="field">
+        <label for="f-pakalpojums">{f.labels.service}</label>
+        <select id="f-pakalpojums" name="pakalpojums">
+          <option value="">{f.labels.choose}</option>
+          {f.services.map((s) => <option value={s.value}>{s.label}</option>)}
+        </select>
       </div>
 
       <div class="field">
@@ -93,14 +101,6 @@ const failureHtml = linkContacts(f.failure);
         <select id="f-vieta" name="vieta">
           <option value="">{f.labels.choose}</option>
           {f.places.map((p) => <option value={p.value}>{p.label}</option>)}
-        </select>
-      </div>
-
-      <div class="field field--full">
-        <label for="f-pakalpojums">{f.labels.service}</label>
-        <select id="f-pakalpojums" name="pakalpojums">
-          <option value="">{f.labels.choose}</option>
-          {f.services.map((s) => <option value={s.value}>{s.label}</option>)}
         </select>
       </div>
 
@@ -119,7 +119,7 @@ const failureHtml = linkContacts(f.failure);
 
       <div class="field field--full">
         <label for="f-termins">{f.labels.when} <span class="field__opt">({f.labels.optional})</span></label>
-        <input id="f-termins" name="termins" type="text" maxlength="200" placeholder={f.placeholders.when} />
+        <textarea id="f-termins" name="termins" rows="2" maxlength="200" placeholder={f.placeholders.when}></textarea>
       </div>
 
       {
@@ -141,7 +141,7 @@ const failureHtml = linkContacts(f.failure);
                   {f.labels.photo} <span class="field__opt">({f.labels.optional})</span>
                 </span>
                 <span class="file__hint" id="h-foto">
-                  {f.labels.photoHint}
+                  {typo(f.labels.photoHint)}
                 </span>
                 <span class="file__name" data-file-name />
               </span>
@@ -259,6 +259,7 @@ const failureHtml = linkContacts(f.failure);
   .field__opt {
     font-weight: 450;
     color: var(--ink-soft);
+    white-space: nowrap;
   }
 
   .field input:not([type='checkbox']):not([type='file']),
@@ -281,6 +282,10 @@ const failureHtml = linkContacts(f.failure);
   .field textarea {
     min-height: 140px;
     resize: vertical;
+  }
+
+  .field #f-termins {
+    min-height: 80px;
   }
 
   .field ::placeholder {
@@ -582,11 +587,13 @@ const failureHtml = linkContacts(f.failure);
       if (!el) return;
       el.classList.add('is-shown');
       el.focus({ preventScroll: true });
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Bez „behavior”: plūstoši parasti, uzreiz - ja ieslēgta samazināta kustība (html scroll-behavior)
+      el.scrollIntoView({ block: 'center' });
     };
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      show(null);
       const bad = validate();
       if (bad.length) {
         (field(bad[0]) as HTMLElement | null)?.focus();

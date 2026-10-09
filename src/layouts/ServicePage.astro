@@ -68,13 +68,14 @@ const schema = [
         case 'steps':
           return <StepsBlock id={id} block={b} tones={tones[i]} />;
         case 'prices':
-          return <PricesBlock id={id} block={b} tones={tones[i]} />;
+          return <PricesBlock id={id} block={b} tones={tones[i]} compare={page.blocks[i + 1]?.type === 'compare'} />;
         case 'compare':
-          return <CompareBlock id={id} tones={tones[i]} />;
+          // Slīdnis stāv cenu sadaļā (kreisajā kolonnā); atsevišķi - tikai ja nav aiz cenām.
+          return page.blocks[i - 1]?.type === 'prices' ? null : <CompareBlock id={id} tones={tones[i]} />;
         case 'examples':
           return <ExamplesBlock id={id} block={b} tones={tones[i]} />;
         case 'faq':
-          return <Faq id="buj" title={b.title} items={prepareFaq(b.items)} tones={tones[i]} />;
+          return <Faq id="buj" title={b.title} items={prepareFaq(b.items)} tones={tones[i]} inner />;
       }
     })
   }

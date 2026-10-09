@@ -10,6 +10,7 @@ import Section from '../components/page/Section.astro';
 import BenefitsBlock from '../components/page/BenefitsBlock.astro';
 import ListBlock from '../components/page/ListBlock.astro';
 import InnerCta from '../components/page/InnerCta.astro';
+import Actions from '../components/page/Actions.astro';
 
 import { parMani } from '../data/pages/par-mani';
 import { breadcrumbs } from '../lib/schema';
@@ -29,11 +30,10 @@ const schema = [
       slot="media"
       image="zaigaPortrets"
       shape="arch"
+      priority
       sizes="(min-width: 75rem) 380px, (min-width: 64rem) 30vw, (min-width: 43.75rem) 24rem, 84vw"
     />
-    <ul role="list" class="facts">
-      {parMani.facts.map((f) => <li>{typo(f)}</li>)}
-    </ul>
+    <Actions actions={parMani.cta.actions} primary />
   </InnerHero>
 
   <Section
@@ -82,39 +82,6 @@ const schema = [
 </BaseLayout>
 
 <style>
-  .facts {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px 26px;
-    margin-top: var(--s-2);
-    font-size: var(--fs-small);
-    font-weight: 650;
-    color: var(--ink-soft);
-  }
-
-  .facts li {
-    position: relative;
-    padding-left: 22px;
-  }
-
-  /* Krustdūriens kā sarakstos */
-  .facts li::before,
-  .facts li::after {
-    content: '';
-    position: absolute;
-    left: 2px;
-    top: 0.75em;
-    width: 11px;
-    height: 2px;
-    border-radius: 1px;
-    background: var(--thread);
-    transform: rotate(45deg);
-  }
-
-  .facts li::after {
-    transform: rotate(-45deg);
-  }
-
   .story__text p {
     max-width: 56ch;
   }

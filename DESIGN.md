@@ -219,11 +219,20 @@ click-to-load map preview instead).
 - **Tonal flow.** Hero cream, then blocks alternate linen / cream; image-only blocks keep the previous tone;
   the FAQ melts into blush, the closing call to action is blush, then the chocolate footer.
 - **Grid.** Same 12 columns: H2 (and an optional photo under it) in columns 1-5, content from column 6-7.
-  A section can mirror (photo on the right) so consecutive photos alternate sides (`/par-mani`).
+  A section can mirror: only the photo moves to the right, the H2 stays with its text (as on the homepage).
+  Inner H2s are one step smaller than on the homepage (48 px at 1440) so the H1 leads.
+- **Lists.** Long service lists use a short running-stitch marker (a cross could read as „not offered”).
+  Short bullet lists (repairs of knits, „Svarīgi zināt”, „Pirms ierašanās”) sit on a paper note card so two
+  lists in a row never look the same. An odd last benefit spans the full row.
+- **Before/after on /apgerbu-remonts** sits in the price section's left column under the H2 (desktop),
+  after the ticket on phones.
 - **Price lists** are real `<table>`s (column headers „Darbs/Adījums”, „Cena”) on a paper ticket; prices only
   from `src/data/prices.ts`. Text-only prices („pēc vienošanās”) wrap to two short lines. The common
   price note appears under each service ticket (Part B per-page notes) and once under the `/cenas` board.
 - **Meta descriptions** use `price('<id>')`, so „no 4 €/m” renders as „no 4 € / m” (same as the tables).
+- **Mobile bottom bar** is visible on every page except while the page's own call/WhatsApp buttons are on
+  screen (hero, closing call to action, contact card, footer). Service heroes on phones show their buttons
+  right under the photo.
 - **Buttons.** First action is filled, second outlined. „→ forma” buttons link to
   `/kontakti?pakalpojums=<id>#forma`; the form preselects that service. Every hero/CTA button row counts as
   the page's own contact buttons, so the mobile bottom bar steps aside while it is visible.
@@ -232,11 +241,13 @@ click-to-load map preview instead).
 - **Contact form.** Fields, errors and messages exactly as Part B §9.6. Small additions in the polite Jūs
   form, kept minimal: „(nav obligāts)”, „Izvēlieties”, the photo hint „JPG, PNG, WebP vai HEIC, līdz 10 MB”,
   an e-mail error and two photo errors. Field order follows Part B; „Kad tas vajadzīgs?” follows „Kas jādara?”.
-  Works without JS (POST → `/kontakti#paldies` / `#kluda`). `formConfig.web3formsKey` switches to Web3Forms
+  „Kad tas vajadzīgs?” is a two-line field so the Part B example is never cut. Works without JS
+  (POST → `/kontakti#paldies` / `#kluda`). `formConfig.web3formsKey` switches to Web3Forms
   (photo field hidden, free plan has no attachments).
 - **Map.** Illustrated, deliberately abstract preview + „Rādīt karti”; the Google iframe loads only after the
   click, with a one-line note that Google may then set cookies. „Atvērt Google Maps” is always there.
-- **Privacy policy.** Part B text plus one sentence about the click-to-load Google map (accuracy).
+- **Privacy policy** on the grid: each Part B lead-in („Pārzinis.”, „Kāpēc.”…) as a heading in columns 1-4,
+  the text from column 6. Part B text plus one sentence about the click-to-load Google map (accuracy).
   „Spēkā no” shows only when `site.privacyDate` is filled. **Owner/lawyer may want to review.**
 - **404**: `noindex`, no canonical. „pakalpojumus” links to `/#pakalpojumi`.
 - **Consent banner** (Part B §11) exists but renders only when `flags.ga4Id` is set; GA loads after „Piekrītu”.

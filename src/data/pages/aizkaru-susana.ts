@@ -67,7 +67,7 @@ export const page: ServicePageData = {
     },
     {
       type: 'examples',
-      images: [{ image: 'darbi6', caption: 'Aizkari saīsināti līdz grīdai' }, { image: 'aizkariGaldauts' }],
+      images: [{ image: 'darbi6', caption: 'Aizkari saīsināti līdz grīdai' }, { image: 'aizkariGaldauts', caption: 'Galdauti un galda celiņi' }],
     },
     {
       type: 'faq',

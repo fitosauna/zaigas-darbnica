@@ -8,7 +8,7 @@ import InnerHero from '../components/page/InnerHero.astro';
 import AsideImage from '../components/page/AsideImage.astro';
 import Actions from '../components/page/Actions.astro';
 import PriceTicket from '../components/page/PriceTicket.astro';
-import ListBlock from '../components/page/ListBlock.astro';
+import NoteCard from '../components/page/NoteCard.astro';
 import InnerCta from '../components/page/InnerCta.astro';
 import Faq from '../components/Faq.astro';
 import Icon from '../components/Icon.astro';
@@ -35,24 +35,25 @@ const schema = [
       slot="media"
       image="cenasDarbnicasGalds"
       shape="print"
+      priority
       sizes="(min-width: 75rem) 570px, (min-width: 64rem) 47vw, (min-width: 43.75rem) 36rem, 92vw"
     />
-    <p class="lead">{typo(cenas.intro)}</p>
+    <p class="lead cenas-intro">{typo(cenas.intro)}</p>
     <Actions actions={cenas.introActions} primary />
-    <nav class="jump" aria-label="Cenu sadaļas">
+  </InnerHero>
+
+  <section class="board tone" aria-label="Cenrādis">
+    <nav class="container jump" aria-label="Cenu sadaļas">
       <ul role="list">
         {
           cenas.groups.map((g) => (
             <li>
-              <a href={`#${g.group}`}>{g.title}</a>
+              <a href={`#${g.group}`}>{g.short}</a>
             </li>
           ))
         }
       </ul>
     </nav>
-  </InnerHero>
-
-  <section class="board tone" aria-label="Cenrādis">
     <div class="container board__cols">
       {
         cenas.groups.map((g) => (
@@ -69,59 +70,44 @@ const schema = [
           </section>
         ))
       }
+      <section class="pgroup pgroup--note" aria-labelledby="svarigi-title">
+        <NoteCard id="svarigi" title={cenas.important.title} items={cenas.important.items} />
+      </section>
     </div>
     <p class="container board__note">{typo(priceNote)}</p>
   </section>
 
-  <ListBlock
-    id="svarigi"
-    block={{ type: 'bullets', title: cenas.important.title, items: cenas.important.items }}
-    tones={{ from: 'linen', tone: 'cream', to: 'cream' }}
-  />
-
-  <Faq id="buj" title={cenas.faq.title} items={faqs} />
+  <Faq id="buj" title={cenas.faq.title} items={faqs} tones={{ from: 'linen', tone: 'cream', to: 'blush' }} inner />
 
   <InnerCta title={cenas.cta.title} text={cenas.cta.text} actions={cenas.cta.actions} />
 </BaseLayout>
 
 <style>
-  /* Ātrās saites uz cenrāžiem */
-  .jump {
-    margin-top: var(--s-6);
+  /* Ievada teksts darbvirsmā parastā izmērā, lai ievads ietilpst pirmajā ekrānā */
+  @media (min-width: 64rem) {
+    :global(.ihero .ihero__body) > p.cenas-intro {
+      font-size: var(--fs-body);
+      max-width: 52ch;
+    }
   }
 
-  /* Telefonā viena pavelkama rinda, platākos ekrānos - vairākas rindas */
+  /* Ātrās saites uz cenrāžiem (dēļa augšā) */
+  .jump {
+    margin-bottom: var(--s-8);
+  }
+
   .jump ul {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 8px;
-    margin-inline: calc(-1 * var(--page-gutter-l)) calc(-1 * var(--page-gutter-r));
-    padding: 2px var(--page-gutter-r) 2px var(--page-gutter-l);
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .jump ul::-webkit-scrollbar {
-    display: none;
-  }
-
-  .jump li {
-    flex: none;
-  }
-
-  @media (min-width: 43.75rem) {
-    .jump ul {
-      flex-wrap: wrap;
-      margin-inline: 0;
-      padding: 2px 0;
-      overflow: visible;
-    }
   }
 
   .jump a {
     display: inline-flex;
     align-items: center;
-    min-height: 44px;
-    padding: 8px 16px;
+    min-height: 48px;
+    padding: 8px 18px;
     border-radius: var(--r-pill);
     background: rgb(255 252 247 / 0.7);
     box-shadow: inset 0 0 0 1px var(--hairline-strong);
@@ -150,21 +136,14 @@ const schema = [
     gap: var(--s-9);
   }
 
-  .pgroup {
-    scroll-margin-top: calc(var(--header-top) + var(--header-h) + 24px);
-  }
-
   .pgroup__head {
     display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 0 var(--s-5);
+    flex-direction: column;
+    align-items: flex-start;
     margin-bottom: var(--s-8);
   }
 
   .pgroup__head h2 {
-    font-size: var(--fs-h3);
     font-size: clamp(1.625rem, 1.35rem + 1.2vw, 2.375rem);
     max-width: 18ch;
   }
@@ -191,6 +170,7 @@ const schema = [
   }
 
   .board__note {
+    max-width: 60ch;
     margin-top: var(--s-8);
     font-size: var(--fs-small);
     color: var(--ink-soft);

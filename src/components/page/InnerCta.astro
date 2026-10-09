@@ -225,7 +225,12 @@ const style = `--from: var(--${tones.from}); --tone: var(--${tones.tone}); --to:
     }
 
     .icta--aside .icta__info {
-      justify-content: flex-start;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .icta--aside .icta__info li + li::before {
+      content: none;
     }
   }
 </style>

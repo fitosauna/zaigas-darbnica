@@ -44,6 +44,13 @@ const style = `--from: var(--${tones.from}); --tone: var(--${tones.tone}); --to:
       <slot />
     </div>
     {
+      Astro.slots.has('aside') && (
+        <div class="sec__aside sec__aside--slot">
+          <slot name="aside" />
+        </div>
+      )
+    }
+    {
       aside && (
         <AsideImage
           image={aside.image}
@@ -94,8 +101,10 @@ const style = `--from: var(--${tones.from}); --tone: var(--${tones.tone}); --to:
     min-width: 0;
   }
 
+  /* Iekšlapās H2 par pakāpi mazāks nekā sākumlapā, lai H1 paliek noteicošais */
   .sec__head h2 {
     max-width: 16ch;
+    font-size: clamp(2rem, 1.55rem + 1.7vw, 3rem);
   }
 
   .sec__head > :global(p) {
@@ -103,13 +112,18 @@ const style = `--from: var(--${tones.from}); --tone: var(--${tones.tone}); --to:
     max-width: 46ch;
   }
 
-  .sec__aside {
+  /* „.sec__grid >” - lai bildes komponenta paša „margin: 0” nepārspēj šo atstarpi */
+  .sec__grid > .sec__aside {
     width: min(100%, 22rem);
     margin: var(--s-4) auto 0;
   }
 
+  .sec__grid > .sec__aside.sec__aside--slot {
+    width: 100%;
+  }
+
   @media (min-width: 43.75rem) {
-    .sec__aside {
+    .sec__grid > .sec__aside {
       width: min(100%, 26rem);
     }
   }
@@ -136,23 +150,34 @@ const style = `--from: var(--${tones.from}); --tone: var(--${tones.tone}); --to:
       grid-column: 6 / -1;
     }
 
-    .sec__aside {
+    .sec__grid > .sec__aside {
       grid-column: 1 / span 4;
       grid-row: 2;
       width: 100%;
       margin: var(--s-7) 0 0;
     }
 
+    .sec__grid > .sec__aside.sec__aside--slot {
+      grid-column: 1 / span 5;
+    }
+
+    /* Spoguļots: tikai bilde pāriet pa labi, virsraksts paliek pie satura */
     .sec--mirror .sec__head {
-      grid-column: 8 / -1;
+      grid-column: 1 / span 6;
+      grid-row: 1;
     }
 
     .sec--mirror .sec__body {
-      grid-column: 1 / span 6;
+      grid-column: 1 / span 7;
+      grid-row: 2;
+      margin-top: var(--s-7);
     }
 
-    .sec--mirror .sec__aside {
-      grid-column: 8 / span 4;
+    .sec--mirror .sec__grid > .sec__aside {
+      grid-column: 9 / -1;
+      grid-row: 1 / span 2;
+      align-self: center;
+      margin: 0;
       --tilt: -1.4deg;
     }
   }

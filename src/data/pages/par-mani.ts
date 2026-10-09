@@ -10,8 +10,6 @@ export const parMani = {
       'Iepazīstiet Zaigu Lemeševsku - šuvēju un adītāju Alūksnē ar 20 gadu pieredzi, mācījusies šūšanas skolā „Burda Rīga”. Kvalitāte par demokrātisku cenu.',
   },
   h1: 'Zaiga Lemeševska - šuvēja un adītāja, kurai rūp Jūsu lietas',
-  /** Īsi fakti zem virsraksta (no §8.4). */
-  facts: ['20 gadu pieredze', 'Šūšanas skola „Burda Rīga”', 'Darbnīca Alūksnē'],
   story: {
     title: 'Kā es kļuvu par šuvēju un adītāju',
     paragraphs: [

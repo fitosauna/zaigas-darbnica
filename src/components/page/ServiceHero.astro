@@ -132,6 +132,19 @@ const sizes = portrait
     margin-top: var(--s-6);
   }
 
+  /* Telefonā pogas uzreiz zem foto, lai pirmajā ekrānā ir skaidrs saziņas ceļš */
+  @media (max-width: 43.74rem) {
+    .shero__body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .shero__body :global(.shero__actions) {
+      order: -1;
+      margin: 0 0 var(--s-5);
+    }
+  }
+
   .shero__info {
     display: flex;
     flex-wrap: wrap;

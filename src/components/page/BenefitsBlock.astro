@@ -57,5 +57,14 @@ const { id, block, tones, mirror = false } = Astro.props;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--s-7) var(--s-6);
     }
+
+    /* Nepāra pēdējais punkts noslēdz bloku visā platumā, nevis paliek viens pats */
+    .benefits li:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+
+    .benefits li:last-child:nth-child(odd) p {
+      max-width: 60ch;
+    }
   }
 </style>

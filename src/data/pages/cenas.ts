@@ -18,19 +18,20 @@ export const cenas = {
   intro:
     'Šeit atradīsiet biežāko darbu sākumcenas. Katrs apģērbs un pasūtījums ir atšķirīgs, tāpēc precīzu cenu pateikšu, kad būšu apskatījusi darbu - vienmēr pirms darba sākuma. Ja vēlaties, atsūtiet foto WhatsApp, un pateikšu aptuveno cenu jau iepriekš.',
   introActions: [{ kind: 'whatsapp', label: 'Atsūtīt foto un uzzināt cenu' }] as Action[],
-  /** Cenu grupas Part B secībā: virsraksts, saite uz pakalpojumu, piezīme zem tabulas. */
+  /** Cenu grupas Part B secībā: virsraksts, īss nosaukums ātrajām saitēm, saite uz pakalpojumu, piezīme. */
   groups: [
-    { group: 'remonts', title: 'Apģērbu remonts', href: '/apgerbu-remonts' },
-    { group: 'pielagosana', title: 'Apģērbu pielāgošana un pāršūšana', href: '/apgerbu-parsusana' },
+    { group: 'remonts', title: 'Apģērbu remonts', short: 'Remonts', href: '/apgerbu-remonts' },
+    { group: 'pielagosana', title: 'Apģērbu pielāgošana un pāršūšana', short: 'Pielāgošana', href: '/apgerbu-parsusana' },
     {
       group: 'susana',
       title: 'Individuālā šūšana',
+      short: 'Šūšana',
       href: '/individuala-susana',
       note: 'Individuālajai šūšanai norādīta darba cena; audums - Jūsu vai iegādājams atsevišķi.',
     },
-    { group: 'adisana', title: 'Adīšana pēc pasūtījuma', href: '/adisana-pec-pasutijuma' },
-    { group: 'aizkari', title: 'Aizkari un mājas tekstils', href: '/aizkaru-susana' },
-  ] as { group: PriceGroupId; title: string; href: string; note?: string }[],
+    { group: 'adisana', title: 'Adīšana pēc pasūtījuma', short: 'Adīšana', href: '/adisana-pec-pasutijuma' },
+    { group: 'aizkari', title: 'Aizkari un mājas tekstils', short: 'Aizkari', href: '/aizkaru-susana' },
+  ] as { group: PriceGroupId; title: string; short: string; href: string; note?: string }[],
   important: {
     title: 'Svarīgi zināt par cenām',
     items: [

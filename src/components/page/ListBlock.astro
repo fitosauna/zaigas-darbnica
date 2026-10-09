@@ -4,6 +4,7 @@
  * rindām. Rindas atdala smalka dūrienu līnija, marķieris ir krustdūriens.
  */
 import Section, { type Tones } from './Section.astro';
+import NoteCard from './NoteCard.astro';
 import type { Block } from '../../data/pages/types';
 import { typo } from '../../lib/typo';
 
@@ -26,7 +27,10 @@ const note = block.type === 'list' ? block.note : undefined;
 ---
 
 <Section id={id} title={block.title} tones={tones} aside={block.aside} wide>
-  {block.intro && <p slot="intro">{typo(block.intro)}</p>}
+  {block.type === 'list' && block.intro && <p slot="intro">{typo(block.intro)}</p>}
+  {block.type === 'bullets' ? (
+    <NoteCard intro={block.intro} items={block.items} />
+  ) : (
   <ul role="list" class="slist">
     {
       rows.map((r) => (
@@ -34,6 +38,7 @@ const note = block.type === 'list' ? block.note : undefined;
       ))
     }
   </ul>
+  )}
   {note && <p class="slist__note">{typo(note)}</p>}
 </Section>
 
@@ -45,7 +50,6 @@ const note = block.type === 'list' ? block.note : undefined;
   .slist li {
     position: relative;
     padding: 15px 0 15px 38px;
-    max-width: 60ch;
     background: repeating-linear-gradient(90deg, rgb(82 27 16 / 0.22) 0 6px, transparent 6px 11px) 0 100% / 100% 1px
       no-repeat;
   }
@@ -54,26 +58,19 @@ const note = block.type === 'list' ? block.note : undefined;
     padding-top: 4px;
   }
 
-  /* Krustdūriens */
-  .slist li::before,
-  .slist li::after {
+  /* Īss dūriens diega krāsā (nevis krustiņš, kas varētu nozīmēt „nē”) */
+  .slist li::before {
     content: '';
     position: absolute;
-    left: 6px;
+    left: 2px;
     top: calc(15px + 0.8em);
-    width: 13px;
+    width: 18px;
     height: 2px;
     border-radius: 1px;
-    background: var(--thread);
-    transform: rotate(45deg);
+    background: repeating-linear-gradient(90deg, var(--thread) 0 6px, transparent 6px 10px);
   }
 
-  .slist li::after {
-    transform: rotate(-45deg);
-  }
-
-  .slist li:first-child::before,
-  .slist li:first-child::after {
+  .slist li:first-child::before {
     top: calc(4px + 0.8em);
   }
 

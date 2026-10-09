@@ -12,6 +12,8 @@ interface Props {
   image: ImageKey;
   shape?: 'arch' | 'print' | 'tall';
   sizes?: string;
+  /** Pirmā ekrāna (LCP) bilde: ielādēt uzreiz un ar augstu prioritāti. */
+  priority?: boolean;
   class?: string;
 }
 
@@ -19,9 +21,11 @@ const {
   image,
   shape = 'print',
   sizes = '(min-width: 64rem) 34vw, (min-width: 43.75rem) 60vw, 86vw',
+  priority = false,
   class: className,
   ...others
 } = Astro.props;
+const load = priority ? { loading: 'eager' as const, fetchpriority: 'high' as const } : {};
 const scope = Object.fromEntries(Object.entries(others).filter(([k]) => k.startsWith('data-astro-cid')));
 const img = images[image];
 const portrait = img.src.height > img.src.width;
@@ -32,12 +36,12 @@ const portrait = img.src.height > img.src.width;
     shape === 'arch' ? (
       <div class="aside__arch">
         <div class="aside__glass">
-          <Picture image={img} widths={[360, 520, 720, 960, 1122]} sizes={sizes} />
+          <Picture image={img} widths={[360, 520, 720, 960, 1122]} sizes={sizes} {...load} />
         </div>
       </div>
     ) : (
       <div class="aside__frame">
-        <Picture image={img} widths={[360, 520, 720, 960, 1200]} sizes={sizes} />
+        <Picture image={img} widths={[360, 520, 720, 960, 1200]} sizes={sizes} {...load} />
       </div>
     )
   }

@@ -108,24 +108,18 @@ import Icon from './Icon.astro';
 <script>
   const bar = document.querySelector<HTMLElement>('[data-bottom-bar]');
   const groups = [...document.querySelectorAll<HTMLElement>('[data-primary-actions]')];
+  // Josla ir redzama vienmēr, izņemot brīžus, kad ekrānā ir pašas lapas zvana/WhatsApp pogas
+  // (ievads, noslēgums, kājene). Sākumlapā ievada pogas ir redzamas uzreiz, tāpēc pirmais ekrāns
+  // paliek tīrs; lapās, kur pogas ir zemāk vai to nav, josla redzama jau no sākuma.
   if (bar && groups.length && 'IntersectionObserver' in window) {
-    const first = groups[0];
     const visible = new Set<Element>();
-    let firstScrolledPast = false;
-    const update = () => bar.classList.toggle('is-hidden', !firstScrolledPast || visible.size > 0);
-    bar.classList.add('is-hidden');
-    new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) visible.add(entry.target);
-          else visible.delete(entry.target);
-          // Josla parādās tikai pēc tam, kad pirmā pogu grupa (hero) aizritināta augšup.
-          if (entry.target === first) firstScrolledPast = !entry.isIntersecting && entry.boundingClientRect.bottom < 0;
-        }
-        update();
-      },
-      { threshold: 0 },
-    ).observe(first);
+    const inView = (el: Element) => {
+      const r = el.getBoundingClientRect();
+      return r.bottom > 0 && r.top < window.innerHeight && r.height > 0;
+    };
+    groups.filter(inView).forEach((g) => visible.add(g));
+    const update = () => bar.classList.toggle('is-hidden', visible.size > 0);
+    update();
     const io = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -136,6 +130,6 @@ import Icon from './Icon.astro';
       },
       { threshold: 0.4 },
     );
-    groups.slice(1).forEach((g) => io.observe(g));
+    groups.forEach((g) => io.observe(g));
   }
 </script>
