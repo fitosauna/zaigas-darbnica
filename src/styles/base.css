@@ -101,10 +101,9 @@ h4 {
   line-height: var(--lh-heading);
   letter-spacing: -0.012em;
   text-wrap: balance;
-  /* Pārnešana tikai gariem vārdiem, lai virsraksti nelūzt neglīti */
-  hyphens: auto;
-  -webkit-hyphens: auto;
-  hyphenate-limit-chars: 10 4 4;
+  /* Bez vārdu dalīšanas ar defisi - vesels vārds pāriet nākamajā rindā */
+  hyphens: manual;
+  -webkit-hyphens: manual;
   overflow-wrap: break-word;
   font-feature-settings: 'kern' 1, 'liga' 1;
 }
@@ -131,9 +130,8 @@ li,
 dd,
 blockquote {
   text-wrap: pretty;
-  hyphens: auto;
-  -webkit-hyphens: auto;
-  hyphenate-limit-chars: 8 3 3;
+  hyphens: manual;
+  -webkit-hyphens: manual;
   overflow-wrap: break-word;
 }
 
