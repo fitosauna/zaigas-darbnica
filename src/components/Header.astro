@@ -554,10 +554,19 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
     display: flex;
     flex-direction: column;
     min-height: 100%;
-    padding: var(--header-top) calc(var(--header-side) + 6px) calc(24px + env(safe-area-inset-bottom));
+    padding: var(--header-top) calc(var(--header-side) + 6px) 0;
+    background: var(--cream);
+  }
+
+  /* Ļoti smalks lina graudainums arī izvēlnē */
+  .sheet__inner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
     background-image: var(--grain);
     background-size: 180px;
-    background-blend-mode: multiply;
+    opacity: 0.05;
+    pointer-events: none;
   }
 
   .sheet__top {
@@ -624,12 +633,17 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
     color: var(--rose-ink);
   }
 
+  /* Zvanīt un WhatsApp vienmēr redzami izvēlnes apakšā, arī uz zemiem ekrāniem */
   .sheet__contact {
-    margin-top: auto;
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    margin: auto calc(-1 * (var(--header-side) + 6px)) 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
-    padding: 0 4px;
+    padding: 18px calc(var(--header-side) + 10px) calc(14px + env(safe-area-inset-bottom));
+    background: linear-gradient(180deg, rgb(250 245 238 / 0), var(--cream) 18px);
   }
 
   .sheet__btn {
