@@ -1,0 +1,129 @@
+---
+/**
+ * 1.5 Par Zaigu - portrets arkveida, spoguļa rāmī ar mazu rokrakstā
+ * rakstītu parakstu (A5). Bilde ar īsto Zaigu - teksts runā par Zaigu.
+ */
+import Picture from '../Picture.astro';
+import Button from '../Button.astro';
+import { images } from '../../data/images';
+---
+
+<section class="about tone" aria-labelledby="about-title">
+  <div class="container about__grid">
+    <figure class="about__portrait">
+      <div class="arch">
+        <div class="arch__glass">
+          <Picture
+            image={images.zaigaPortrets}
+            widths={[360, 520, 720, 960, 1122]}
+            sizes="(min-width: 64rem) 30vw, (min-width: 43.75rem) 52vw, 80vw"
+          />
+        </div>
+      </div>
+      <span class="about__sign hand" aria-hidden="true">Zaiga</span>
+    </figure>
+
+    <div class="about__copy">
+      <p class="label">Par mani</p>
+      <h2 id="about-title">Iepazīsimies! Esmu Zaiga</h2>
+      <p class="about__text">
+        Adīt iemācījos jau bērnībā - vakaros adījām kopā ar mammu, kamēr viņa stāstīja stāstus. Šūšanas amatu apguvu
+        Rīgā, šūšanas skolā „Burda Rīga”, un nu jau 20&nbsp;gadus šuju un adu citiem. Man patīk redzēt, kā apģērbs, kas
+        gaidīja skapī, atkal tiek valkāts, vai kā klients pirmo reizi uzvelk tieši viņam uzadītu džemperi.
+      </p>
+      <Button href="/par-mani" variant="secondary" arrow>Vairāk par mani</Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    --from: var(--blush);
+    --tone: var(--blush);
+    --to: var(--cream);
+    padding: var(--section-tight) 0 var(--section);
+  }
+
+  .about__grid {
+    display: grid;
+    gap: var(--s-8);
+    align-items: center;
+  }
+
+  .about__portrait {
+    position: relative;
+    width: min(100%, 25rem);
+    margin-inline: auto;
+  }
+
+  /* Arka ar plānu spoguļa rāmi */
+  .arch {
+    padding: 12px;
+    border-radius: 999px 999px 20px 20px;
+    background: linear-gradient(160deg, rgb(255 252 247 / 0.9), rgb(241 230 216 / 0.7));
+    box-shadow:
+      inset 0 0 0 1px rgb(82 27 16 / 0.16),
+      0 1px 2px rgb(82 27 16 / 0.05),
+      0 30px 60px -36px rgb(82 27 16 / 0.55);
+  }
+
+  .arch__glass {
+    position: relative;
+    overflow: hidden;
+    border-radius: 999px 999px 12px 12px;
+    box-shadow: inset 0 0 0 1px rgb(82 27 16 / 0.12);
+  }
+
+  .arch__glass :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 5.2;
+    object-fit: cover;
+    object-position: 50% 30%;
+  }
+
+  /* Viegls spoguļa atspīdums */
+  .arch__glass::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(125deg, rgb(255 255 255 / 0.22) 0%, rgb(255 255 255 / 0) 34%);
+    pointer-events: none;
+  }
+
+  .about__sign {
+    position: absolute;
+    right: -0.2em;
+    bottom: -0.55em;
+    font-size: clamp(3rem, 2.4rem + 2.4vw, 4.25rem);
+    color: var(--thread);
+    transform: rotate(-8deg);
+  }
+
+  .about__copy h2 {
+    margin-top: var(--s-3);
+  }
+
+  .about__text {
+    margin-top: var(--s-5);
+    max-width: 54ch;
+    font-size: var(--fs-lead);
+    line-height: 1.55;
+  }
+
+  .about__copy :global(.btn) {
+    margin-top: var(--s-6);
+  }
+
+  @media (min-width: 64rem) {
+    .about__grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      gap: clamp(3rem, 8vw, 8rem);
+    }
+
+    .about__portrait {
+      width: 100%;
+      max-width: 27rem;
+      margin: 0 0 0 auto;
+    }
+  }
+</style>

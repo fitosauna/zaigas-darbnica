@@ -1,0 +1,102 @@
+---
+/** 1.9 Teritorija - Alūksne, Gulbene, Balvi. */
+import { contact } from '../../config';
+---
+
+<section class="area tone" aria-labelledby="area-title">
+  <div class="container area__grid">
+    <div class="area__copy">
+      <h2 id="area-title">Šuvēja Alūksnē - arī Gulbenes un Balvu klientiem</h2>
+      <p>
+        Mana darbnīca atrodas Alūksnē, {contact.address.streetLocative}. Pie manis brauc klienti arī no Gulbenes, Balviem
+        un apkārtējiem pagastiem. Ja braucat no tālienes, vispirms atsūtiet foto, lai jau iepriekš zinātu, vai darbu var
+        izdarīt un cik tas maksās. Ja iespējams, atvediet vairākas lietas uzreiz.
+      </p>
+    </div>
+    <div class="area__places" aria-hidden="true">
+      <span class="area__town area__town--home">Alūksne</span>
+      <span class="area__town">Gulbene</span>
+      <span class="area__town">Balvi</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .area {
+    --from: var(--cream);
+    --tone: var(--linen);
+    --to: var(--cream);
+    padding: var(--section) 0;
+  }
+
+  .area__grid {
+    display: grid;
+    gap: var(--s-7);
+  }
+
+  .area__places {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 1.6rem + 3vw, 4rem);
+    line-height: 1.12;
+    color: var(--chocolate);
+  }
+
+  .area__town {
+    position: relative;
+    width: fit-content;
+    font-weight: 350;
+    color: rgb(82 27 16 / 0.42);
+  }
+
+  .area__town--home {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--chocolate);
+  }
+
+  /* Dūrienu līnija, kas savieno pilsētas ar Alūksni */
+  .area__town + .area__town {
+    padding-left: 1.4em;
+  }
+
+  .area__town + .area__town::before {
+    content: '';
+    position: absolute;
+    left: 0.35em;
+    top: -0.55em;
+    width: 0.75em;
+    height: 1.12em;
+    border-left: 1.5px dashed var(--thread);
+    border-bottom: 1.5px dashed var(--thread);
+    border-bottom-left-radius: 0.5em;
+  }
+
+  .area__copy h2 {
+    max-width: 18ch;
+  }
+
+  .area__copy p {
+    margin-top: var(--s-5);
+    max-width: 56ch;
+  }
+
+  @media (min-width: 64rem) {
+    .area__grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: clamp(3rem, 6vw, 6rem);
+      align-items: center;
+    }
+
+    .area__places {
+      grid-row: 1;
+      grid-column: 1;
+    }
+
+    .area__copy {
+      grid-row: 1;
+      grid-column: 2;
+    }
+  }
+</style>

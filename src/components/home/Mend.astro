@@ -1,0 +1,272 @@
+---
+/**
+ * 1.4 Ne vienmēr vajag pirkt jaunu - „pirms / pēc” salīdzinājums ar
+ * pieejamu slīdni (range input: tastatūra, ekrāna lasītāji, pieskāriens).
+ */
+import Picture from '../Picture.astro';
+import Button from '../Button.astro';
+import Icon from '../Icon.astro';
+import { links } from '../../config';
+import { images } from '../../data/images';
+
+const sizes = '(min-width: 64rem) 46vw, 92vw';
+const widths = [420, 640, 860, 1100, 1254];
+---
+
+<section class="mend tone" aria-labelledby="mend-title">
+  <div class="container mend__grid">
+    <div class="compare" data-compare style="--pos: 50%">
+      <div class="compare__frame">
+        <Picture image={images.pecJaka} widths={widths} sizes={sizes} class="compare__img compare__img--after" />
+        <div class="compare__before">
+          <Picture image={images.pirmsJaka} widths={widths} sizes={sizes} class="compare__img" />
+        </div>
+        <div class="compare__seam" aria-hidden="true">
+          <span class="compare__knob">
+            <Icon name="chevron" size={18} class="compare__chev compare__chev--l" />
+            <Icon name="chevron" size={18} class="compare__chev compare__chev--r" />
+          </span>
+        </div>
+        <span class="compare__tag compare__tag--before" aria-hidden="true">Pirms</span>
+        <span class="compare__tag compare__tag--after" aria-hidden="true">Pēc</span>
+        <label class="visually-hidden" for="compare-range">Salīdzināt jaku pirms un pēc rāvējslēdzēja maiņas</label>
+        <input
+          id="compare-range"
+          class="compare__range"
+          type="range"
+          min="0"
+          max="100"
+          value="50"
+          step="1"
+          aria-valuetext="Redzama puse: pirms un pēc"
+        />
+      </div>
+    </div>
+
+    <div class="mend__copy">
+      <h2 id="mend-title">Ne vienmēr vajag pirkt jaunu</h2>
+      <p>
+        Mīļākā jaka ar salauztu rāvējslēdzēju, kleita, kas vairs neder kā agrāk, vai labas bikses, kurām tikai
+        jāsaīsina garums - bieži pietiek ar nelielu šūšanas darbu, lai lieta atkal kalpotu gadiem. Tas maksā tikai daļu
+        no jaunas lietas cenas, un Jums paliek apģērbs, kas jau patīk.
+      </p>
+      <Button href={links.whatsapp} icon="whatsapp" external>Atsūtīt foto un uzzināt cenu</Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .mend {
+    --from: var(--linen);
+    --tone: var(--blush);
+    --to: var(--blush);
+    padding: var(--section-tight) 0;
+  }
+
+  .mend__grid {
+    display: grid;
+    gap: var(--s-7);
+    align-items: center;
+  }
+
+  .compare {
+    position: relative;
+  }
+
+  .compare__frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--r-l);
+    aspect-ratio: 1;
+    background: var(--linen);
+    box-shadow: var(--shadow-lift);
+    touch-action: pan-y;
+  }
+
+  .compare__img,
+  .compare__img :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .compare__before {
+    position: absolute;
+    inset: 0;
+    clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+  }
+
+  /* Šuve: vertikāla līnija ar dūrieniem un rokturi */
+  .compare__seam {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--pos);
+    width: 0;
+    pointer-events: none;
+  }
+
+  .compare__seam::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -1.5px;
+    width: 3px;
+    background: var(--cream);
+    box-shadow: 0 0 10px rgb(58 42 38 / 0.25);
+  }
+
+  .compare__seam::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -0.75px;
+    width: 1.5px;
+    background: repeating-linear-gradient(180deg, var(--thread) 0 7px, transparent 7px 13px);
+  }
+
+  .compare__knob {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--cream);
+    color: var(--chocolate);
+    box-shadow: 0 4px 14px rgb(58 42 38 / 0.28), inset 0 0 0 1px rgb(82 27 16 / 0.12);
+    transform: translate(-50%, -50%);
+    transition: transform var(--dur) var(--ease-out);
+  }
+
+  .compare__chev--l {
+    transform: rotate(90deg);
+    margin-right: -4px;
+  }
+
+  .compare__chev--r {
+    transform: rotate(-90deg);
+    margin-left: -4px;
+  }
+
+  .compare__tag {
+    position: absolute;
+    top: 18px;
+    padding: 6px 14px 6px 12px;
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--chocolate);
+    font-family: var(--font-hand);
+    font-size: 1.5rem;
+    line-height: 1;
+    box-shadow: var(--shadow-paper);
+    pointer-events: none;
+  }
+
+  .compare__tag--before {
+    left: 18px;
+    transform: rotate(-4deg);
+  }
+
+  .compare__tag--after {
+    right: 18px;
+    transform: rotate(3deg);
+  }
+
+  /* Neredzams, bet fokusējams slīdnis pāri visam attēlam */
+  .compare__range {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: ew-resize;
+    -webkit-appearance: none;
+    appearance: none;
+    touch-action: pan-y;
+  }
+
+  .compare:has(.compare__range:focus-visible) .compare__knob {
+    outline: 2.5px solid var(--focus);
+    outline-offset: 3px;
+  }
+
+  .compare:has(.compare__range:active) .compare__knob {
+    transform: translate(-50%, -50%) scale(1.06);
+  }
+
+  .mend__copy h2 {
+    max-width: 14ch;
+  }
+
+  .mend__copy p {
+    margin-top: var(--s-5);
+    max-width: 52ch;
+    font-size: var(--fs-lead);
+    line-height: 1.55;
+  }
+
+  .mend__copy :global(.btn) {
+    margin-top: var(--s-6);
+  }
+
+  @media (min-width: 64rem) {
+    .mend__grid {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+      gap: clamp(3rem, 7vw, 7rem);
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-compare]').forEach((root) => {
+    const range = root.querySelector<HTMLInputElement>('input[type="range"]');
+    if (!range) return;
+    const update = () => {
+      const v = Number(range.value);
+      root.style.setProperty('--pos', `${v}%`);
+      range.setAttribute('aria-valuetext', `Pirms: ${v}%, pēc: ${100 - v}%`);
+    };
+    range.addEventListener('input', update);
+    update();
+
+    // Vienreizējs, lēns mājiens, ka slīdni var vilkt (ne ar samazinātu kustību).
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !('IntersectionObserver' in window)) return;
+    let touched = false;
+    range.addEventListener('pointerdown', () => (touched = true), { once: true });
+    range.addEventListener('keydown', () => (touched = true), { once: true });
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        io.disconnect();
+        const keys = [50, 34, 64, 50];
+        const start = performance.now();
+        const dur = 2200;
+        const ease = (t: number) => 0.5 - Math.cos(Math.PI * t) / 2;
+        const step = (now: number) => {
+          if (touched) return;
+          const t = Math.min(1, (now - start) / dur);
+          const seg = Math.min(keys.length - 2, Math.floor(t * (keys.length - 1)));
+          const local = t * (keys.length - 1) - seg;
+          const v = keys[seg] + (keys[seg + 1] - keys[seg]) * ease(local);
+          root.style.setProperty('--pos', `${v}%`);
+          if (t < 1) requestAnimationFrame(step);
+          else update();
+        };
+        setTimeout(() => requestAnimationFrame(step), 400);
+      },
+      { threshold: 0.6 },
+    );
+    io.observe(root);
+  });
+</script>

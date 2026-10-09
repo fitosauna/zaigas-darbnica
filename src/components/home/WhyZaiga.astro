@@ -1,0 +1,236 @@
+---
+/**
+ * 1.3 Kāpēc Zaiga - teksts uz blāvas piegrieztnes lapas (režģis, raustītas
+ * griešanas līnijas, iegriezumi) ar lielu kontūras „20” (A5).
+ */
+import Picture from '../Picture.astro';
+import { images } from '../../data/images';
+
+const reasons = [
+  {
+    title: '20 gadu pieredze.',
+    text: 'Šuju un adu jau 20 gadus. Esmu strādājusi ar ļoti dažādiem audumiem, dzijām un apģērbiem, tāpēc uzņemos arī sarežģītus un netipiskus darbus.',
+  },
+  {
+    title: 'Skaidra cena jau sākumā.',
+    text: 'Pirms darba pateikšu, cik tas maksās. Remontam vajadzīgie materiāli - rāvējslēdzējs, odere, diegi - jau ir iekļauti cenā.',
+  },
+  {
+    title: 'Gatavs sarunātajā laikā.',
+    text: 'Gatavības datumu sarunājam uzreiz, un es to ievēroju. Ja vajag ātri, piezvaniet - steidzamus darbus var paveikt ātrāk.',
+  },
+  {
+    title: 'Kvalitāte, nevis daudzums.',
+    text: 'Katram darbam veltu tik daudz laika, cik tam vajag. Vīles taisnas, diegs piemērotā krāsā, apģērbs izskatās kārtīgi.',
+  },
+  {
+    title: 'Godīgs padoms.',
+    text: 'Ja labošana nav naudas vērta, pateikšu to atklāti.',
+  },
+  {
+    title: 'Viena meistare no sākuma līdz beigām.',
+    text: 'Jūs runājat ar to pašu cilvēku, kas šuj vai ada Jūsu lietu.',
+  },
+];
+---
+
+<section class="why tone" aria-labelledby="why-title">
+  <svg class="why__sheet" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid slice" viewBox="0 0 1440 1000">
+    <defs>
+      <pattern id="why-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+        <path d="M24 0H0v24" fill="none" stroke="rgb(82 27 16 / 0.07)" stroke-width="1"></path>
+      </pattern>
+      <pattern id="why-grid-major" width="120" height="120" patternUnits="userSpaceOnUse">
+        <path d="M120 0H0v120" fill="none" stroke="rgb(82 27 16 / 0.07)" stroke-width="1.2"></path>
+      </pattern>
+    </defs>
+    <rect width="1440" height="1000" fill="url(#why-grid)"></rect>
+    <rect width="1440" height="1000" fill="url(#why-grid-major)"></rect>
+    <g fill="none" stroke="rgb(184 96 90 / 0.3)" stroke-width="1.5" stroke-dasharray="9 7" stroke-linecap="round">
+      <!-- Piedurknes piegrieztne -->
+      <path d="M90 140c90-70 250-80 330 0 30 30 40 90 60 160l60 520H40l50-520c10-70 0-130 0-160Z"></path>
+      <!-- Žaketes priekšas piegrieztne -->
+      <path d="M1190 70c40 30 90 40 140 30l90-20 30 110c-40 40-50 100-40 170l20 380h-240l20-380c10-90 10-190-20-290Z"></path>
+    </g>
+    <g fill="none" stroke="rgb(82 27 16 / 0.18)" stroke-width="1.2">
+      <!-- Iegriezumi (notches) -->
+      <path d="M262 108v16M246 110l4 14M48 520h16M1426 330h-16M1300 820v-16"></path>
+      <!-- Diega virziena bulta -->
+      <path d="M250 300v360m-8-344 8-16 8 16m-16 312 8 16 8-16"></path>
+      <path d="M1320 280v380m-8-364 8-16 8 16m-16 332 8 16 8-16"></path>
+    </g>
+  </svg>
+
+  <div class="container why__grid">
+    <div class="why__head">
+      <p class="label">Kāpēc Zaiga</p>
+      <h2 id="why-title">Kāpēc klienti uztic savas lietas Zaigai?</h2>
+    </div>
+
+    <div class="why__aside">
+      <p class="why__number" aria-hidden="true">
+        <span class="why__twenty">20</span>
+        <span class="why__note hand">gadu pieredze</span>
+      </p>
+      <figure class="why__photo">
+        <Picture
+          image={images.zaigaPieSujmasinas}
+          widths={[420, 640, 860, 1100]}
+          sizes="(min-width: 64rem) 36vw, (min-width: 43.75rem) 60vw, 92vw"
+        />
+      </figure>
+    </div>
+
+    <div class="why__main">
+      <ul role="list" class="why__list">
+        {
+          reasons.map((r) => (
+            <li>
+              <h3>{r.title}</h3>
+              <p>{r.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .why {
+    --from: var(--linen);
+    --tone: var(--linen);
+    --to: var(--linen);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: var(--section) 0 var(--section-tight);
+  }
+
+  .why__sheet {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.9;
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 18%, #000 80%, transparent);
+    mask-image: linear-gradient(180deg, transparent, #000 18%, #000 80%, transparent);
+  }
+
+  .why__grid {
+    display: grid;
+    gap: var(--s-7);
+  }
+
+  .why__aside {
+    position: relative;
+  }
+
+  .why__number {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    gap: var(--s-3);
+    line-height: 0.8;
+  }
+
+  .why__twenty {
+    font-family: var(--font-display);
+    font-size: var(--fs-display-num);
+    font-weight: 300;
+    font-variation-settings: 'opsz' 144;
+    letter-spacing: -0.06em;
+    color: transparent;
+    -webkit-text-stroke: 1.6px var(--thread);
+    paint-order: stroke;
+  }
+
+  .why__note {
+    position: relative;
+    z-index: 1;
+    bottom: 1.15em;
+    font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.4rem);
+    transform: rotate(-6deg);
+    white-space: nowrap;
+  }
+
+  .why__photo {
+    position: relative;
+    margin-top: calc(-1 * clamp(1.75rem, 0.5rem + 3.5vw, 3rem));
+    margin-left: clamp(1.5rem, 8vw, 5rem);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lift);
+    transform: rotate(1.2deg);
+  }
+
+  .why__photo :global(img) {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+
+  .why__head h2 {
+    margin-top: var(--s-3);
+    max-width: 18ch;
+  }
+
+  .why__list {
+    display: grid;
+    gap: var(--s-6) var(--s-7);
+  }
+
+  .why__list li {
+    position: relative;
+    padding-top: var(--s-4);
+    border-top: 1px dashed rgb(82 27 16 / 0.28);
+  }
+
+  .why__list h3 {
+    font-size: clamp(1.25rem, 1.15rem + 0.45vw, 1.5rem);
+    font-weight: 480;
+  }
+
+  .why__list p {
+    margin-top: var(--s-2);
+    max-width: 40ch;
+  }
+
+  @media (min-width: 43.75rem) {
+    .why__list {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .why__grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      grid-template-areas:
+        'aside head'
+        'aside main';
+      grid-template-rows: auto 1fr;
+      gap: var(--s-7) clamp(3rem, 6vw, 6rem);
+      align-items: start;
+    }
+
+    .why__head {
+      grid-area: head;
+    }
+
+    .why__main {
+      grid-area: main;
+    }
+
+    .why__aside {
+      grid-area: aside;
+      position: sticky;
+      top: calc(var(--header-top) + var(--header-h) + 40px);
+    }
+
+    .why__photo {
+      margin-left: 0;
+      margin-right: -1rem;
+    }
+  }
+</style>

@@ -1,0 +1,364 @@
+---
+/**
+ * 1.1 Hero - atbilstoši hero-reference-mockup.png kompozīcijai (bez logo).
+ * Darbvirsmā foto labajā pusē (~64%) izplūst krēmīgā fonā ar garu masku;
+ * telefonā foto aizņem augšējo pusi un izplūst uz leju, H1 pārklāj pāreju.
+ */
+import Picture from '../Picture.astro';
+import Button from '../Button.astro';
+import Icon from '../Icon.astro';
+import { contact, hours, links } from '../../config';
+import { images } from '../../data/images';
+import type { BuiltPicture } from '../../lib/picture';
+
+interface Props {
+  picture: BuiltPicture;
+}
+const { picture } = Astro.props;
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__media">
+    <Picture
+      built={picture}
+      image={images.heroDarbnica}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+      class="hero__picture"
+      imgClass="hero__img"
+    />
+  </div>
+
+  <div class="container hero__inner">
+    <div class="hero__copy">
+      <h1 id="hero-title" class="hero__title">
+        <span class="hero__name">Zaigas darbnīca</span>
+        <span class="hero__place"
+          >Alūksnē<svg
+            class="hero__thread"
+            viewBox="0 0 420 70"
+            fill="none"
+            aria-hidden="true"
+            focusable="false"
+            preserveAspectRatio="xMinYMid meet"
+          >
+            <path
+              pathLength="1"
+              d="M3 16C44 40 104 56 172 56c70 0 124-24 178-35 22-4 38 0 42 11 4 12-6 21-15 18-9-3-9-15 1-22 12-8 34-8 58 2"
+            ></path>
+          </svg></span
+        >
+      </h1>
+
+      <p class="hero__lead">
+        Apģērbu labošana un pielāgošana, individuālā šūšana un adīšana pēc pasūtījuma. 20&nbsp;gadu pieredze, skaidra
+        cena jau sākumā.
+      </p>
+
+      <div class="hero__actions" data-primary-actions>
+        <Button href={links.tel} icon="phone" size="lg">Zvanīt Zaigai</Button>
+        <Button href={links.whatsapp} icon="whatsapp" variant="secondary" size="lg" external>
+          Atsūtīt foto WhatsApp
+        </Button>
+      </div>
+
+      <ul role="list" class="hero__info">
+        <li><Icon name="pin" size={18} />{contact.address.street}, {contact.address.city}</li>
+        <li><Icon name="clock" size={18} /><span class="nowrap">{hours.short}</span></li>
+        <li><Icon name="route" size={18} />Klienti arī no Gulbenes un Balviem</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    padding-bottom: var(--s-8);
+  }
+
+  /* Telefons: foto augšā, izplūst uz leju krēmīgajā fonā */
+  .hero__media {
+    position: relative;
+    z-index: -1;
+    height: clamp(330px, 53svh, 560px);
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 50%, rgb(0 0 0 / 0.55) 72%, transparent 96%);
+    mask-image: linear-gradient(180deg, #000 0%, #000 50%, rgb(0 0 0 / 0.55) 72%, transparent 96%);
+  }
+
+  .hero__picture {
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero__picture :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 22%;
+    transform-origin: 62% 40%;
+    animation: hero-drift 32s var(--ease-in-out) infinite alternate;
+    will-change: transform;
+  }
+
+  @keyframes hero-drift {
+    from {
+      transform: scale(1.02) translate3d(0, 0, 0);
+    }
+    to {
+      transform: scale(1.085) translate3d(-1.2%, -0.8%, 0);
+    }
+  }
+
+  .hero__inner {
+    position: relative;
+    margin-top: calc(-1 * clamp(76px, 12svh, 128px));
+  }
+
+  .hero__title {
+    display: flex;
+    flex-direction: column;
+    font-size: var(--fs-h1);
+    font-weight: 380;
+    font-variation-settings: 'opsz' 144;
+    line-height: 1;
+    letter-spacing: -0.024em;
+    color: var(--chocolate);
+    text-wrap: balance;
+    hyphens: manual;
+    -webkit-hyphens: manual;
+  }
+
+  .hero__place {
+    position: relative;
+    align-self: flex-start;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.012em;
+    padding-right: 0.06em;
+  }
+
+  /* Diegs zem „Alūksnē” - atbalss logo vijumam, uzzīmējas vienreiz */
+  .hero__thread {
+    position: absolute;
+    left: -0.12em;
+    top: 0.82em;
+    width: 4.7em;
+    height: auto;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .hero__thread path {
+    stroke: var(--thread);
+    stroke-width: 3.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+    animation: thread-draw 2.4s var(--ease-in-out) 0.45s both;
+  }
+
+  @keyframes thread-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .hero__lead {
+    margin-top: clamp(1.75rem, 1.2rem + 1.8vw, 2.5rem);
+    max-width: 34ch;
+    font-size: var(--fs-lead);
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: var(--s-6);
+  }
+
+  .hero__info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: var(--s-5);
+    font-size: var(--fs-small);
+    line-height: 1.45;
+    color: var(--ink-soft);
+  }
+
+  .hero__info li {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+
+  .hero__info :global(svg) {
+    flex: none;
+    color: var(--thread);
+  }
+
+  @media (min-width: 43.75rem) {
+    .hero__info {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 8px 22px;
+    }
+
+    .hero__info li {
+      white-space: nowrap;
+    }
+  }
+
+  /* Platāki telefoni: pogas blakus, ja ietilpst */
+  @media (min-width: 30rem) {
+    .hero__actions {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  }
+
+  /* Planšete: plats kadrējums, joprojām vertikāls izkārtojums */
+  @media (min-width: 43.75rem) {
+    .hero__media {
+      height: clamp(380px, 56vh, 620px);
+    }
+
+    .hero__picture :global(img) {
+      object-position: 78% 50%;
+    }
+  }
+
+  /* Darbvirsma: foto labajā pusē, teksts kreisajā */
+  @media (min-width: 64rem) {
+    .hero {
+      display: grid;
+      align-items: center;
+      min-height: clamp(640px, 100svh, 1000px);
+      padding: calc(var(--header-top) + var(--header-h) + 32px) 0 clamp(56px, 7vh, 96px);
+    }
+
+    .hero__media {
+      position: absolute;
+      inset: 0 0 0 auto;
+      width: 70%;
+      height: 100%;
+      -webkit-mask-image: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgb(0 0 0 / 0.12) 10%,
+        rgb(0 0 0 / 0.42) 22%,
+        rgb(0 0 0 / 0.8) 34%,
+        #000 46%
+      );
+      mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.12) 10%, rgb(0 0 0 / 0.42) 22%, rgb(0 0 0 / 0.8) 34%, #000 46%);
+    }
+
+    /* Apakšā foto maigi izplūst nākamajā sadaļā */
+    .hero::after {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: clamp(120px, 18vh, 200px);
+      background: linear-gradient(180deg, rgb(250 245 238 / 0), var(--cream));
+      pointer-events: none;
+    }
+
+    .hero__picture :global(img) {
+      object-position: 100% 50%;
+    }
+
+    .hero__inner {
+      margin-top: 0;
+    }
+
+    .hero__copy {
+      max-width: 34rem;
+    }
+
+    .hero__actions {
+      margin-top: var(--s-7);
+    }
+  }
+
+  /* Telefons guļus: kompakts sadalīts izkārtojums, lai pogas redzamas uzreiz */
+  @media (orientation: landscape) and (max-height: 32.5rem) and (max-width: 63.99rem) {
+    .hero {
+      display: grid;
+      align-items: center;
+      min-height: 100svh;
+      padding: calc(var(--header-top) + var(--header-h) + 12px) 0 20px;
+    }
+
+    .hero__media {
+      position: absolute;
+      inset: 0 0 0 auto;
+      width: 62%;
+      height: 100%;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.5) 22%, #000 44%);
+      mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.5) 22%, #000 44%);
+    }
+
+    .hero__picture :global(img) {
+      object-position: 100% 50%;
+    }
+
+    .hero__inner {
+      margin-top: 0;
+    }
+
+    .hero__copy {
+      max-width: 48%;
+    }
+
+    .hero__title {
+      font-size: clamp(2rem, 6.4vh + 0.5rem, 2.75rem);
+    }
+
+    .hero__lead {
+      margin-top: 1.1rem;
+      font-size: 1.0625rem;
+    }
+
+    .hero__actions {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 1rem;
+    }
+
+    .hero__actions :global(.btn) {
+      --btn-h: 48px;
+      --btn-px: 18px;
+      font-size: 1rem;
+    }
+
+    .hero__info {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__picture :global(img) {
+      animation: none;
+      transform: none;
+    }
+
+    .hero__thread path {
+      animation: none;
+      stroke-dashoffset: 0;
+    }
+  }
+</style>

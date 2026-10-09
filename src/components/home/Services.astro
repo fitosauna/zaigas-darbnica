@@ -1,0 +1,321 @@
+---
+/**
+ * 1.2 Pakalpojumi - auduma paraugu „moodboard” (A5): katrs pakalpojums ir
+ * foto ar zigzaga (pinked) malām uz sava auduma parauga (džinss, lins,
+ * zīds, adījums, caurspīdīgs aizkars). Telefonā - pavelkama rinda.
+ */
+import Picture from '../Picture.astro';
+import Icon from '../Icon.astro';
+import { services } from '../../data/services';
+import { images } from '../../data/images';
+import { pinkedPolygon } from '../../lib/shapes';
+
+const shapes = {
+  landscape: pinkedPolygon(36, 24, 5),
+  portrait: pinkedPolygon(24, 30, 5),
+};
+const fabricShape = pinkedPolygon(30, 30, 6);
+---
+
+<section class="services tone" id="pakalpojumi" aria-labelledby="services-title">
+  <div class="container services__head">
+    <p class="label">Pakalpojumi</p>
+    <h2 id="services-title">Ar ko varu Jums palīdzēt?</h2>
+    <p class="services__intro">
+      No maza ielāpa līdz ar rokām adītam džemperim - visu dara viena meistare, ar kuru varat runāt tieši.
+    </p>
+  </div>
+
+  <div class="services__board-wrap">
+    <ul role="list" class="board">
+      {
+        services.map((s, i) => {
+          const img = images[s.image];
+          const orientation = img.src.width >= img.src.height ? 'landscape' : 'portrait';
+          return (
+            <li class:list={['swatch', `swatch--${s.swatch}`, `swatch--${orientation}`]} style={`--i: ${i}`}>
+              <a class="swatch__media" href={s.href} tabindex="-1" aria-hidden="true">
+                <span class="swatch__fabric" style={`clip-path: ${fabricShape}`} />
+                <span class="swatch__photo" style={`clip-path: ${shapes[orientation]}`}>
+                  <Picture
+                    image={img}
+                    alt=""
+                    widths={orientation === 'landscape' ? [420, 640, 860, 1100] : [320, 480, 640, 860]}
+                    sizes={
+                      orientation === 'landscape'
+                        ? '(min-width: 64rem) 34vw, (min-width: 43.75rem) 44vw, 78vw'
+                        : '(min-width: 64rem) 22vw, (min-width: 43.75rem) 34vw, 62vw'
+                    }
+                  />
+                </span>
+              </a>
+              <div class="swatch__text">
+                <h3 class="swatch__title">{s.name}</h3>
+                <p>{s.summary}</p>
+                <a class="swatch__more" href={s.href}>
+                  Uzzināt vairāk<span class="visually-hidden">: {s.name}</span>
+                  <Icon name="arrow" size={18} />
+                </a>
+              </div>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .services {
+    --from: var(--cream);
+    --tone: var(--cream);
+    --to: var(--linen);
+    padding: var(--section-tight) 0 var(--section);
+  }
+
+  .services__head {
+    max-width: var(--container);
+  }
+
+  .services__head h2 {
+    margin-top: var(--s-3);
+    max-width: 16ch;
+  }
+
+  .services__intro {
+    margin-top: var(--s-5);
+    max-width: 46ch;
+    font-size: var(--fs-lead);
+    line-height: 1.5;
+  }
+
+  /* Telefons: pavelkama rinda ar nākamā parauga „peek” */
+  .services__board-wrap {
+    margin-top: var(--s-7);
+  }
+
+  .board {
+    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(78vw, 22rem);
+    gap: var(--s-5);
+    align-items: start;
+    padding: 18px var(--gutter) 28px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+  }
+
+  .board::-webkit-scrollbar {
+    display: none;
+  }
+
+  .swatch {
+    scroll-snap-align: start;
+    min-width: 0;
+  }
+
+  .swatch__media {
+    position: relative;
+    display: block;
+    isolation: isolate;
+    filter: drop-shadow(0 10px 14px rgb(82 27 16 / 0.16)) drop-shadow(0 1px 1px rgb(82 27 16 / 0.12));
+  }
+
+  .swatch__photo {
+    position: relative;
+    display: block;
+    transform: rotate(var(--tilt, -1deg));
+    transition: transform var(--dur-slow) var(--ease-out);
+  }
+
+  .swatch__photo :global(img) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+
+  .swatch--portrait .swatch__photo :global(img) {
+    aspect-ratio: 4 / 5;
+  }
+
+  /* Auduma paraugs zem foto - redzama tikai mala */
+  .swatch__fabric {
+    position: absolute;
+    z-index: -1;
+    inset: -10px -14px 6px 10px;
+    transform: rotate(var(--fabric-tilt, 3deg));
+    background-color: var(--fabric, var(--linen));
+    background-image: var(--weave, none);
+    transition: transform var(--dur-slow) var(--ease-out);
+  }
+
+  .swatch:nth-child(odd) {
+    --tilt: -1.2deg;
+    --fabric-tilt: 2.6deg;
+  }
+
+  .swatch:nth-child(even) {
+    --tilt: 1deg;
+    --fabric-tilt: -2.4deg;
+  }
+
+  @media (hover: hover) {
+    .swatch:hover .swatch__photo {
+      transform: rotate(0deg) translateY(-3px);
+    }
+
+    .swatch:hover .swatch__fabric {
+      transform: rotate(calc(var(--fabric-tilt) * 1.25));
+    }
+  }
+
+  /* Auduma faktūras */
+  .swatch--denim {
+    --fabric: #4d5f78;
+    --weave: repeating-linear-gradient(45deg, rgb(255 255 255 / 0.09) 0 1.5px, transparent 1.5px 4px),
+      repeating-linear-gradient(-45deg, rgb(0 0 0 / 0.08) 0 1px, transparent 1px 5px);
+  }
+
+  .swatch--linen {
+    --fabric: #e3d3bd;
+    --weave: repeating-linear-gradient(0deg, rgb(82 27 16 / 0.06) 0 1px, transparent 1px 3px),
+      repeating-linear-gradient(90deg, rgb(82 27 16 / 0.05) 0 1px, transparent 1px 4px);
+  }
+
+  .swatch--silk {
+    --fabric: #d9a49b;
+    --weave: linear-gradient(118deg, rgb(255 255 255 / 0) 20%, rgb(255 255 255 / 0.35) 42%, rgb(255 255 255 / 0) 58%),
+      linear-gradient(118deg, #cf9389, #e7bdb4 48%, #d39a90);
+  }
+
+  .swatch--knit {
+    --fabric: #b9675f;
+    --weave: linear-gradient(55deg, transparent 42%, rgb(255 255 255 / 0.14) 46% 54%, transparent 58%),
+      linear-gradient(-55deg, transparent 42%, rgb(0 0 0 / 0.1) 46% 54%, transparent 58%);
+    background-size: 8px 10px;
+  }
+
+  .swatch--knit .swatch__fabric {
+    background-size: 8px 10px;
+  }
+
+  .swatch--sheer {
+    --fabric: #f4ede4;
+    --weave: repeating-linear-gradient(
+      90deg,
+      rgb(255 255 255 / 0.85) 0 7px,
+      rgb(226 212 196 / 0.7) 12px,
+      rgb(255 255 255 / 0.85) 19px
+    );
+  }
+
+  .swatch__text {
+    margin-top: var(--s-5);
+    padding-right: var(--s-2);
+  }
+
+  .swatch__title {
+    font-size: var(--fs-h3);
+    font-weight: 450;
+  }
+
+  .swatch__text p {
+    margin-top: var(--s-2);
+    color: var(--ink);
+  }
+
+  .swatch__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 48px;
+    margin-top: var(--s-1);
+    font-weight: 700;
+    color: var(--rose-ink);
+    text-decoration: none;
+  }
+
+  .swatch__more :global(svg) {
+    transition: transform var(--dur) var(--ease-out);
+  }
+
+  .swatch__more:hover {
+    color: var(--chocolate);
+  }
+
+  .swatch__more:hover :global(svg) {
+    transform: translateX(3px);
+  }
+
+  /* Planšete: divas kolonnas ar nobīdi */
+  @media (min-width: 43.75rem) {
+    .board {
+      grid-auto-flow: row;
+      grid-template-columns: 1fr 1fr;
+      grid-auto-columns: auto;
+      gap: var(--s-7) var(--s-7);
+      width: min(100% - 2 * var(--gutter), var(--container));
+      margin-inline: auto;
+      padding: 18px 0 0;
+      overflow: visible;
+    }
+
+    .swatch:nth-child(even) {
+      margin-top: var(--s-9);
+    }
+  }
+
+  /* Darbvirsma: brīvs moodboard 12 kolonnu režģī */
+  @media (min-width: 64rem) {
+    .services__head {
+      display: grid;
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      column-gap: var(--s-8);
+      align-items: end;
+    }
+
+    .services__head .label {
+      grid-column: 1 / -1;
+    }
+
+    .services__intro {
+      margin: 0 0 0.4em;
+    }
+
+    .board {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 0 var(--s-6);
+      row-gap: var(--s-8);
+    }
+
+    .swatch:nth-child(1) {
+      grid-column: 1 / span 5;
+      margin-top: 0;
+    }
+
+    .swatch:nth-child(2) {
+      grid-column: 7 / span 5;
+      margin-top: var(--s-9);
+    }
+
+    .swatch:nth-child(3) {
+      grid-column: 2 / span 3;
+      margin-top: calc(-1 * var(--s-6));
+    }
+
+    .swatch:nth-child(4) {
+      grid-column: 6 / span 4;
+      margin-top: var(--s-8);
+    }
+
+    .swatch:nth-child(5) {
+      grid-column: 10 / span 3;
+      margin-top: calc(-1 * var(--s-5));
+    }
+  }
+</style>
