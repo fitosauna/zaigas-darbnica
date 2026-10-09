@@ -1,0 +1,13 @@
+# Bibliotēkas (PHPMailer) izmanto tikai send.php no servera puses.
+# No pārlūka šai mapei piekļūt nedrīkst - Apache atbild ar 403.
+
+# Apache 2.4 (SiteGround)
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+
+# Rezerves variants vecākam Apache vai mod_access_compat (vecā sintakse).
+<IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+</IfModule>
