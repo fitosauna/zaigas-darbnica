@@ -1,9 +1,8 @@
 ---
 /**
  * Kontaktinformācija (Part B §9.2) kā vizītkarte: papīrs ar iešūtu dūrienu malu.
- * Katrs tālrunis ir tel: saite; WhatsApp - ar pogu (DESIGN.md #13).
+ * Tālrunis - tel: saite, WhatsApp - wa.me saite, e-pasts - mailto:.
  */
-import Button from '../Button.astro';
 import { contact, links } from '../../config';
 import { kontakti } from '../../data/pages/kontakti';
 ---
@@ -19,8 +18,8 @@ import { kontakti } from '../../data/pages/kontakti';
       <dd><a href={links.tel}>{contact.phoneDisplay}</a></dd>
     </div>
     <div>
-      <dt><a href={links.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a></dt>
-      <dd><a href={links.tel}>{contact.phoneDisplay}</a>&nbsp;- {kontakti.info.whatsappNote}</dd>
+      <dt>WhatsApp</dt>
+      <dd><a href={links.whatsapp} target="_blank" rel="noopener noreferrer">Rakstīt WhatsApp</a>&nbsp;- {kontakti.info.whatsappNote}</dd>
     </div>
     <div>
       <dt>E-pasts</dt>
@@ -33,11 +32,6 @@ import { kontakti } from '../../data/pages/kontakti';
       </dd>
     </div>
   </dl>
-  <div class="card__actions" data-primary-actions>
-    <Button href={links.tel} icon="phone">Zvanīt Zaigai</Button>
-    <Button href={links.whatsapp} icon="whatsapp" variant="secondary" external>Rakstīt WhatsApp</Button>
-    <Button href={links.mail} icon="mail" variant="quiet">Rakstīt e-pastu</Button>
-  </div>
 </section>
 
 <style>
@@ -102,28 +96,8 @@ import { kontakti } from '../../data/pages/kontakti';
     white-space: nowrap;
   }
 
-  .card__actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px 14px;
-    margin-top: var(--s-6);
-  }
-
-  .card__list dt a {
-    padding: 10px 0;
-    margin: -10px 0;
-    font-weight: 750;
-  }
-
   @media (max-width: 29.99rem) {
-    .card__actions {
-      flex-direction: column;
-      align-items: stretch;
-    }
-  }
-
-  @media (min-width: 30rem) {
+    @media (min-width: 30rem) {
     .card__list > div {
       grid-template-columns: 6.5rem 1fr;
       gap: var(--s-4);
