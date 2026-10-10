@@ -1,14 +1,13 @@
 ---
 /**
  * Kājene: šokolādes „odere” ar maigu izliektu vīli un dūrienu līniju.
- * Īsa: logo, kontakti un (darbvirsmā) pogas „Zvanīt” / „WhatsApp”;
- * telefonā pogu nav, jo tās jau ir apakšējā joslā.
+ * Īsa: logo pa kreisi, adrese un e-pasts pa labi; telefonā viens zem otra centrā.
+ * Zvanīt/WhatsApp jau ir galvenē, noslēgumā un apakšējā joslā.
  */
 import { contact, links, site } from '../config';
 import { logos } from '../data/images';
 import { mainNav } from '../data/navigation';
 import { buildLogo } from '../lib/picture';
-import Icon from './Icon.astro';
 
 // logo-cream.png ir ~16% caurspīdīgas malas augšā/apakšā; tās nogriežam ar object-fit (bez pārzīmēšanas).
 const logo = await buildLogo(logos.fullCream.src, 150);
@@ -37,18 +36,8 @@ const pages = mainNav.filter((n) => !n.children);
 
     <address class="footer__contacts">
       <p>{contact.address.street}, {contact.address.city}, <span class="nowrap">{contact.address.postalCode}</span></p>
-      <p><a href={links.tel}>{contact.phoneDisplay}</a></p>
       <p><a href={links.mail}>{contact.email}</a></p>
     </address>
-
-    <ul role="list" class="footer__quick" data-primary-actions>
-      <li>
-        <a href={links.tel}><Icon name="phone" size={18} /> Zvanīt</a>
-      </li>
-      <li>
-        <a href={links.whatsapp} target="_blank" rel="noopener noreferrer"><Icon name="whatsapp" size={18} /> WhatsApp</a>
-      </li>
-    </ul>
 
     <!-- Bez JavaScript izvēlnes poga galvenē ved šurp -->
     <nav class="footer__nojs" id="kajenes-izvelne" aria-label="Kājenes izvēlne">
@@ -153,30 +142,6 @@ const pages = mainNav.filter((n) => !n.children);
     font-weight: 650;
   }
 
-  /* Telefonā pogu nav - zvanīt/WhatsApp jau ir apakšējā joslā */
-  .footer__quick {
-    display: none;
-  }
-
-  .footer__quick a {
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-    min-height: 50px;
-    padding: 0 22px;
-    border-radius: var(--r-pill);
-    box-shadow: inset 0 0 0 1.5px rgb(250 245 238 / 0.4);
-    text-decoration: none;
-    font-weight: 700;
-    transition: box-shadow var(--dur) var(--ease-out), background-color var(--dur) var(--ease-out);
-  }
-
-  .footer__quick a:hover {
-    color: var(--on-dark);
-    background: rgb(250 245 238 / 0.08);
-    box-shadow: inset 0 0 0 1.5px var(--on-dark);
-  }
-
   .footer__nojs {
     display: none;
   }
@@ -203,7 +168,7 @@ const pages = mainNav.filter((n) => !n.children);
     flex-direction: column;
     align-items: center;
     gap: 4px;
-    margin-top: var(--s-6);
+    margin-top: var(--s-5);
     padding-top: var(--s-4);
     border-top: 1px solid rgb(250 245 238 / 0.14);
     color: rgb(250 245 238 / 0.78);
@@ -218,21 +183,16 @@ const pages = mainNav.filter((n) => !n.children);
 
   @media (min-width: 64rem) {
     .footer__grid {
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: auto auto;
+      justify-content: space-between;
       align-items: center;
-      justify-items: start;
-      gap: var(--s-6);
-      text-align: left;
-    }
-
-    .footer__quick {
-      display: flex;
-      gap: 12px;
-      justify-self: end;
+      gap: var(--s-4) var(--s-6);
+      text-align: right;
     }
 
     .footer__nojs {
       grid-column: 1 / -1;
+      justify-self: stretch;
     }
 
     .footer__base {

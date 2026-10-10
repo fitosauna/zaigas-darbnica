@@ -7,7 +7,6 @@
 import Actions from './Actions.astro';
 import AsideImage from './AsideImage.astro';
 import Icon from '../Icon.astro';
-import { contact, hours, links } from '../../config';
 import type { Action, Aside } from '../../data/pages/types';
 import { linkContacts } from '../../lib/typo';
 import type { Tones } from './Section.astro';
@@ -51,11 +50,6 @@ const style = `--from: var(--${tones.from}); --tone: var(--${tones.tone}); --to:
       <h2 id="aicinajums-title">{title}</h2>
       <p class="icta__lead" set:html={linkContacts(text)} />
       <Actions actions={actions} primary align={aside ? 'start' : 'center'} class="icta__actions" />
-      <ul role="list" class="icta__info">
-        <li>Tālrunis un WhatsApp: <a href={links.tel}>{contact.phoneDisplay}</a></li>
-        <li>{contact.address.street}, {contact.address.city}</li>
-        <li><span class="nowrap">{hours.daysLong}</span> <span class="nowrap">{hours.time}</span></li>
-      </ul>
     </div>
   </div>
 
@@ -120,23 +114,7 @@ const style = `--from: var(--${tones.from}); --tone: var(--${tones.tone}); --to:
     margin-top: var(--s-6);
   }
 
-  .icta__info {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin-top: var(--s-6);
-    font-size: var(--fs-small);
-    color: var(--ink-soft);
-  }
 
-  .icta__info a {
-    display: inline-block;
-    padding: 12px 2px;
-    margin: -12px 0;
-    color: var(--rose-ink);
-    font-weight: 700;
-    white-space: nowrap;
-  }
 
   .icta__aside {
     width: min(100%, 17rem);
@@ -190,21 +168,6 @@ const style = `--from: var(--${tones.from}); --tone: var(--${tones.tone}); --to:
     transform: translateX(3px);
   }
 
-  @media (min-width: 60rem) {
-    .icta__info {
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .icta__info li + li::before {
-      content: '·';
-      margin: 0 0.6em;
-      color: var(--thread);
-      font-weight: 700;
-    }
-  }
-
   /* Ar bildi: darbvirsmā bilde pa kreisi, teksts pa labi */
   @media (min-width: 64rem) {
     .icta--aside .icta__grid {
@@ -222,15 +185,6 @@ const style = `--from: var(--${tones.from}); --tone: var(--${tones.tone}); --to:
       grid-column: 7 / -1;
       align-items: flex-start;
       text-align: left;
-    }
-
-    .icta--aside .icta__info {
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .icta--aside .icta__info li + li::before {
-      content: none;
     }
   }
 </style>
