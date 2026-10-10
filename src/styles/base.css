@@ -156,9 +156,10 @@ a:hover {
   color: var(--chocolate);
 }
 
+/* Iezīmējums redzams uz visiem fona toņiem (arī rozā --blush sadaļās) */
 ::selection {
-  background: var(--blush);
-  color: var(--chocolate);
+  background: var(--rose-cta);
+  color: var(--cream);
 }
 
 /* Fokuss: vienmēr redzams, ar tastatūru */
