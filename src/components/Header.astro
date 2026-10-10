@@ -90,7 +90,7 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
   </div>
 </header>
 
-<dialog class="sheet" id="izvelne" aria-label="Izvēlne" data-menu>
+<dialog class="sheet" id="izvelne" aria-label="Izvēlne" data-menu tabindex="-1">
   <div class="sheet__inner">
     <div class="sheet__top">
       <a class="brand" href="/" aria-label={logos.header.alt}>
@@ -134,7 +134,7 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
     <div class="sheet__contact">
       <a class="sheet__btn sheet__btn--call" href={links.tel}>
         <Icon name="phone" size={22} />
-        <span>Zvanīt <span class="sheet__num">{contact.phoneDisplay}</span></span>
+        <span>Zvanīt Zaigai</span>
       </a>
       <a class="sheet__btn sheet__btn--wa" href={links.whatsapp} target="_blank" rel="noopener noreferrer">
         <Icon name="whatsapp" size={22} />
@@ -578,6 +578,11 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
     }
   }
 
+  /* Atverot izvēlni, fokuss ir uz pašu dialogu (bez rāmja); Tab tālāk rāda parasto fokusa rāmi */
+  .sheet:focus {
+    outline: none;
+  }
+
   .sheet::backdrop {
     background: rgb(58 42 38 / 0.2);
   }
@@ -615,7 +620,7 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
   }
 
   .sheet__nav {
-    padding: 28px 10px 24px;
+    padding: 20px 10px 18px;
   }
 
   .sheet__nav > ul > li + li {
@@ -625,7 +630,7 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
   .sheet__link {
     display: flex;
     align-items: center;
-    min-height: 60px;
+    min-height: 50px;
     font-family: var(--font-display);
     font-size: clamp(1.75rem, 1.4rem + 1.6vw, 2.25rem);
     font-weight: 400;
@@ -642,7 +647,7 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
   }
 
   .sheet__group {
-    padding: 14px 0 12px;
+    padding: 11px 0 9px;
   }
 
   .sheet__label {
@@ -654,7 +659,7 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
   .sheet__sub a {
     display: flex;
     align-items: center;
-    min-height: 46px;
+    min-height: 39px;
     padding-left: 2px;
     font-family: var(--font-display);
     font-size: 1.3125rem;
@@ -674,8 +679,8 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
     margin: auto calc(-1 * (var(--header-side) + 6px)) 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    padding: 18px calc(var(--header-side) + 10px) calc(14px + env(safe-area-inset-bottom));
+    gap: 8px;
+    padding: 12px calc(var(--header-side) + 10px) calc(14px + env(safe-area-inset-bottom));
     background: linear-gradient(180deg, rgb(250 245 238 / 0), var(--cream) 18px);
   }
 
@@ -684,8 +689,8 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
     align-items: center;
     justify-content: center;
     gap: 8px;
-    min-height: 56px;
-    padding: 8px 14px;
+    min-height: 50px;
+    padding: 6px 14px;
     border-radius: var(--r-pill);
     font-weight: 700;
     text-decoration: none;
@@ -697,11 +702,6 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
     color: #fff;
   }
 
-  .sheet__num {
-    font-weight: 600;
-    opacity: 0.92;
-  }
-
   .sheet__btn--wa {
     grid-column: 1 / -1;
     color: var(--chocolate);
@@ -710,10 +710,25 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
 
   .sheet__meta {
     grid-column: 1 / -1;
-    margin-top: 6px;
+    margin-top: 2px;
     text-align: center;
     font-size: var(--fs-small);
     color: var(--ink-soft);
+  }
+
+  /* Zemi telefoni (piem. iPhone SE): visa izvēlne un pogas vienā ekrānā */
+  @media (max-height: 700px) {
+    .sheet__nav {
+      padding-top: 12px;
+    }
+
+    .sheet__link {
+      min-height: 46px;
+    }
+
+    .sheet__meta {
+      display: none;
+    }
   }
 
   @media (min-width: 64rem) {
@@ -800,6 +815,7 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
       opener.addEventListener('click', (e) => {
         e.preventDefault();
         sheet.showModal();
+        sheet.focus();
         document.documentElement.classList.add('menu-open');
         opener.setAttribute('aria-expanded', 'true');
       });
