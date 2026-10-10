@@ -29,16 +29,8 @@ export const homeFaq: Faq[] = prepareFaq([
     a: 'Jā. Uzadu zeķes, dūraiņus, cepures, šalles, džemperus, jakas, pledus un citas lietas, kā arī laboju adītus apģērbus.',
   },
   {
-    q: 'Vai pieņemat klientus no Gulbenes un Balviem?',
-    a: `Protams. Darbnīca atrodas Alūksnē, ${contact.address.streetLocative}, un pie manis brauc klienti arī no Gulbenes, Balviem un apkārtnes.`,
-  },
-  {
     q: 'Vai var atnest savu audumu vai dziju?',
     a: 'Jā, protams. Varat atnest savu audumu vai dziju, vai arī kopā izvēlēsimies piemērotāko.',
-  },
-  {
-    q: 'Vai ir vērts labot lētu apģērbu?',
-    a: 'Godīgi pateikšu. Ja labošana maksātu gandrīz tikpat, cik jauna lieta, ieteikšu to nedarīt.',
   },
 ]);
 
