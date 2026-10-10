@@ -45,8 +45,8 @@ export const kontakti = {
       'Darbnīca atrodas Alūksnē, bet pie manis brauc klienti arī no Gulbenes, Balviem un apkārtējiem pagastiem.',
     items: [
       { title: 'Alūksne un Alūksnes novads', text: 'darbnīca ir tepat Alūksnē' },
-      { title: 'Gulbene un Gulbenes novads', text: 'aptuveni 50 km līdz Alūksnei' },
-      { title: 'Balvi un Balvu novads', text: 'aptuveni 50 km līdz Alūksnei' },
+      { title: 'Gulbene un Gulbenes novads', text: '42 km līdz darbnīcai' },
+      { title: 'Balvi un Balvu novads', text: '42 km līdz darbnīcai' },
     ] as ListItem[],
     tipLead: 'Padoms, ja braucat no tālienes:',
     tip: 'vispirms atsūtiet foto WhatsApp, lai jau iepriekš zinātu, vai darbu var izdarīt un cik tas maksās. Ja iespējams, atvediet vairākas lietas uzreiz.',
