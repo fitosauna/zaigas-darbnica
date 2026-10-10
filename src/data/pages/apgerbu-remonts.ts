@@ -2,7 +2,7 @@
  * /apgerbu-remonts - Part B §2. Teksts burtiski no Part B (A12), cenas no prices.ts.
  * Vienīgā atkāpe: meta aprakstā „Zvani” → „Zvaniet +371 26 423 325” (A12 „Jūs” forma).
  */
-import { contact } from '../../config';
+import { contact, pickup } from '../../config';
 import { price } from '../prices';
 import type { ServicePageData } from './types';
 
@@ -17,8 +17,8 @@ export const page: ServicePageData = {
   hero: {
     image: 'pakalpojumsRemonts',
     swatch: 'denim',
-    lead: 'Saplīsis rāvējslēdzējs? Iemīļotais apģērbs vēl var kalpot.',
-    text: 'Mētelis vēl kā jauns, bet rāvējslēdzējs vairs neaizveras. Džinsi sēž lieliski, bet vīle atirusi. Tas nenozīmē, ka jāpērk jauns. Labošana maksā tikai daļu no jaunas lietas cenas, un Jums paliek apģērbs, kas jau der un patīk.',
+    lead: 'Saplīsis rāvējslēdzējs vai atirusi vīle? To var salabot.',
+    text: 'Mētelis vēl kā jauns, bet rāvējslēdzējs vairs neaizveras. Džinsi sēž lieliski, bet vīle atirusi. Tas nenozīmē, ka jāpērk jauns. Labošana maksā daļu no jaunas lietas cenas, un Jums paliek apģērbs, kas jau der un patīk.',
     actions: [
       { kind: 'whatsapp', label: 'Atsūtīt foto WhatsApp' },
       { kind: 'tel', label: 'Zvanīt Zaigai' },
@@ -54,12 +54,12 @@ export const page: ServicePageData = {
         },
         {
           title: 'Izskatās kārtīgi.',
-          text: 'Profesionāli salabots apģērbs neizskatās „salabots”. Diegus un materiālus piemeklēju piemērotā krāsā.',
+          text: 'Labi salabots apģērbs neizskatās „salabots”. Diegus un materiālus piemeklēju audumam piemērotā krāsā.',
         },
-        { title: 'Kalpo ilgāk.', text: 'Kvalitatīvs rāvējslēdzējs un stipra vīle bieži vien kalpo ilgāk par oriģinālo.' },
+        { title: 'Kalpo ilgāk.', text: 'Labs rāvējslēdzējs un stipra vīle bieži iztur ilgāk nekā oriģinālie.' },
         {
           title: 'Godīgs vērtējums.',
-          text: 'Ne katru bojājumu var salabot pilnīgi neredzami, tāpēc pirms darba atklāti izrunāsim, kāds būs rezultāts. Ja labošana nav izdevīga, pateikšu to uzreiz.',
+          text: 'Ne katru bojājumu var salabot pilnīgi neredzami, tāpēc pirms darba atklāti izrunāsim, kāds būs rezultāts. Ja labot neatmaksājas, pateikšu uzreiz.',
         },
       ],
     },
@@ -92,7 +92,7 @@ export const page: ServicePageData = {
         },
         {
           q: 'Vai apģērbam jābūt izmazgātam?',
-          a: 'Jā, lūdzu, atnesiet tīru apģērbu. Tā var strādāt precīzāk, un darbs būs kvalitatīvāks.',
+          a: 'Jā, lūdzu, atnesiet tīru apģērbu. Tā var strādāt precīzāk, un rezultāts būs labāks.',
         },
         {
           q: 'Vai varat salabot ātri?',
@@ -103,7 +103,7 @@ export const page: ServicePageData = {
   ],
   cta: {
     title: 'Nepametiet iemīļoto apģērbu skapī',
-    text: 'Atsūtiet foto WhatsApp, un es pateikšu, vai to var salabot un cik tas maksās. Darbnīca atrodas Alūksnē, Tālavas ielā 18.',
+    text: `Atsūtiet foto WhatsApp, un pateikšu, vai to var salabot un cik tas maksās. Darbnīca atrodas Alūksnē, Tālavas ielā 18. ${pickup.sentence}`,
     actions: [
       { kind: 'whatsapp', label: 'Atsūtīt foto WhatsApp' },
       { kind: 'tel', label: 'Zvanīt Zaigai' },

@@ -18,7 +18,7 @@ export const page: ServicePageData = {
     image: 'pakalpojumsAizkari',
     swatch: 'sheer',
     lead: 'Lai aizkari derētu tieši Jūsu mājai.',
-    text: 'Veikalā nopirktie aizkari ir par gariem, par īsiem vai nav tādā platumā, kā Jūsu logam vajag. Savukārt specializētu salonu cenas mēdz pārsteigt. Es uzšuju un pielāgoju aizkarus un citus mājas tekstilus tā, lai tie der tieši Jūsu mājai, un cenu pateikšu jau sākumā. Ja vēlaties, atbraukšu un nomērīšu logus pati.',
+    text: 'Veikalā nopirktie aizkari ir par gariem, par īsiem vai nav tādā platumā, kā Jūsu logam vajag. Savukārt specializētu salonu cenas mēdz pārsteigt. Es uzšuju un saīsinu aizkarus un citu mājas tekstilu tieši Jūsu logiem un mēbelēm, un cenu pateikšu jau sākumā. Ja vēlaties, atbraukšu un nomērīšu logus pati.',
     actions: [
       { kind: 'form', label: 'Pieteikt logu nomērīšanu', service: 'logi' },
       { kind: 'tel', label: 'Zvanīt Zaigai' },
@@ -43,7 +43,7 @@ export const page: ServicePageData = {
       type: 'steps',
       title: 'Atbraukšu nomērīt logus',
       paragraphs: [
-        `Nezināt precīzus izmērus? Atbraukšu pie Jums, nomērīšu logus un palīdzēšu izvēlēties aizkaru garumu un krokojumu. Tā nebūs jāuztraucas par kļūdām izmēros. Piezvaniet uz ${contact.phoneDisplay}, lai sarunātu laiku.`,
+        `Nezināt precīzus izmērus? Atbraukšu pie Jums, nomērīšu logus un palīdzēšu izvēlēties aizkaru garumu un krokojumu. Tā nebūs jāuztraucas par kļūdām izmēros. Ja aizkari jau ir, varu tos uzreiz paņemt līdzi, un gatavus atvedīsim atpakaļ, lai Jums nekur nav jābrauc. Piezvaniet uz ${contact.phoneDisplay}, lai sarunātu laiku.`,
       ],
       lead: 'Ja vēlaties logus nomērīt paši:',
       steps: [

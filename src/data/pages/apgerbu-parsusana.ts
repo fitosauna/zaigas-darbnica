@@ -17,8 +17,8 @@ export const page: ServicePageData = {
   hero: {
     image: 'pakalpojumsPielagosana',
     swatch: 'linen',
-    lead: 'Lai apģērbs derētu Jums, nevis otrādi.',
-    text: 'Bikses vienmēr par garām. Kleita patīk, bet sānos par platu. Internetā pirkts apģērbs dzīvē izskatās kā maiss. Vaina nav Jūsu augumā - veikalu izmēri vienkārši nav šūti tieši Jums. Es pielāgoju apģērbu tā, lai tas sēž tieši tā, kā vajag.',
+    lead: 'Lai apģērbs sēž kā uzliets.',
+    text: 'Bikses vienmēr par garām. Kleita patīk, bet sānos par platu. Internetā pirkts apģērbs dzīvē izskatās kā maiss. Tā notiek bieži, jo veikalu izmēri nav šūti tieši Jums. Es apģērbu pielāgoju Jūsu augumam.',
     actions: [
       { kind: 'form', label: 'Pieteikt pielaikošanu', service: 'pielagosana' },
       { kind: 'tel', label: 'Zvanīt Zaigai' },
@@ -81,7 +81,7 @@ export const page: ServicePageData = {
       items: [
         {
           q: 'Vai man jānāk uz pielaikošanu?',
-          a: 'Vairumā gadījumu jā - tā var precīzi noteikt garumu un platumu. Bikšu saīsināšanai var arī atnest līdzi bikses, kuras der, vai pateikt precīzu garumu. Uz pielaikošanu ņemiet līdzi apavus, ar kuriem valkāsiet apģērbu.',
+          a: 'Vairumā gadījumu jā - tā var precīzi noteikt garumu un platumu. Bikšu saīsināšanai var arī atnest līdzi bikses, kuras der, vai pateikt precīzu garumu. Tad es vai mana meita varam bikses paņemt pie Jums, un nekur nav jābrauc. Uz pielaikošanu ņemiet līdzi apavus, ar kuriem valkāsiet apģērbu.',
         },
         {
           q: 'Vai var saīsināt džinsus?',

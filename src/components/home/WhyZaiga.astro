@@ -7,18 +7,30 @@ import Picture from '../Picture.astro';
 import { images } from '../../data/images';
 import { typo } from '../../lib/typo';
 
-const reasons = [
+type Reason = { title: string; text: string; strong?: string };
+
+/** Sadala tekstu ap izceļamo teikumu, lai to droši ietītu <strong> (bez set:html). */
+function parts(r: Reason): [string, string, string] {
+  if (!r.strong || !r.text.includes(r.strong)) return [r.text, '', ''];
+  const i = r.text.indexOf(r.strong);
+  return [r.text.slice(0, i), r.strong, r.text.slice(i + r.strong.length)];
+}
+
+const reasons: Reason[] = [
   {
     title: 'Vairāk nekā 20 gadu pieredze.',
-    text: 'Šuju un adu jau vairāk nekā 20 gadus. Strādāju ar ļoti dažādiem audumiem un dzijām, tāpēc labprāt uzņemos arī sarežģītus un netipiskus darbus.',
+    text: 'Šuju un adu vairāk nekā 20 gadus. Esmu strādājusi ar dažādiem audumiem un dzijām. Īpaši patīk uzņemties sarežģītākus darbus.',
+    strong: 'Īpaši patīk uzņemties sarežģītākus darbus.',
   },
   {
-    title: 'Rūpīgs darbs un kvalitāte.',
-    text: 'Katram darbam pievēršu uzmanību līdz pat sīkākajai detaļai - no taisnām vīlēm līdz piemērotā krāsā piemeklētiem diegiem un materiāliem.',
+    title: 'Strādāju kārtīgi.',
+    text: 'Skatos, lai vīles būtu taisnas un diegi atbilstu audumam. Ķap-ļap strādāt nemāku - katru darbu daru kā sev.',
+    strong: 'katru darbu daru kā sev.',
   },
   {
     title: 'Skaidra cena un godīgs padoms.',
-    text: 'Par cenu vienojamies pirms darba, un remontam nepieciešamie materiāli tajā jau ir iekļauti. Ja labošana nav izdevīga, pateikšu to atklāti.',
+    text: 'Cenu sarunājam pirms darba. Remontam vajadzīgie materiāli jau ir iekļauti cenā. Ja labot neatmaksājas, pateikšu uzreiz.',
+    strong: 'Ja labot neatmaksājas, pateikšu uzreiz.',
   },
   {
     title: 'Personīga pieeja un uzticami termiņi.',
@@ -89,7 +101,18 @@ const reasons = [
           reasons.map((r) => (
             <li>
               <h3>{typo(r.title)}</h3>
-              <p>{typo(r.text)}</p>
+              <p>
+                {(() => {
+                  const [before, bold, after] = parts(r);
+                  return (
+                    <>
+                      {typo(before)}
+                      {bold && <strong>{typo(bold)}</strong>}
+                      {typo(after)}
+                    </>
+                  );
+                })()}
+              </p>
             </li>
           ))
         }

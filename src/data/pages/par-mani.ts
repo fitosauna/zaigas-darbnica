@@ -7,15 +7,15 @@ export const parMani = {
   seo: {
     title: 'Par mani - Zaiga Lemeševska | Zaigas darbnīca',
     description:
-      'Iepazīstiet Zaigu Lemeševsku - šuvēju un adītāju Alūksnē ar 20 gadu pieredzi, mācījusies šūšanas skolā „Burda Rīga”. Kvalitāte par demokrātisku cenu.',
+      'Iepazīstiet Zaigu Lemeševsku - šuvēju un adītāju Alūksnē ar 20 gadu pieredzi, mācījusies šūšanas skolā „Burda Rīga”. Rūpīgs darbs par saprātīgu cenu.',
   },
   h1: 'Zaiga Lemeševska - šuvēja un adītāja, kurai rūp Jūsu lietas',
   story: {
     title: 'Kā es kļuvu par šuvēju un adītāju',
     paragraphs: [
-      'Mana mīlestība pret rokdarbiem sākās bērnībā. Vakaros sēdējām kopā ar mammu un adījām, kamēr viņa stāstīja stāstus. Tie vakari man joprojām ir sirdī - un adīt un šūt es turpinu arī šodien.',
-      'Šūšanas amatu apguvu Rīgā, šūšanas skolā „Burda Rīga”. Kopš tā laika šuju un adu jau 20 gadus - un joprojām labprāt mācos, jo teorija un jaunas tehnikas palīdz strādāt vēl precīzāk.',
-      'Šodien strādāju savā darbnīcā Alūksnē, Tālavas ielā 18, un pie manis brauc klienti no Alūksnes, Gulbenes, Balviem un apkārtnes. Man svarīgāka ir kvalitāte, nevis daudzums: katram darbam veltu tik daudz laika, cik tam vajag, un cenas paturu demokrātiskas.',
+      'Adīt mani jau bērnībā iemācīja mamma. Vakaros sēdējām kopā un adījām, un viņa stāstīja stāstus. No viņas iemācījos arī to, ka katrs darbs jādara rūpīgi. Tie vakari man joprojām ir sirdī.',
+      'Vēlāk šūšanas amatu apguvu Rīgā, šūšanas skolā „Burda Rīga”. Kopš tā laika šuju un adu vairāk nekā 20 gadus. Šūšana man ir sirdslieta, un joprojām labprāt iemācos ko jaunu.',
+      'Šodien strādāju savā darbnīcā Alūksnē, Tālavas ielā 18. Pie manis brauc klienti no Alūksnes, Gulbenes, Balviem un apkārtnes. Ja kādam nav laika atbraukt, es vai mana meita aizbraucam pēc apģērba paši. Katram darbam veltu tik laika, cik tam vajag, un cenas turu saprātīgas.',
     ],
   },
   how: {
@@ -44,8 +44,8 @@ export const parMani = {
       { title: '20 gadu pieredze', text: 'šūšanā, apģērbu labošanā, pielāgošanā un adīšanā', inline: true },
       { title: 'Izglītība:', text: 'šūšanas skola „Burda Rīga”', inline: true },
       { title: 'Adīšana kopš bērnības', text: 'džemperi, zeķes, dūraiņi, arī latviskie raksti' },
-      { title: 'Plašs darbu klāsts', text: 'no maza ielāpa līdz kāzu kleitai, tautastērpam vai adītam pledam' },
-      { title: 'Nepārtraukta mācīšanās', text: 'jaunas tehnikas un teorētiskās zināšanas' },
+      { title: 'Dažādi darbi', text: 'no maza ielāpa līdz kāzu kleitai, tautastērpam vai adītam pledam' },
+      { title: 'Joprojām mācos', text: 'jaunas tehnikas un šūšanas teoriju' },
     ] as ListItem[],
   },
   cta: {

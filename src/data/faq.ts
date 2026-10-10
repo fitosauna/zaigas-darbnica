@@ -2,7 +2,7 @@
  * Biežāk uzdotie jautājumi. Cenas atbildēs nāk no src/data/prices.ts.
  * Atbildes var saturēt vienkāršu HTML saitēm (`html: true`).
  */
-import { contact } from '../config';
+import { contact, pickup } from '../config';
 import { price } from './prices';
 import { linkContacts } from '../lib/typo';
 
@@ -23,6 +23,10 @@ export const homeFaq: Faq[] = prepareFaq([
   {
     q: 'Vai var uzzināt cenu pēc foto?',
     a: `Jā. Atsūtiet foto WhatsApp uz ${contact.phoneDisplay} un īsi aprakstiet, kas jādara. Pateikšu, vai to var izdarīt un aptuveni cik tas maksās, pirms braucat uz darbnīcu.`,
+  },
+  {
+    q: 'Vai varat apģērbu paņemt un atvest atpakaļ?',
+    a: `Jā. ${pickup.sentence} Kad un kur, sarunāsim pa telefonu ${contact.phoneDisplay}. Tā Jums nav jātērē laiks braucienam uz darbnīcu.`,
   },
   {
     q: 'Vai Jūs arī adāt pēc pasūtījuma?',

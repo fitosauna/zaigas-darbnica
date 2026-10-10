@@ -18,8 +18,8 @@ export const page: ServicePageData = {
   hero: {
     image: 'pakalpojumsAdisana',
     swatch: 'knit',
-    lead: 'Silts adījums, kas radīts tieši Jums.',
-    text: 'Veikala džemperis pirmajā ziemā sabumbulojas, zeķes izdilst, un īsti siltu, kvalitatīvu adījumu atrast ir grūti. Ar rokām adīta lieta ir cits stāsts: tā ir silta, kalpo gadiem un top tieši Jums - Jūsu izmērā, Jūsu krāsā un ar Jūsu izvēlētu rakstu. Adu kopš bērnības un uzadīšu to, ko vēlaties.',
+    lead: 'Ar rokām adītas zeķes, dūraiņi un džemperi pēc pasūtījuma.',
+    text: 'Veikala džemperis pirmajā ziemā sabumbulojas, zeķes ātri izdilst, un īsti siltu adījumu atrast ir grūti. Ar rokām adīta lieta ir siltāka un valkājas gadiem. Uzadīšu to Jūsu izmērā, krāsā un ar rakstu, kādu izvēlaties. Adīt mani iemācīja mamma, kad biju vēl maza.',
     actions: [
       { kind: 'form', label: 'Pasūtīt adījumu', service: 'adisana' },
       { kind: 'tel', label: 'Zvanīt Zaigai' },
@@ -74,8 +74,8 @@ export const page: ServicePageData = {
       title: 'Kāpēc ar rokām adīts?',
       items: [
         {
-          title: 'Siltums un kvalitāte.',
-          text: 'Laba dzija un rūpīgs adījums kalpo gadiem un nesabumbulojas pēc pirmās ziemas.',
+          title: 'Silts un izturīgs.',
+          text: 'Laba dzija un blīvs adījums valkājas gadiem un nesabumbulojas pēc pirmās ziemas.',
         },
         {
           title: 'Tieši Jūsu izmērā.',
@@ -83,7 +83,7 @@ export const page: ServicePageData = {
         },
         { title: 'Jūsu gaumē.', text: 'Jūs izvēlaties krāsu, dziju un rakstu - arī latviskus rakstus.' },
         {
-          title: 'Dāvana ar dvēseli.',
+          title: 'Laba dāvana.',
           text: 'Ar rokām adītas zeķes, dūraiņi vai pleds ir īpaša dāvana Ziemassvētkiem, jubilejām un kristībām.',
         },
       ],
@@ -135,7 +135,7 @@ export const page: ServicePageData = {
   ],
   cta: {
     title: 'Vēlaties kaut ko siltu un adītu tieši Jums?',
-    text: 'Pastāstiet savu ideju - uzadīšu to ar rūpību, kā to daru jau kopš bērnības. Darbnīca atrodas Alūksnē, Tālavas ielā 18.',
+    text: 'Pastāstiet, ko vēlaties, un uzadīšu. Darbnīca atrodas Alūksnē, Tālavas ielā 18.',
     actions: [
       { kind: 'form', label: 'Pasūtīt adījumu', service: 'adisana' },
       { kind: 'whatsapp', label: 'Rakstīt WhatsApp' },

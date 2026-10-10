@@ -18,7 +18,7 @@ export const page: ServicePageData = {
     image: 'pakalpojumsIndividualaSusana',
     swatch: 'silk',
     lead: 'Ja veikalā neatrodat īsto, varam to uzšūt.',
-    text: 'Izstaigāti visi veikali, bet kleitas, kāda ir Jūsu iedomā, tur nav. Vai arī ir, bet neder pa augumu. Individuāli šūts apģērbs top pēc Jūsu izmēriem, gaumes un vajadzībām - lai Jūs tajā justos ērti un skaisti.',
+    text: 'Izstaigāti visi veikali, bet kleitas, kāda ir Jūsu iedomā, tur nav. Vai arī ir, bet neder pa augumu. Tad to var uzšūt. Šuju pēc Jūsu izmēriem un ieceres, tāpēc apģērbs der un ir tieši tāds, kādu gribējāt.',
     actions: [
       { kind: 'form', label: 'Pārrunāt savu ieceri', service: 'susana' },
       { kind: 'tel', label: 'Zvanīt Zaigai' },
@@ -63,17 +63,17 @@ export const page: ServicePageData = {
     },
     {
       type: 'benefits',
-      title: 'Apģērbs, kas radīts ar domu par Jums',
+      title: 'Ko iegūstat, ja apģērbu šuj pēc mēra',
       items: [
         {
-          title: 'Der Jūsu augumam, nevis izmēru tabulai.',
-          text: 'Apģērbs top pēc Jūsu izmēriem, tāpēc tas sēž tā, kā veikalā pirkts apģērbs reti sēž.',
+          title: 'Der tieši Jūsu augumam.',
+          text: 'Šuju pēc Jūsu izmēriem, tāpēc tas sēž tā, kā veikalā pirkts apģērbs reti sēž.',
         },
         { title: 'Tieši tāds, kādu vēlaties.', text: 'Jūs izvēlaties modeli, audumu, garumu un detaļas.' },
-        { title: 'Unikāls.', text: 'Pasākumā neviens cits nebūs tādā pašā kleitā.' },
+        { title: 'Vienīgais tāds.', text: 'Pasākumā neviens cits nebūs tādā pašā kleitā.' },
         {
-          title: 'Kvalitāte, kas kalpo.',
-          text: 'Rūpīgi apstrādātas vīles un labs audums nozīmē, ka apģērbs kalpos ilgi.',
+          title: 'Iztur ilgi.',
+          text: 'Kārtīgi apstrādātas vīles un labs audums nozīmē, ka apģērbu varēsiet valkāt ilgi.',
         },
         {
           title: 'Mierīgs prāts pirms pasākuma.',
@@ -109,7 +109,7 @@ export const page: ServicePageData = {
         },
         {
           q: 'Vai nepieciešama pielaikošana?',
-          a: 'Jā, individuāli šūtam apģērbam parasti ir viena vai vairākas pielaikošanas, lai tas sēdētu nevainojami.',
+          a: 'Jā, individuāli šūtam apģērbam parasti ir viena vai vairākas pielaikošanas, lai tas sēdētu kā uzliets.',
         },
       ],
     },

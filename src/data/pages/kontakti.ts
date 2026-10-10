@@ -49,7 +49,7 @@ export const kontakti = {
       { title: 'Balvi un Balvu novads', text: '42 km līdz darbnīcai' },
     ] as ListItem[],
     tipLead: 'Padoms, ja braucat no tālienes:',
-    tip: 'vispirms atsūtiet foto WhatsApp, lai jau iepriekš zinātu, vai darbu var izdarīt un cik tas maksās. Ja iespējams, atvediet vairākas lietas uzreiz.',
+    tip: 'vispirms atsūtiet foto WhatsApp, lai jau iepriekš zinātu, vai darbu var izdarīt un cik tas maksās. Ja iespējams, atvediet vairākas lietas uzreiz. Ja braukt nav laika, piezvaniet - varam sarunāt, ka apģērbu paņemam paši.',
   },
   form: {
     title: 'Uzrakstiet man',

@@ -38,6 +38,7 @@ export const cenas = {
       'Remontam un pielāgošanai vajadzīgie materiāli (rāvējslēdzēji, odere, diegi, lente) ir iekļauti cenā.',
       'Individuālajai šūšanai un adīšanai cena atkarīga no auduma vai dzijas - to saskaņosim pirms darba. Varat atnest arī savu.',
       'Steidzami darbi ir iespējami - piezvaniet, un sarunāsim termiņu.',
+      'Ja Jums nav laika atbraukt, apģērbu varam paņemt un atvest atpakaļ. Par to vienosimies pa telefonu.',
     ],
   },
   faq: {

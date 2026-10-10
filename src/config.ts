@@ -34,12 +34,25 @@ export const contact = {
     /** Lokatīvā: „Tālavas ielā 18”. */
     streetLocative: 'Tālavas ielā 18',
     city: 'Alūksne',
+    /** Lokatīvā: „Alūksnē”. */
+    cityLocative: 'Alūksnē',
     postalCode: 'LV-4301',
     country: 'LV',
   },
   /** Google Maps saite „Atvērt Google Maps”. */
   mapsUrl: 'https://www.google.com/maps/search/?api=1&query=T%C4%81lavas%20iela%2018%2C%20Al%C5%ABksne%2C%20LV-4301',
   areaServed: ['Alūksne', 'Gulbene', 'Balvi'],
+} as const;
+
+/**
+ * Apģērba paņemšana un atvešana (Zaiga vai viņas meita). Cena un attālums nav
+ * apstiprināti, tāpēc tekstos tos nesolām - sarunā pa telefonu.
+ */
+export const pickup = {
+  /** Īsa rinda (hero informācija). */
+  short: 'Varam atbraukt pēc apģērba',
+  /** Viens teikums lapu tekstiem. */
+  sentence: 'Ja Jums nav laika atbraukt, es vai mana meita varam apģērbu paņemt pie Jums un gatavu atvest atpakaļ.',
 } as const;
 
 export const hours = {

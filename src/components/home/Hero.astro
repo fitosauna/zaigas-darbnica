@@ -7,7 +7,7 @@
 import Picture from '../Picture.astro';
 import Button from '../Button.astro';
 import Icon from '../Icon.astro';
-import { contact, hours, links } from '../../config';
+import { contact, hours, links, pickup } from '../../config';
 import { images } from '../../data/images';
 import type { BuiltPicture } from '../../lib/picture';
 import { typo } from '../../lib/typo';
@@ -53,8 +53,8 @@ const { picture } = Astro.props;
       </h1>
 
       <p class="hero__lead">
-        Apģērbu remonts un pielāgošana, individuālā šūšana un adīšana pēc pasūtījuma. Vairāk nekā 20&nbsp;gadu
-        pieredze, rūpīgs darbs un godīgas cenas.
+        Šuju, laboju un pielāgoju apģērbu Alūksnē. Adu arī pēc pasūtījuma. Ar šūšanu un adīšanu nodarbojos
+        <strong>vairāk nekā 20&nbsp;gadus</strong>. Par cenu vienojamies pirms darba.
       </p>
 
       <div class="hero__actions" data-primary-actions>
@@ -73,6 +73,7 @@ const { picture } = Astro.props;
           >
         </li>
         <li><Icon name="route" size={18} />Alūksne, Gulbene, Balvi un apkārtējie novadi</li>
+        <li><Icon name="car" size={18} />{pickup.short}</li>
       </ul>
     </div>
   </div>
@@ -390,7 +391,7 @@ const { picture } = Astro.props;
       margin-top: 10px;
     }
 
-    .hero__info li:nth-child(3) {
+    .hero__info li:nth-child(n + 3) {
       display: none;
     }
   }
