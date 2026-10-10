@@ -1,0 +1,134 @@
+---
+/**
+ * 1.11 Noslēguma aicinājums - diegs ienāk no malas un sasienas sirsniņā
+ * (logo sirsniņa). Trešais un pēdējais diega brīdis sākumlapā.
+ */
+import Button from '../Button.astro';
+import { links } from '../../config';
+---
+
+<section class="final tone" aria-labelledby="final-title" data-reveal>
+  <svg class="final__thread" viewBox="0 0 1200 160" fill="none" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid meet">
+    <path
+      pathLength="1"
+      d="M-60 126C150 130 330 112 470 108c62-2 104 2 130 10-12-15-40-34-40-58 0-15 11-26 25-26 9 0 15 5 15 13 0-8 6-13 15-13 14 0 25 11 25 26 0 24-28 43-40 58 26-8 68-12 130-10 140 4 320 22 530 18"
+    ></path>
+  </svg>
+
+  <div class="container final__inner">
+    <h2 id="final-title">Ir ideja vai jautājums?</h2>
+    <p class="final__lead">
+      Droši dodiet ziņu! Labprāt pakonsultēšu un palīdzēšu atrast labāko risinājumu.
+    </p>
+    <div class="final__actions" data-primary-actions>
+      <Button href={links.tel} icon="phone" size="lg">Zvanīt Zaigai</Button>
+      <Button href={links.whatsapp} icon="whatsapp" variant="secondary" size="lg" external>Rakstīt WhatsApp</Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .final {
+    --from: var(--blush);
+    --tone: var(--blush);
+    --to: var(--blush);
+    position: relative;
+    padding: var(--s-6) 0 var(--section-tight);
+    text-align: center;
+  }
+
+  .final {
+    overflow-x: clip;
+  }
+
+  /* Telefonā diegs platāks par ekrānu, lai sirsniņa paliek redzama izmēra */
+  .final__thread {
+    display: block;
+    width: max(100%, 46rem);
+    max-width: 75rem;
+    height: auto;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    overflow: visible;
+  }
+
+  .final__thread path {
+    stroke: var(--thread);
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+
+  :global(html.js) .final[data-reveal] .final__thread path {
+    stroke-dashoffset: 1;
+  }
+
+  :global(html.js) .final.is-visible .final__thread path {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 2.6s var(--ease-in-out);
+  }
+
+  .final__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: var(--s-4);
+  }
+
+  .final__inner h2 {
+    max-width: 20ch;
+  }
+
+  .final__lead {
+    margin-top: var(--s-5);
+    max-width: 40ch;
+    font-size: var(--fs-lead);
+    line-height: 1.5;
+  }
+
+  .final__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: var(--s-6);
+  }
+
+
+
+
+  @media (max-width: 29.99rem) {
+    .final__actions {
+      flex-direction: column;
+      align-self: stretch;
+    }
+  }
+
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.js) .final[data-reveal] .final__thread path {
+      stroke-dashoffset: 0;
+    }
+  }
+</style>
+
+<script>
+  const el = document.querySelector<HTMLElement>('.final[data-reveal]');
+  if (el && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          el.classList.add('is-visible');
+          io.disconnect();
+        }
+      },
+      { threshold: 0.35 },
+    );
+    io.observe(el);
+  } else {
+    el?.classList.add('is-visible');
+  }
+</script>

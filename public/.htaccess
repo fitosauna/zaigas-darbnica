@@ -1,0 +1,155 @@
+# Zaigas darbnīca - Apache 2.4 (SiteGround)
+#
+# Šis fails būvēšanā nonāk dist/.htaccess. Content-Security-Policy vērtību
+# aizpilda integrations/csp-htaccess.mjs (sha256 katram inline skriptam).
+# Domēns zaigasdarbnica.lv ir arī src/config.ts (site.url): mainot domēnu,
+# mainiet abās vietās.
+
+# --- Pamata iestatījumi / basics -------------------------------------------
+# Bez mapju satura saraksta; bez MultiViews (citādi /cenas atrastu cenas.html pats).
+Options -Indexes
+<IfModule mod_negotiation.c>
+  Options -MultiViews
+</IfModule>
+
+DirectoryIndex index.html
+AddDefaultCharset utf-8
+
+# Latviska 404 lapa
+ErrorDocument 404 /404.html
+
+<IfModule mod_mime.c>
+  AddType application/manifest+json .webmanifest
+  AddType image/avif .avif
+  AddType image/webp .webp
+  AddType font/woff2 .woff2
+  AddCharset utf-8 .css .js .mjs .json .webmanifest .xml .txt .svg
+</IfModule>
+
+# --- Slēptie faili / dotfiles ------------------------------------------------
+# .env, .git, .htaccess u.c. nav publiski. .well-known/ (SSL pārbaude) paliek
+# pieejama: tur faili nesākas ar punktu, un pārrakstīšanas noteikumi to izlaiž.
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # .well-known (Let's Encrypt u.c.): bez pāradresācijām un aizliegumiem.
+  RewriteRule ^\.well-known/ - [L]
+
+  # Slēptās mapes un faili (.git/, .env) -> 403
+  RewriteRule (^|/)\. - [F]
+
+  # PHPMailer (lib/) un konfigurācija nav domāta pārlūkam -> 403.
+  # send.php tos ielādē no diska, tāpēc forma darbojas.
+  RewriteRule ^(lib(/|$)|config(\.example)?\.php$) - [F]
+
+  # Shēma: https arī aiz SiteGround Nginx starpniekservera (tad Apache var redzēt http).
+  RewriteRule ^ - [E=ZD_PROTO:http]
+  RewriteCond %{HTTPS} =on [OR]
+  RewriteCond %{HTTP:X-Forwarded-Proto} ^https [NC,NV]
+  RewriteRule ^ - [E=ZD_PROTO:https]
+
+  # Visas pāradresācijas ir VIENS 301 lēciens uz galīgo adresi (http + www + .html + /
+  # kopā -> uzreiz https://zaigasdarbnica.lv/cenas). Tās attiecas tikai uz pārlūka
+  # pieprasījumu (REDIRECT_STATUS tukšs), nevis uz iekšējo pārsūtīšanu uz 404.html vai
+  # cenas.html, un .html/index tikai tad, ja pārlūks tos tiešām prasīja (THE_REQUEST) -
+  # citādi DirectoryIndex (index.html) radītu cilpu.
+
+  # /404 un /404.html -> īsts 404 statuss (lapa domāta tikai kļūdām)
+  RewriteCond %{ENV:REDIRECT_STATUS} ^$
+  RewriteRule ^404(\.html)?/*$ - [R=404,L]
+
+  # Kanoniskais ceļš ZD_PATH (bez sākuma slīpsvītras); ZD_GO=1 - jāpāradresē.
+  RewriteRule ^(.*)$ - [E=ZD_PATH:$1]
+
+  # a) http vai www (arī "zaigasdarbnica.lv." un ar portu) -> https://zaigasdarbnica.lv.
+  #    SiteGround pagaidu adrese un citi domēni netiek piespiesti uz https.
+  RewriteCond %{ENV:REDIRECT_STATUS} ^$
+  RewriteCond %{HTTP_HOST} ^(www\.)?zaigasdarbnica\.lv\.?(:[0-9]+)?$ [NC]
+  RewriteCond %{ENV:ZD_PROTO}://%{HTTP_HOST} !^https://zaigasdarbnica\.lv$
+  RewriteRule ^ - [E=ZD_GO:1]
+
+  # b) /cenas/ un /cenas.html/ -> bez slīpsvītras beigās (īstas mapes, piem. _astro/, paliek).
+  RewriteCond %{ENV:REDIRECT_STATUS} ^$
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.+?)/+$ - [E=ZD_PATH:$1,E=ZD_GO:1]
+
+  # c) /index, /index.html -> /  (/mape/index.html -> /mape)
+  RewriteCond %{ENV:REDIRECT_STATUS} ^$
+  RewriteCond %{THE_REQUEST} \s/+([^?\s]*/)?index(\.html)?/*[?\s] [NC]
+  RewriteCond %{ENV:ZD_PATH} ^(?:(.*?)/+)?index(\.html)?$
+  RewriteRule ^ - [E=ZD_PATH:%1,E=ZD_GO:1]
+
+  # d) /cenas.html -> /cenas (canonical URL bez .html)
+  RewriteCond %{ENV:REDIRECT_STATUS} ^$
+  RewriteCond %{THE_REQUEST} \s/+[^?\s]*\.html/*[?\s] [NC]
+  RewriteCond %{ENV:ZD_PATH} ^(.+)\.html$
+  RewriteRule ^ - [E=ZD_PATH:%1,E=ZD_GO:1]
+
+  # Pāradresācija (query string paliek). Īstajam domēnam vienmēr https bez www.
+  RewriteCond %{ENV:REDIRECT_STATUS} ^$
+  RewriteCond %{ENV:ZD_GO} =1
+  RewriteCond %{HTTP_HOST} ^(www\.)?zaigasdarbnica\.lv\.?(:[0-9]+)?$ [NC]
+  RewriteRule ^ https://zaigasdarbnica.lv/%{ENV:ZD_PATH} [R=301,L]
+  RewriteCond %{ENV:REDIRECT_STATUS} ^$
+  RewriteCond %{ENV:ZD_GO} =1
+  RewriteRule ^ %{ENV:ZD_PROTO}://%{HTTP_HOST}/%{ENV:ZD_PATH} [R=301,L]
+
+  # Tīrais URL: /cenas pasniedz cenas.html (adrese pārlūkā nemainās).
+  # Īsti faili (send.php, sitemap.xml, robots.txt, _astro/...) un mapes netiek aiztikti.
+  # Mape ar lapas nosaukumu (piem. public/cenas/ blakus cenas.html) salauztu /cenas, tāpēc
+  # integrations/csp-htaccess.mjs tādu būvējumu aptur ar kļūdu.
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^(.+)$ $1.html [L]
+</IfModule>
+
+# --- Saspiešana / compression (brotli, ja pārlūks to atbalsta, citādi gzip) ---
+<IfModule mod_filter.c>
+  <IfModule mod_brotli.c>
+    AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/css text/xml text/javascript application/javascript application/x-javascript application/json application/ld+json application/manifest+json application/xml application/rss+xml image/svg+xml image/x-icon image/vnd.microsoft.icon
+  </IfModule>
+  <IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml text/javascript application/javascript application/x-javascript application/json application/ld+json application/manifest+json application/xml application/rss+xml image/svg+xml image/x-icon image/vnd.microsoft.icon
+  </IfModule>
+</IfModule>
+
+# --- Kešatmiņa / caching -----------------------------------------------------
+# Kešatmiņu nosaka tikai Cache-Control zemāk (bez servera Expires noklusējumiem).
+<IfModule mod_expires.c>
+  ExpiresActive Off
+</IfModule>
+
+<IfModule mod_setenvif.c>
+  SetEnvIf Request_URI "^/_astro/" ZD_IMMUTABLE
+</IfModule>
+
+<IfModule mod_headers.c>
+  # /_astro/: failu nosaukumā ir saturs (hash) -> 1 gads, nekad nemainās
+  Header set Cache-Control "public, max-age=31536000, immutable" env=ZD_IMMUTABLE
+
+  # HTML: katru reizi pārbaudīt, vai nav jaunākas versijas
+  <FilesMatch "\.html$">
+    Header always set Cache-Control "no-cache, max-age=0, must-revalidate"
+  </FilesMatch>
+
+  # Favikoni, og-image.jpg, site.webmanifest: 1 nedēļa
+  <FilesMatch "^(favicon\.ico|favicon-32\.png|apple-touch-icon\.png|icon-(192|512)\.png|og-image\.jpg|site\.webmanifest)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+
+  # --- Drošības galvenes / security headers (arī 404 un pāradresācijām) ---
+  # HSTS bez includeSubDomains un preload (apakšdomēniem var nebūt SSL).
+  Header always set Strict-Transport-Security "max-age=31536000"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+  # Vērtību būvēšanā ieraksta integrations/csp-htaccess.mjs (skriptu hash, Google Maps iframe).
+  Header always set Content-Security-Policy "__CSP__"
+</IfModule>

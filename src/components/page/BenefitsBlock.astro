@@ -1,0 +1,70 @@
+---
+/**
+ * Ieguvumi: trekns teikums (H3) un paskaidrojums. Planšetē un darbvirsmā
+ * divās kolonnās ar smalku līniju virs katra punkta (kā sākumlapas soļi).
+ */
+import Section, { type Tones } from './Section.astro';
+import type { Block } from '../../data/pages/types';
+import { typo } from '../../lib/typo';
+
+interface Props {
+  id: string;
+  block: Extract<Block, { type: 'benefits' }>;
+  tones: Tones;
+  mirror?: boolean;
+}
+
+const { id, block, tones, mirror = false } = Astro.props;
+---
+
+<Section id={id} title={block.title} tones={tones} aside={block.aside} wide={!mirror} mirror={mirror}>
+  <ul role="list" class="benefits">
+    {
+      block.items.map((b) => (
+        <li>
+          <h3>{typo(b.title)}</h3>
+          {b.text && <p>{typo(b.text)}</p>}
+        </li>
+      ))
+    }
+  </ul>
+</Section>
+
+<style>
+  .benefits {
+    display: grid;
+    gap: var(--s-6);
+  }
+
+  .benefits li {
+    padding-top: var(--s-4);
+    border-top: 1px solid var(--hairline-strong);
+  }
+
+  .benefits h3 {
+    font-size: clamp(1.3125rem, 1.2rem + 0.45vw, 1.625rem);
+    font-weight: 480;
+    line-height: 1.2;
+  }
+
+  .benefits p {
+    margin-top: var(--s-2);
+    max-width: 44ch;
+  }
+
+  @media (min-width: 43.75rem) {
+    .benefits {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--s-7) var(--s-6);
+    }
+
+    /* Nepāra pēdējais punkts noslēdz bloku visā platumā, nevis paliek viens pats */
+    .benefits li:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+
+    .benefits li:last-child:nth-child(odd) p {
+      max-width: 60ch;
+    }
+  }
+</style>

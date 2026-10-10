@@ -1,0 +1,134 @@
+---
+/** 1.8 Kā notiek sadarbība - trīs soļi ar lieliem cipariem. */
+import Button from '../Button.astro';
+import { contact } from '../../config';
+import { linkContacts, typo } from '../../lib/typo';
+
+const steps = [
+  {
+    title: 'Sazinieties ar mani',
+    text: 'Piezvaniet vai atsūtiet foto WhatsApp. Pateikšu, vai varu palīdzēt, aptuveno cenu un kad darbs varētu būt gatavs.',
+  },
+  {
+    title: 'Atnesiet vai atbrauksim pakaļ',
+    text: `Atnesiet apģērbu uz darbnīcu ${contact.address.streetLocative}, ${contact.address.cityLocative}. Ja nevarat atbraukt, varam to paņemt pie Jums.`,
+  },
+  {
+    title: 'Saņemiet gatavu darbu',
+    text: 'Sarunātajā laikā saņemiet salaboto apģērbu vai jauno darinājumu. Ja vajag, gatavo darbu atvedīsim pie Jums.',
+  },
+];
+---
+
+<section class="process" aria-labelledby="process-title">
+  <div class="container">
+    <div class="process__head">
+      <h2 id="process-title">Kā pieteikt darbu? Tikai trīs soļi</h2>
+    </div>
+
+    <ol role="list" class="steps">
+      {
+        steps.map((s, i) => (
+          <li class="step">
+            <span class="step__num" aria-hidden="true">
+              {i + 1}
+            </span>
+            <h3 class="step__title">
+              <span class="visually-hidden">{i + 1}. </span>
+              {typo(s.title)}
+            </h3>
+            <p set:html={linkContacts(s.text)} />
+          </li>
+        ))
+      }
+    </ol>
+
+    <div class="process__cta">
+      <Button href="/kontakti" variant="secondary" arrow>Sazināties ar Zaigu</Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .process {
+    padding: var(--section-tight) 0;
+  }
+
+  .process__head h2 {
+    max-width: 18ch;
+  }
+
+  .steps {
+    display: grid;
+    gap: var(--s-7);
+    margin-top: var(--s-8);
+    counter-reset: step;
+  }
+
+  .step {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: var(--s-5);
+    align-items: start;
+    align-content: start;
+  }
+
+  .step__num {
+    grid-row: span 2;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(3.5rem, 2.8rem + 3vw, 5.5rem);
+    line-height: 0.82;
+    color: var(--thread);
+    min-width: 0.7em;
+  }
+
+  .step__title {
+    font-size: var(--fs-h3);
+    font-weight: 480;
+    max-width: 22ch;
+  }
+
+  .step p {
+    margin-top: var(--s-3);
+    max-width: 40ch;
+  }
+
+  .process__cta {
+    margin-top: var(--s-8);
+  }
+
+  @media (min-width: 64rem) {
+    .steps {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--s-6);
+    }
+
+    /* Poga noslēdz „kāpnes” zem trešā soļa */
+    .process__cta {
+      margin-top: var(--s-7);
+      padding-left: calc((100% + var(--s-6)) * 2 / 3);
+    }
+
+    .step {
+      grid-template-columns: 1fr;
+      padding-top: var(--s-5);
+      border-top: 1px solid var(--hairline-strong);
+    }
+
+    .step:nth-child(2) {
+      margin-top: var(--s-7);
+    }
+
+    .step:nth-child(3) {
+      margin-top: calc(var(--s-7) * 2);
+    }
+
+    .step__num {
+      grid-row: auto;
+      margin-bottom: var(--s-4);
+    }
+  }
+</style>

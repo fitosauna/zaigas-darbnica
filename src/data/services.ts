@@ -1,0 +1,69 @@
+/**
+ * Pakalpojumi - nosaukumi, saites un īsie apraksti sākumlapai.
+ * Cenas tekstos ņemtas no src/data/prices.ts (nevis ierakstītas šeit).
+ */
+import { price } from './prices';
+import { images, type ImageKey } from './images';
+import { typo } from '../lib/typo';
+
+export type Service = {
+  slug: string;
+  href: string;
+  /** Nosaukums izvēlnē un sākumlapā. */
+  name: string;
+  /** Īsais apraksts sākumlapā (Part B §1.2). */
+  summary: string;
+  /** Bilde sākumlapas „moodboard” un pakalpojuma lapas hero. */
+  image: ImageKey;
+  /** Auduma paraugs (moodboard): faktūras nosaukums un krāsa. */
+  swatch: 'denim' | 'linen' | 'silk' | 'knit' | 'sheer';
+};
+
+const list: Service[] = [
+  {
+    slug: 'apgerbu-remonts',
+    href: '/apgerbu-remonts',
+    name: 'Apģērbu remonts',
+    summary: `Mainu rāvējslēdzējus jakām, mēteļiem un biksēm. Salaboju atirušas vīles, caurumus un mainu oderes. Cenas ${price('cauruma-salabosana')}.`,
+    image: 'pakalpojumsRemonts',
+    swatch: 'denim',
+  },
+  {
+    slug: 'apgerbu-parsusana',
+    href: '/apgerbu-parsusana',
+    name: 'Pielāgošana un pāršūšana',
+    summary: `Saīsinu bikses un piedurknes, iešuju kleitas un pielāgoju apģērbu augumam. Cenas ${price('bikses-saisinasana')}.`,
+    image: 'pakalpojumsPielagosana',
+    swatch: 'linen',
+  },
+  {
+    slug: 'individuala-susana',
+    href: '/individuala-susana',
+    name: 'Individuālā šūšana',
+    summary: 'Šuju kleitas, svārkus, bikses, svētku un izlaiduma tērpus pēc Jūsu izmēriem un ieceres.',
+    image: 'pakalpojumsIndividualaSusana',
+    swatch: 'silk',
+  },
+  {
+    slug: 'adisana-pec-pasutijuma',
+    href: '/adisana-pec-pasutijuma',
+    name: 'Adīšana pēc pasūtījuma',
+    summary: 'Ar rokām adu zeķes, dūraiņus, cepures, džemperus un daudz ko citu pēc pasūtījuma. Laboju arī adītas lietas.',
+    image: 'pakalpojumsAdisana',
+    swatch: 'knit',
+  },
+  {
+    slug: 'aizkaru-susana',
+    href: '/aizkaru-susana',
+    name: 'Aizkari un mājas tekstils',
+    summary: 'Šuju un saīsinu aizkarus, šuju galdautus un pārvalkus. Varu arī atbraukt nomērīt logus.',
+    image: 'pakalpojumsAizkari',
+    swatch: 'sheer',
+  },
+];
+
+export const services: Service[] = list.map((s) => ({ ...s, summary: typo(s.summary) }));
+
+export function serviceImage(service: Service) {
+  return images[service.image];
+}

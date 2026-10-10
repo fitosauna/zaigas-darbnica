@@ -1,0 +1,79 @@
+---
+/**
+ * Latviešu 404 (Part B §12), noindex. Liels kontūras cipars kā sākumlapas „20”.
+ * .htaccess: ErrorDocument 404 /404.html
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Actions from '../components/page/Actions.astro';
+import type { Action } from '../data/pages/types';
+
+const title = 'Lapa nav atrasta | Zaigas darbnīca';
+const description = 'Iespējams, saite ir mainījusies. Apskatiet pakalpojumus vai sazinieties ar Zaigu tieši.';
+const actions: Action[] = [
+  { kind: 'link', label: 'Uz sākumlapu', href: '/' },
+  { kind: 'tel', label: 'Zvanīt Zaigai' },
+];
+---
+
+<BaseLayout title={title} description={description} path="/404" noindex>
+  <section class="lost" aria-labelledby="lapas-virsraksts">
+    <div class="container lost__inner">
+      <p class="lost__num" aria-hidden="true">404</p>
+      <h1 id="lapas-virsraksts">Šī lapa nav atrasta</h1>
+      <p class="lost__text">
+        Iespējams, saite ir mainījusies. Apskatiet <a href="/#pakalpojumi">pakalpojumus</a> vai sazinieties ar mani tieši.
+      </p>
+      <Actions actions={actions} primary align="center" class="lost__actions" />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lost {
+    --from: var(--cream);
+    padding: calc(var(--header-top) + var(--header-h) + var(--s-8)) 0 var(--section);
+    text-align: center;
+  }
+
+  .lost__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Kontūras cipars ar dūrienu līniju (kā „20” sākumlapā) */
+  .lost__num {
+    font-family: var(--font-display);
+    font-size: clamp(7rem, 4rem + 14vw, 14rem);
+    font-weight: 400;
+    font-variation-settings: 'opsz' 144;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--thread);
+  }
+
+  .lost h1 {
+    margin-top: var(--s-5);
+    font-size: clamp(2.375rem, 1.65rem + 3.1vw, 4.375rem);
+    font-weight: 380;
+    font-variation-settings: 'opsz' 144;
+    line-height: 1.03;
+    max-width: 14ch;
+  }
+
+  .lost__text {
+    margin-top: var(--s-5);
+    max-width: 40ch;
+    font-size: var(--fs-lead);
+    line-height: 1.5;
+  }
+
+  .lost__text a {
+    font-weight: 700;
+  }
+
+  .lost :global(.lost__actions) {
+    margin-top: var(--s-7);
+  }
+</style>

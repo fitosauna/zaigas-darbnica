@@ -1,0 +1,79 @@
+---
+/**
+ * Pogu rinda no datiem (src/data/pages/types.ts → Action).
+ * Pirmā poga - pildīta (galvenā), pārējās - kontūras.
+ * `primary` atzīmē rindu kā lapas galvenās saziņas pogas: kamēr tās redzamas,
+ * mobilā apakšējā josla paslēpjas (BottomBar.astro).
+ */
+import Button from '../Button.astro';
+import { links } from '../../config';
+import type { Action } from '../../data/pages/types';
+
+interface Props {
+  actions: Action[];
+  primary?: boolean;
+  size?: 'md' | 'lg';
+  class?: string;
+  align?: 'start' | 'center';
+}
+
+const { actions, primary = false, size = 'lg', class: className, align = 'start', ...others } = Astro.props;
+const scope = Object.fromEntries(Object.entries(others).filter(([k]) => k.startsWith('data-astro-cid')));
+
+function target(a: Action): string {
+  switch (a.kind) {
+    case 'tel':
+      return links.tel;
+    case 'whatsapp':
+      return links.whatsapp;
+    case 'mail':
+      return links.mail;
+    case 'form':
+      return `/kontakti?pakalpojums=${a.service}#forma`;
+    case 'link':
+      return a.href;
+  }
+}
+
+const iconFor = { tel: 'phone', whatsapp: 'whatsapp', mail: 'mail' } as const;
+---
+
+<div
+  class:list={['actions', `actions--${align}`, className]}
+  data-primary-actions={primary ? '' : undefined}
+  {...scope}
+>
+  {
+    actions.map((a, i) => (
+      <Button
+        href={target(a)}
+        variant={i === 0 ? 'primary' : 'secondary'}
+        size={size}
+        icon={a.kind === 'tel' || a.kind === 'whatsapp' || a.kind === 'mail' ? iconFor[a.kind] : undefined}
+        arrow={a.kind === 'form' || a.kind === 'link'}
+        external={a.kind === 'whatsapp'}
+      >
+        {a.label}
+      </Button>
+    ))
+  }
+</div>
+
+<style>
+  .actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  @media (min-width: 30rem) {
+    .actions {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    .actions--center {
+      justify-content: center;
+    }
+  }
+</style>

@@ -1,0 +1,104 @@
+---
+/**
+ * Iekšlapas H1. Ja norādīts `accent` (teksta beigas, piem. „Alūksnē”), tas stāv
+ * savā rindā kursīvā ar īsu diega vijumu zem tā - tāpat kā sākumlapas „Alūksnē”.
+ * Tas ir iekšlapas vienīgais diega brīdis (DESIGN.md §4), uzzīmējas vienreiz.
+ */
+import { typo } from '../../lib/typo';
+
+interface Props {
+  text: string;
+  /** Teksta beigu daļa, ko izcelt (jāsakrīt ar `text` beigām). */
+  accent?: string;
+  /** Vijuma platums em (vārda garumam). */
+  swoop?: number;
+  id?: string;
+}
+
+const { text, accent, swoop = 4.7, id = 'lapas-virsraksts' } = Astro.props;
+const hasAccent = Boolean(accent && text.endsWith(accent));
+const head = hasAccent ? text.slice(0, text.length - accent!.length).trimEnd() : text;
+---
+
+<h1 class="ptitle" id={id}>
+  {typo(head)}
+  {
+    hasAccent && (
+      <span class="ptitle__accent" style={`--swoop: ${swoop}em`}>
+        {' '}
+        {accent}
+        <svg
+          class="ptitle__thread"
+          viewBox="0 0 420 70"
+          fill="none"
+          aria-hidden="true"
+          focusable="false"
+          preserveAspectRatio="xMinYMid meet"
+        >
+          <path
+            pathLength="1"
+            d="M3 15C46 41 108 58 180 58c78 0 140-30 196-36 30-3 52 4 56 19 3 12-6 21-17 19-10-2-13-12-7-19"
+          />
+        </svg>
+      </span>
+    )
+  }
+</h1>
+
+<style>
+  .ptitle {
+    font-size: clamp(2.375rem, 1.65rem + 3.1vw, 4.375rem);
+    font-weight: 380;
+    font-variation-settings: 'opsz' 144;
+    line-height: 1.03;
+    letter-spacing: -0.022em;
+    max-width: 15ch;
+  }
+
+  .ptitle__accent {
+    position: relative;
+    display: block;
+    width: fit-content;
+    padding-right: 0.06em;
+    padding-bottom: 0.3em;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.012em;
+    white-space: nowrap;
+  }
+
+  .ptitle__thread {
+    position: absolute;
+    left: -0.12em;
+    top: 0.82em;
+    width: var(--swoop);
+    height: auto;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .ptitle__thread path {
+    stroke: var(--thread);
+    stroke-width: 3.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+    animation: ptitle-draw 2.2s var(--ease-in-out) 0.35s both;
+  }
+
+  @keyframes ptitle-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ptitle__thread path {
+      animation: none;
+    }
+  }
+</style>

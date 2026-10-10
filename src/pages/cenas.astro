@@ -1,0 +1,194 @@
+---
+/**
+ * /cenas - visi cenrāži kā drēbnieka birkas uz viena dēļa (lapas zīmīgais brīdis).
+ * Teksts: src/data/pages/cenas.ts, cenas: src/data/prices.ts.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import InnerHero from '../components/page/InnerHero.astro';
+import AsideImage from '../components/page/AsideImage.astro';
+import Actions from '../components/page/Actions.astro';
+import PriceTicket from '../components/page/PriceTicket.astro';
+import NoteCard from '../components/page/NoteCard.astro';
+import InnerCta from '../components/page/InnerCta.astro';
+import Faq from '../components/Faq.astro';
+import Icon from '../components/Icon.astro';
+
+import { cenas } from '../data/pages/cenas';
+import { priceNote } from '../data/prices';
+import { prepareFaq } from '../data/faq';
+import { breadcrumbs, faqPage } from '../lib/schema';
+import { typo } from '../lib/typo';
+
+const faqs = prepareFaq(cenas.faq.items);
+const schema = [
+  breadcrumbs([
+    { name: 'Sākums', path: '/' },
+    { name: cenas.name, path: cenas.path },
+  ]),
+  faqPage(faqs),
+];
+---
+
+<BaseLayout title={cenas.seo.title} description={cenas.seo.description} path={cenas.path} schema={schema}>
+  <InnerHero crumb={cenas.name} title={cenas.h1} accent="cenas" swoop={3.9}>
+    <AsideImage
+      slot="media"
+      image="cenasDarbnicasGalds"
+      shape="print"
+      priority
+      sizes="(min-width: 75rem) 570px, (min-width: 64rem) 47vw, (min-width: 43.75rem) 36rem, 92vw"
+    />
+    <p class="lead cenas-intro">{typo(cenas.intro)}</p>
+    <Actions actions={cenas.introActions} primary />
+  </InnerHero>
+
+  <section class="board tone" aria-label="Cenrādis">
+    <nav class="container jump" aria-label="Cenu sadaļas">
+      <ul role="list">
+        {
+          cenas.groups.map((g) => (
+            <li>
+              <a href={`#${g.group}`}>{g.short}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <div class="container board__cols">
+      {
+        cenas.groups.map((g) => (
+          <section class="pgroup" id={g.group} aria-labelledby={`${g.group}-title`}>
+            <div class="pgroup__head">
+              <h2 id={`${g.group}-title`}>{g.title}</h2>
+              <a class="pgroup__more" href={g.href}>
+                Uzzināt vairāk<span class="visually-hidden">: {g.title}</span>
+                <Icon name="arrow" size={18} />
+              </a>
+            </div>
+            <PriceTicket group={g.group} caption={g.title} />
+            {g.note && <p class="pgroup__note">{typo(g.note)}</p>}
+          </section>
+        ))
+      }
+      <section class="pgroup pgroup--note" aria-labelledby="svarigi-title">
+        <NoteCard id="svarigi" title={cenas.important.title} items={cenas.important.items} />
+      </section>
+    </div>
+    <p class="container board__note">{typo(priceNote)}</p>
+  </section>
+
+  <Faq id="buj" title={cenas.faq.title} items={faqs} tones={{ from: 'linen', tone: 'cream', to: 'blush' }} inner />
+
+  <InnerCta title={cenas.cta.title} text={cenas.cta.text} actions={cenas.cta.actions} />
+</BaseLayout>
+
+<style>
+  /* Ievada teksts darbvirsmā parastā izmērā, lai ievads ietilpst pirmajā ekrānā */
+  @media (min-width: 64rem) {
+    :global(.ihero .ihero__body) > p.cenas-intro {
+      font-size: var(--fs-body);
+      max-width: 52ch;
+    }
+  }
+
+  /* Ātrās saites uz cenrāžiem (dēļa augšā) */
+  .jump {
+    margin-bottom: var(--s-8);
+  }
+
+  .jump ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .jump a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 8px 18px;
+    border-radius: var(--r-pill);
+    background: rgb(255 252 247 / 0.7);
+    box-shadow: inset 0 0 0 1px var(--hairline-strong);
+    color: var(--chocolate);
+    font-size: var(--fs-small);
+    font-weight: 650;
+    text-decoration: none;
+    transition: background-color var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out);
+  }
+
+  .jump a:hover {
+    background: var(--paper);
+    box-shadow: inset 0 0 0 1px var(--rose-ink);
+  }
+
+  /* Birku dēlis */
+  .board {
+    --from: var(--cream);
+    --tone: var(--linen);
+    --to: var(--linen);
+    padding: var(--section-tight) 0;
+  }
+
+  .board__cols {
+    display: grid;
+    gap: var(--s-9);
+  }
+
+  .pgroup__head {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: var(--s-8);
+  }
+
+  .pgroup__head h2 {
+    font-size: clamp(1.625rem, 1.35rem + 1.2vw, 2.375rem);
+    max-width: 18ch;
+  }
+
+  .pgroup__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 48px;
+    font-weight: 700;
+    color: var(--rose-ink);
+    text-decoration: none;
+  }
+
+  .pgroup__more:hover {
+    color: var(--chocolate);
+  }
+
+  .pgroup__note {
+    margin-top: var(--s-5);
+    max-width: 46ch;
+    font-size: var(--fs-small);
+    color: var(--ink-soft);
+  }
+
+  .board__note {
+    max-width: 60ch;
+    margin-top: var(--s-8);
+    font-size: var(--fs-small);
+    color: var(--ink-soft);
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  /* Darbvirsma: divas kolonnas, birkas plūst no augšas uz leju (Part B secība) */
+  @media (min-width: 64rem) {
+    .board__cols {
+      display: block;
+      columns: 2;
+      column-gap: var(--s-9);
+    }
+
+    .pgroup {
+      break-inside: avoid;
+      padding-bottom: var(--s-9);
+    }
+  }
+</style>

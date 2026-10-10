@@ -1,0 +1,93 @@
+---
+/**
+ * Numurēti soļi ar lieliem kursīva cipariem diega krāsā (kā sākumlapas
+ * „Kā pieteikt darbu”). `sheet` - uz piegrieztnes papīra režģa.
+ */
+import Section, { type Tones } from './Section.astro';
+import type { Block } from '../../data/pages/types';
+import { linkContacts, typo } from '../../lib/typo';
+
+interface Props {
+  id: string;
+  block: Extract<Block, { type: 'steps' }>;
+  tones: Tones;
+}
+
+const { id, block, tones } = Astro.props;
+---
+
+<Section id={id} title={block.title} tones={tones} aside={block.aside} sheet={block.sheet}>
+  {block.paragraphs?.map((p) => <p slot="intro" set:html={linkContacts(p)} />)}
+  {block.lead && <p class="nsteps__lead">{typo(block.lead)}</p>}
+  <ol role="list" class="nsteps">
+    {
+      block.steps.map((s, i) => (
+        <li class="nstep">
+          <span class="nstep__num" aria-hidden="true">
+            {i + 1}
+          </span>
+          <h3 class="nstep__title">
+            <span class="visually-hidden">{i + 1}. </span>
+            {typo(s.title)}
+          </h3>
+          {s.text && <p>{typo(s.text)}</p>}
+        </li>
+      ))
+    }
+  </ol>
+</Section>
+
+<style>
+  .nsteps__lead {
+    margin-bottom: var(--s-6);
+    font-family: var(--font-display);
+    font-size: clamp(1.1875rem, 1.1rem + 0.4vw, 1.4375rem);
+    font-style: italic;
+    color: var(--chocolate);
+  }
+
+  .nsteps {
+    display: grid;
+    gap: var(--s-6);
+  }
+
+  .nstep {
+    display: grid;
+    grid-template-columns: 3.25rem 1fr;
+    column-gap: var(--s-4);
+    align-items: start;
+  }
+
+  .nstep__num {
+    grid-row: span 2;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(3rem, 2.6rem + 1.6vw, 4.25rem);
+    line-height: 0.8;
+    color: var(--thread);
+    text-align: center;
+  }
+
+  .nstep__title {
+    font-size: clamp(1.3125rem, 1.2rem + 0.45vw, 1.625rem);
+    font-weight: 480;
+    line-height: 1.2;
+  }
+
+  .nstep p {
+    margin-top: var(--s-2);
+    max-width: 46ch;
+  }
+
+  @media (min-width: 64rem) {
+    .nsteps {
+      gap: var(--s-7);
+    }
+
+    .nstep {
+      grid-template-columns: 4.5rem 1fr;
+      column-gap: var(--s-5);
+    }
+  }
+</style>

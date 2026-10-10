@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/home/Hero.astro';
+import Services from '../components/home/Services.astro';
+import WhyZaiga from '../components/home/WhyZaiga.astro';
+import Mend from '../components/home/Mend.astro';
+import About from '../components/home/About.astro';
+import Gallery from '../components/home/Gallery.astro';
+import Reviews from '../components/home/Reviews.astro';
+import Process from '../components/home/Process.astro';
+import Faq from '../components/Faq.astro';
+import FinalCta from '../components/home/FinalCta.astro';
+
+import { flags } from '../config';
+import { images } from '../data/images';
+import { homeFaq } from '../data/faq';
+import { price } from '../data/prices';
+import { buildPicture } from '../lib/picture';
+import { faqPage } from '../lib/schema';
+
+const title = 'Šuvēja Alūksnē - šūšana un adīšana | Zaigas darbnīca';
+const description = `Zaigas darbnīca Alūksnē - 20 gadu pieredze: apģērbu remonts, bikšu saīsināšana ${price('bikses-saisinasana')}, rāvējslēdzēja maiņa, individuālā šūšana un adīšana pēc pasūtījuma.`;
+
+/** Hero attēls: telefonā un stāvus planšetē vertikāls kadrējums, citur - plats. */
+const MOBILE = '(max-width: 1023px) and (orientation: portrait)';
+const heroPicture = await buildPicture({
+  src: images.heroDarbnica.src,
+  widths: [820, 1100, 1400, 1672],
+  sizes: '100vw',
+  art: [{ media: MOBILE, src: images.heroDarbnicaMobile.src, widths: [420, 640, 860, 1122], sizes: '100vw' }],
+});
+const preloads = heroPicture.sources.filter((s) => s.type === 'image/avif');
+---
+
+<BaseLayout title={title} description={description} path="/" schema={[faqPage(homeFaq)]}>
+  <Fragment slot="head">
+    {
+      preloads.map((s) => (
+        <link
+          rel="preload"
+          as="image"
+          type={s.type}
+          imagesrcset={s.srcset}
+          imagesizes={s.sizes}
+          media={s.media ?? '(min-width: 1024px), (orientation: landscape)'}
+          fetchpriority="high"
+        />
+      ))
+    }
+  </Fragment>
+
+  <Hero picture={heroPicture} />
+  <Services />
+  <WhyZaiga />
+  <Mend />
+  <About />
+  <Gallery />
+  {flags.showReviews && <Reviews />}
+  <Process />
+  <Faq title="Biežāk uzdotie jautājumi" items={homeFaq} />
+  <FinalCta />
+</BaseLayout>

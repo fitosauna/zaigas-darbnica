@@ -1,0 +1,75 @@
+---
+/**
+ * Īss saraksts uz papīra zīmītes ar iešūtu dūrienu malu (piem. „Adītu apģērbu
+ * labošana”, „Svarīgi zināt par cenām”, „Pirms ierašanās”). Atšķiras no garajiem
+ * pakalpojumu sarakstiem, lai divi saraksti pēc kārtas neizskatās vienādi.
+ * Ar `title` - kartītei savs H2 (lieto /cenas dēlī).
+ */
+import { typo } from '../../lib/typo';
+
+interface Props {
+  items: string[];
+  intro?: string;
+  title?: string;
+  id?: string;
+  class?: string;
+}
+
+const { items, intro, title, id, class: className, ...others } = Astro.props;
+const scope = Object.fromEntries(Object.entries(others).filter(([k]) => k.startsWith('data-astro-cid')));
+---
+
+<div class:list={['note', className]} {...scope}>
+  {title && <h2 id={id ? `${id}-title` : undefined}>{title}</h2>}
+  {intro && <p class="note__intro">{typo(intro)}</p>}
+  <ul role="list" class="note__list">
+    {items.map((t) => <li>{typo(t)}</li>)}
+  </ul>
+</div>
+
+<style>
+  .note {
+    position: relative;
+    max-width: 40rem;
+    padding: clamp(22px, 1rem + 2vw, 36px) clamp(20px, 1rem + 2vw, 40px);
+    border-radius: var(--r-m);
+    background: var(--paper);
+    box-shadow: var(--shadow-paper), 0 18px 36px -24px rgb(82 27 16 / 0.35);
+  }
+
+  .note::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border: 1.5px dashed rgb(184 96 90 / 0.35);
+    border-radius: calc(var(--r-m) - 6px);
+    pointer-events: none;
+  }
+
+  .note h2 {
+    font-size: clamp(1.625rem, 1.35rem + 1.2vw, 2.375rem);
+    margin-bottom: var(--s-4);
+  }
+
+  .note__intro {
+    margin-bottom: var(--s-3);
+    font-weight: 650;
+    color: var(--chocolate);
+  }
+
+  .note__list li {
+    position: relative;
+    padding: 8px 0 8px 30px;
+  }
+
+  /* Īss dūriens kā lielajos sarakstos */
+  .note__list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: calc(8px + 0.8em);
+    width: 18px;
+    height: 2px;
+    background: repeating-linear-gradient(90deg, var(--thread) 0 6px, transparent 6px 10px);
+  }
+</style>

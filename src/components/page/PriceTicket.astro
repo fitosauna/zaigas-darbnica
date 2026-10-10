@@ -1,0 +1,239 @@
+---
+/**
+ * Cenu saraksts kā drēbnieka birka: papīrs ar nogrieztiem stūriem, caurums ar
+ * kraft gredzenu un auklu, punktētas līnijas līdz cenai. Īsta <table> ar
+ * kolonnu virsrakstiem („Darbs” / „Cena”). Cenas tikai no src/data/prices.ts.
+ * Ar `rows` to pašu birku lieto darba laikam lapā /kontakti.
+ */
+import { formatPrice, priceGroups, type PriceGroupId } from '../../data/prices';
+
+type Row = { label: string; value: string; note?: boolean };
+
+interface Props {
+  /** Cenu grupa no prices.ts ... */
+  group?: PriceGroupId;
+  /** ... vai brīvas rindas (piem. darba laiks /kontakti). */
+  rows?: Row[];
+  columns?: [string, string];
+  /** Tabulas paraksts ekrāna lasītājiem (parasti sadaļas virsraksts). */
+  caption: string;
+  class?: string;
+}
+
+const { group, rows: customRows, columns, caption, class: className, ...others } = Astro.props;
+const scope = Object.fromEntries(Object.entries(others).filter(([k]) => k.startsWith('data-astro-cid')));
+const g = group ? priceGroups.find((p) => p.id === group) : undefined;
+if (group && !g) throw new Error(`Nav cenu grupas: ${group}`);
+const rows: Row[] =
+  customRows ?? g!.items.map((item) => ({ label: item.label, value: formatPrice(item), note: item.amount === null }));
+const head: [string, string] = columns ?? [g?.column ?? '', 'Cena'];
+---
+
+<div class:list={['ticket', className]} {...scope}>
+  <span class="ticket__twine" aria-hidden="true"></span>
+  <div class="ticket__card">
+    <span class="ticket__ring" aria-hidden="true"></span>
+    <table class="ticket__table">
+      <caption class="visually-hidden">{caption}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{head[0]}</th>
+          <th scope="col">{head[1]}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          rows.map((row) => (
+            <tr>
+              <th scope="row">
+                <span class="ticket__label">{row.label}</span>
+              </th>
+              {row.note ? (
+                <td class="ticket__note">
+                  <span>{row.value}</span>
+                </td>
+              ) : (
+                <td>{row.value}</td>
+              )}
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+  .ticket {
+    --hole-y: 30px;
+    position: relative;
+    filter: drop-shadow(0 1px 1px rgb(82 27 16 / 0.08)) drop-shadow(0 16px 24px rgb(82 27 16 / 0.14));
+  }
+
+  /* Aukla, kas iet caur caurumu */
+  .ticket__twine {
+    position: absolute;
+    z-index: 1;
+    left: 50%;
+    top: calc(var(--hole-y) - 74px);
+    width: 2px;
+    height: 76px;
+    margin-left: -1px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, rgb(201 162 126 / 0), var(--kraft) 30%, #b48a64);
+    transform: rotate(-16deg);
+    transform-origin: 50% 100%;
+    pointer-events: none;
+  }
+
+  .ticket__twine::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 2px;
+    height: 58px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, rgb(201 162 126 / 0), var(--kraft) 40%, #b48a64);
+    transform: rotate(30deg);
+    transform-origin: 50% 100%;
+  }
+
+  .ticket__card {
+    position: relative;
+    padding: 64px clamp(16px, 0.6rem + 2.4vw, 40px) clamp(22px, 1rem + 1vw, 34px);
+    background: var(--paper);
+    clip-path: polygon(26px 0, calc(100% - 26px) 0, 100% 26px, 100% 100%, 0 100%, 0 26px);
+    -webkit-mask: radial-gradient(circle at 50% var(--hole-y), transparent 7px, #000 7.5px);
+    mask: radial-gradient(circle at 50% var(--hole-y), transparent 7px, #000 7.5px);
+  }
+
+  /* Kraft pastiprinājuma gredzens ap caurumu */
+  .ticket__ring {
+    position: absolute;
+    left: 50%;
+    top: var(--hole-y);
+    width: 26px;
+    height: 26px;
+    margin: -13px 0 0 -13px;
+    border-radius: 50%;
+    background: radial-gradient(circle, transparent 7.5px, #d9b896 8px, var(--kraft) 11px, #b48a64 13px);
+  }
+
+  .ticket__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--fs-small);
+  }
+
+  @media (min-width: 30rem) {
+    .ticket__table {
+      font-size: var(--fs-body);
+    }
+  }
+
+  .ticket__table thead th {
+    padding: 0 0 12px;
+    font-family: var(--font-display);
+    font-size: var(--fs-label);
+    font-weight: 600;
+    font-variation-settings: 'opsz' 12;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    line-height: 1.4;
+    color: var(--rose-ink);
+    text-align: left;
+    background: repeating-linear-gradient(90deg, rgb(184 96 90 / 0.55) 0 6px, transparent 6px 11px) 0 100% / 100% 1.5px
+      no-repeat;
+  }
+
+  .ticket__table thead th:last-child {
+    text-align: right;
+  }
+
+  .ticket__table tbody th,
+  .ticket__table tbody td {
+    padding: 11px 0 0;
+    vertical-align: bottom;
+  }
+
+  .ticket__table tbody td {
+    padding-left: 4px;
+  }
+
+  .ticket__table tbody tr:first-child th,
+  .ticket__table tbody tr:first-child td {
+    padding-top: 16px;
+  }
+
+  .ticket__table tbody th {
+    font-weight: 450;
+    text-align: left;
+    color: var(--ink);
+  }
+
+  /*
+   * Punktētā līnija: zīmēta visā šūnas platumā pēdējās rindas augstumā, bet
+   * etiķetes teksts ar papīra fonu to aizsedz - punkti sākas tieši aiz pēdējā vārda,
+   * arī tad, ja nosaukums lūzt divās rindās.
+   */
+  .ticket__table tbody th {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ticket__table tbody th::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 10px;
+    bottom: 0.5em;
+    height: 3px;
+    background: radial-gradient(circle, rgb(122 86 52 / 0.55) 1.1px, transparent 1.5px) 0 50% / 7px 3px repeat-x;
+  }
+
+  .ticket__label {
+    position: relative;
+    z-index: 1;
+    padding-right: 6px;
+    background: var(--paper);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+
+  .ticket__table td {
+    width: 1%;
+    font-family: var(--font-display);
+    font-size: 1.125em;
+    font-weight: 500;
+    font-variation-settings: 'opsz' 24;
+    font-variant-numeric: lining-nums tabular-nums;
+    color: var(--chocolate);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  /* „pēc vienošanās” / „pēc izmēriem un auduma” - var lauzt rindu */
+  .ticket__table td.ticket__note {
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: 650;
+    font-style: normal;
+    line-height: 1.35;
+    color: var(--rose-ink);
+  }
+
+  .ticket__note span {
+    display: inline-block;
+    width: max-content;
+    max-width: 8em;
+    white-space: normal;
+    text-wrap: balance;
+  }
+
+  @media (min-width: 64rem) {
+    .ticket {
+      transform: rotate(-0.6deg);
+    }
+  }
+</style>

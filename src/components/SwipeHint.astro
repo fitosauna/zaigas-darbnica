@@ -1,0 +1,78 @@
+---
+/**
+ * Pavelkamas rindas indikators: mazi „dūrieni”, aktīvais - diega krāsā.
+ * Redzams tikai tad, ja rindu tiešām var ritināt sāniski (telefonā).
+ */
+interface Props {
+  /** Ritināmā elementa id. */
+  target: string;
+  count: number;
+}
+const { target, count } = Astro.props;
+---
+
+<div class="swipe-hint" data-swipe-hint={target} aria-hidden="true" hidden>
+  {Array.from({ length: count }, (_, i) => <span class:list={['stitch', { 'is-on': i === 0 }]} />)}
+</div>
+
+<style>
+  .swipe-hint {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: var(--s-4);
+  }
+
+  .swipe-hint[hidden] {
+    display: none;
+  }
+
+  .stitch {
+    width: 18px;
+    height: 3px;
+    border-radius: 2px;
+    background: rgb(82 27 16 / 0.38);
+    transition:
+      width var(--dur) var(--ease-out),
+      background-color var(--dur) var(--ease-out);
+  }
+
+  .stitch.is-on {
+    width: 32px;
+    background: var(--thread);
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-swipe-hint]').forEach((hint) => {
+    const row = document.getElementById(hint.dataset.swipeHint ?? '');
+    if (!row) return;
+    const stitches = [...hint.querySelectorAll<HTMLElement>('.stitch')];
+    const update = () => {
+      const ox = getComputedStyle(row).overflowX;
+      const max = row.scrollWidth - row.clientWidth;
+      const scrollable = (ox === 'auto' || ox === 'scroll') && max >= 8;
+      hint.hidden = !scrollable;
+      // Ritināmā rinda ir sasniedzama ar tastatūru (bultiņas ritina).
+      row.tabIndex = scrollable ? 0 : -1;
+      if (!scrollable) return;
+      const i = Math.round((row.scrollLeft / max) * (stitches.length - 1));
+      stitches.forEach((s, k) => s.classList.toggle('is-on', k === i));
+    };
+    let ticking = false;
+    row.addEventListener(
+      'scroll',
+      () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          update();
+          ticking = false;
+        });
+      },
+      { passive: true },
+    );
+    new ResizeObserver(update).observe(row);
+    update();
+  });
+</script>

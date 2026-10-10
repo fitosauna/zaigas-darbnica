@@ -1,0 +1,133 @@
+---
+/**
+ * Sīkdatņu josla (Part B §11) - tikai tad, ja src/config.ts ierakstīts flags.ga4Id.
+ * Google Analytics ielādējas tikai pēc „Piekrītu”. Izvēle glabājas šajā pārlūkā.
+ * Bez GA4 ID šis komponents neko neizvada (nav sīkdatņu, nav joslas).
+ */
+import { flags } from '../config';
+
+const id = flags.ga4Id;
+---
+
+{
+  id && (
+    <div class="consent" data-consent data-ga={id} hidden role="region" aria-label="Sīkdatnes">
+      <p>
+        Mājaslapa izmanto sīkdatnes apmeklējumu statistikai, lai to uzlabotu. Varat tām piekrist vai atteikties.{' '}
+        <a href="/privatuma-politika">Privātuma politika</a>
+      </p>
+      <div class="consent__actions">
+        <button type="button" class="consent__btn consent__btn--yes" data-consent-yes>
+          Piekrītu
+        </button>
+        <button type="button" class="consent__btn" data-consent-no>
+          Atteikties
+        </button>
+      </div>
+    </div>
+  )
+}
+
+<style>
+  .consent {
+    position: fixed;
+    z-index: 120;
+    left: var(--page-gutter-l);
+    right: var(--page-gutter-r);
+    bottom: calc(var(--bottom-bar-h) + 12px);
+    display: grid;
+    gap: var(--s-4);
+    max-width: 40rem;
+    margin-inline: auto;
+    padding: var(--s-5);
+    border-radius: var(--r-m);
+    background: var(--paper);
+    box-shadow: var(--shadow-lift), inset 0 0 0 1px var(--hairline);
+    font-size: var(--fs-small);
+  }
+
+  .consent[hidden] {
+    display: none;
+  }
+
+  .consent a {
+    font-weight: 700;
+  }
+
+  .consent__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .consent__btn {
+    min-height: 48px;
+    padding: 10px 22px;
+    border: 0;
+    border-radius: var(--r-pill);
+    background: transparent;
+    color: var(--chocolate);
+    font-weight: 700;
+    box-shadow: inset 0 0 0 1.5px rgb(82 27 16 / 0.55);
+  }
+
+  .consent__btn--yes {
+    background: var(--rose-cta);
+    color: #fff;
+    box-shadow: none;
+  }
+
+  .consent__btn--yes:hover {
+    background: var(--rose-cta-hover);
+  }
+</style>
+
+<script>
+  const box = document.querySelector<HTMLElement>('[data-consent]');
+  if (box) {
+    const KEY = 'zd-sikdatnes';
+    const id = box.dataset.ga ?? '';
+    const read = () => {
+      try {
+        return localStorage.getItem(KEY);
+      } catch {
+        return null;
+      }
+    };
+    const save = (v: string) => {
+      try {
+        localStorage.setItem(KEY, v);
+      } catch {
+        /* privāts režīms - izvēle derēs tikai šai lapai */
+      }
+    };
+    const loadGa = () => {
+      const s = document.createElement('script');
+      s.async = true;
+      s.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}`;
+      document.head.appendChild(s);
+      const w = window as unknown as { dataLayer: unknown[]; gtag: (...a: unknown[]) => void };
+      w.dataLayer = w.dataLayer || [];
+      w.gtag = function () {
+        // eslint-disable-next-line prefer-rest-params
+        w.dataLayer.push(arguments);
+      };
+      w.gtag('js', new Date());
+      w.gtag('config', id);
+    };
+
+    const choice = read();
+    if (choice === 'yes') loadGa();
+    else if (choice !== 'no') box.hidden = false;
+
+    box.querySelector('[data-consent-yes]')?.addEventListener('click', () => {
+      save('yes');
+      box.hidden = true;
+      loadGa();
+    });
+    box.querySelector('[data-consent-no]')?.addEventListener('click', () => {
+      save('no');
+      box.hidden = true;
+    });
+  }
+</script>

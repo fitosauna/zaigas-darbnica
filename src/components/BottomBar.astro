@@ -1,0 +1,135 @@
+---
+/**
+ * Mobilā apakšējā josla: „Zvanīt” un „WhatsApp” (A4 §3).
+ * Paslēpta, kamēr redzama kāda lapas pašas „Zvanīt / WhatsApp” pogu grupa
+ * ([data-primary-actions]: hero, noslēgums, kājene), lai pogas nedublējas;
+ * bez JavaScript - redzama vienmēr.
+ * Respektē env(safe-area-inset-bottom); izvēlnes laikā paslēpta.
+ */
+import { links } from '../config';
+import Icon from './Icon.astro';
+---
+
+<nav class="bottom-bar" data-bottom-bar aria-label="Ātrā saziņa">
+  <a class="bb bb--call" href={links.tel}>
+    <Icon name="phone" size={21} />
+    <span>Zvanīt</span>
+  </a>
+  <a class="bb bb--wa" href={links.whatsapp} target="_blank" rel="noopener noreferrer">
+    <Icon name="whatsapp" size={21} />
+    <span>WhatsApp</span>
+  </a>
+</nav>
+
+<style>
+  .bottom-bar {
+    position: fixed;
+    z-index: 90;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 10px max(12px, var(--safe-r)) calc(10px + env(safe-area-inset-bottom)) max(12px, var(--safe-l));
+    background: var(--cream);
+    box-shadow:
+      0 -1px 0 rgb(82 27 16 / 0.1),
+      0 -14px 30px -18px rgb(82 27 16 / 0.35);
+    transition:
+      transform 420ms var(--ease-out),
+      visibility 0s linear 0s;
+  }
+
+  .bb {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 52px;
+    border-radius: var(--r-pill);
+    font-weight: 750;
+    font-size: 1.0625rem;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .bb--call {
+    background: var(--rose-cta);
+    color: #fff;
+  }
+
+  .bb--call::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    z-index: -1;
+    border-radius: inherit;
+    border: 1px dashed rgb(255 255 255 / 0.4);
+  }
+
+  .bb--wa {
+    color: var(--chocolate);
+    box-shadow: inset 0 0 0 1.5px rgb(82 27 16 / 0.55);
+  }
+
+  /* JS: paslēpta, kamēr redzamas lapas augšas pogas */
+  :global(html.js) .bottom-bar.is-hidden {
+    transform: translateY(110%);
+    visibility: hidden;
+    transition:
+      transform 420ms var(--ease-out),
+      visibility 0s linear 420ms;
+  }
+
+  :global(html.menu-open) .bottom-bar {
+    visibility: hidden;
+  }
+
+  @media (orientation: landscape) and (max-height: 32.5rem) {
+    .bottom-bar {
+      padding-block: 6px calc(6px + env(safe-area-inset-bottom));
+    }
+
+    .bb {
+      min-height: 48px;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .bottom-bar {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('[data-bottom-bar]');
+  const groups = [...document.querySelectorAll<HTMLElement>('[data-primary-actions]')];
+  // Josla ir redzama vienmēr, izņemot brīžus, kad ekrānā ir pašas lapas zvana/WhatsApp pogas
+  // (ievads, noslēgums, kājene). Sākumlapā ievada pogas ir redzamas uzreiz, tāpēc pirmais ekrāns
+  // paliek tīrs; lapās, kur pogas ir zemāk vai to nav, josla redzama jau no sākuma.
+  if (bar && groups.length && 'IntersectionObserver' in window) {
+    const visible = new Set<Element>();
+    const inView = (el: Element) => {
+      const r = el.getBoundingClientRect();
+      return r.bottom > 0 && r.top < window.innerHeight && r.height > 0;
+    };
+    groups.filter(inView).forEach((g) => visible.add(g));
+    const update = () => bar.classList.toggle('is-hidden', visible.size > 0);
+    update();
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) visible.add(entry.target);
+          else visible.delete(entry.target);
+        }
+        update();
+      },
+      { threshold: 0.4 },
+    );
+    groups.forEach((g) => io.observe(g));
+  }
+</script>

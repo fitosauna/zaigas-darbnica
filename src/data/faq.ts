@@ -1,0 +1,44 @@
+/**
+ * Biežāk uzdotie jautājumi. Cenas atbildēs nāk no src/data/prices.ts.
+ * Atbildes var saturēt vienkāršu HTML saitēm (`html: true`).
+ */
+import { contact, pickup } from '../config';
+import { price } from './prices';
+import { linkContacts } from '../lib/typo';
+
+export type Faq = { q: string; a: string; html?: boolean };
+
+/** Visas atbildes iet caur linkContacts(): nedalāmas atstarpes + tel:/WhatsApp saites. */
+export const prepareFaq = (items: Faq[]): Faq[] => items.map((f) => ({ q: f.q, a: linkContacts(f.a), html: true }));
+
+export const homeFaq: Faq[] = prepareFaq([
+  {
+    q: 'Cik maksā apģērbu labošana?',
+    a: `Cena atkarīga no apģērba un darba apjoma. Piemēram, bikšu saīsināšana maksā ${price('bikses-saisinasana')}, rāvējslēdzēja maiņa biksēm ${price('ravejsledzejs-bikses')}, bet jakai ${price('ravejsledzejs-jaka')}. Materiāli jau ir iekļauti cenā. Visas cenas atradīsiet lapā <a href="/cenas">„Cenas”</a>.`,
+  },
+  {
+    q: 'Cik ilgi jāgaida?',
+    a: 'Termiņš atkarīgs no darba apjoma, tāpēc gatavības datumu sarunājam uzreiz. Ja vajag steidzami, piezvaniet - steidzamus darbus var paveikt ātrāk, un visu sarunāsim pa telefonu.',
+  },
+  {
+    q: 'Vai var uzzināt cenu pēc foto?',
+    a: `Jā. Atsūtiet foto WhatsApp uz ${contact.phoneDisplay} un īsi aprakstiet, kas jādara. Pateikšu, vai to var izdarīt un aptuveni cik tas maksās, pirms braucat uz darbnīcu.`,
+  },
+  {
+    q: 'Vai varat apģērbu paņemt un atvest atpakaļ?',
+    a: `Jā. ${pickup.sentence} Kad un kur, sarunāsim pa telefonu ${contact.phoneDisplay}. Tā Jums nav jātērē laiks braucienam uz darbnīcu.`,
+  },
+  {
+    q: 'Vai Jūs arī adāt pēc pasūtījuma?',
+    a: 'Jā. Uzadu zeķes, dūraiņus, cepures, šalles, džemperus, jakas, pledus un citas lietas, kā arī laboju adītus apģērbus.',
+  },
+  {
+    q: 'Vai var atnest savu audumu vai dziju?',
+    a: 'Jā, protams. Varat atnest savu audumu vai dziju, vai arī kopā izvēlēsimies piemērotāko.',
+  },
+]);
+
+/** Teksts bez HTML (FAQPage JSON-LD). */
+export function faqPlainText(faq: Faq): string {
+  return faq.html ? faq.a.replace(/<[^>]+>/g, '') : faq.a;
+}

@@ -1,0 +1,221 @@
+---
+/**
+ * Pakalpojuma lapas ievads (Part B §X.1). Pakalpojuma foto ir tas pats
+ * auduma paraugs ar zigzaga malām kā sākumlapas moodboard - lielāks.
+ * Darbvirsmā: teksts pa kreisi, paraugs pa labi. Telefonā: virsraksts,
+ * paraugs, teksts un pogas.
+ */
+import Picture from '../Picture.astro';
+import Icon from '../Icon.astro';
+import Breadcrumbs from './Breadcrumbs.astro';
+import PageTitle from './PageTitle.astro';
+import Actions from './Actions.astro';
+import '../../styles/fabrics.css';
+import { contact, hours } from '../../config';
+import { images } from '../../data/images';
+import { pinkedPolygon } from '../../lib/shapes';
+import { typo } from '../../lib/typo';
+import type { ServicePageData } from '../../data/pages/types';
+
+interface Props {
+  page: ServicePageData;
+}
+
+const { page } = Astro.props;
+const img = images[page.hero.image];
+const portrait = img.src.height > img.src.width;
+const photoShape = portrait ? pinkedPolygon(24, 30, 5) : pinkedPolygon(36, 24, 5);
+const fabricShape = pinkedPolygon(30, 30, 6);
+const sizes = portrait
+  ? '(min-width: 75rem) 470px, (min-width: 64rem) 38vw, (min-width: 43.75rem) 70vw, 92vw'
+  : '(min-width: 75rem) 570px, (min-width: 64rem) 47vw, (min-width: 43.75rem) 86vw, 92vw';
+---
+
+<section class:list={['shero', { 'shero--portrait': portrait }]} aria-labelledby="lapas-virsraksts">
+  <div class="container shero__grid">
+    <div class="shero__head">
+      <Breadcrumbs items={[{ name: 'Sākums', href: '/' }, { name: page.name }]} />
+      <PageTitle text={page.h1} accent="Alūksnē" />
+      <p class="shero__lead">{typo(page.hero.lead)}</p>
+    </div>
+
+    <figure class="shero__media">
+      <span class={`shero__fabric fabric fabric--${page.hero.swatch}`} style={`clip-path: ${fabricShape}`}></span>
+      <span class="shero__photo" style={`clip-path: ${photoShape}`}>
+        <Picture image={img} widths={[420, 640, 860, 1100, 1400]} sizes={sizes} loading="eager" fetchpriority="high" />
+      </span>
+    </figure>
+
+    <div class="shero__body">
+      <p>{typo(page.hero.text)}</p>
+      <Actions actions={page.hero.actions} primary class="shero__actions" />
+      <ul role="list" class="shero__info">
+        <li><Icon name="pin" size={18} />{typo(contact.address.street)}, {contact.address.city}</li>
+        <li>
+          <Icon name="clock" size={18} /><span class="nowrap"
+            ><span aria-hidden="true">{hours.daysShort}</span><span class="visually-hidden">{hours.daysLong}</span>
+            {hours.time}</span
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .shero {
+    padding: calc(var(--header-top) + var(--header-h) + clamp(20px, 3vw, 40px)) 0 var(--s-8);
+  }
+
+  .shero__grid {
+    display: grid;
+    gap: var(--s-6);
+  }
+
+  .shero__grid > * {
+    min-width: 0;
+  }
+
+  .shero__head :global(.crumbs) {
+    margin-bottom: clamp(1.25rem, 0.9rem + 1.4vw, 2.25rem);
+  }
+
+  .shero__lead {
+    margin-top: var(--s-4);
+    max-width: 32ch;
+    font-family: var(--font-display);
+    font-size: clamp(1.3125rem, 1.15rem + 0.6vw, 1.75rem);
+    font-weight: 420;
+    font-variation-settings: 'opsz' 36;
+    line-height: 1.3;
+    color: var(--chocolate);
+    text-wrap: balance;
+  }
+
+  /* Paraugs uz sava auduma */
+  .shero__media {
+    position: relative;
+    isolation: isolate;
+    width: calc(100% - 14px);
+    margin: var(--s-2) 0 0;
+    filter: drop-shadow(0 14px 18px rgb(82 27 16 / 0.16)) drop-shadow(0 1px 1px rgb(82 27 16 / 0.12));
+  }
+
+  .shero__fabric {
+    position: absolute;
+    z-index: -1;
+    inset: -12px -14px 8px 12px;
+    transform: rotate(2.4deg);
+  }
+
+  .shero__photo {
+    display: block;
+    transform: rotate(-1.1deg);
+  }
+
+  .shero__photo :global(img) {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+
+  .shero--portrait .shero__photo :global(img) {
+    aspect-ratio: 1;
+    object-position: 50% 32%;
+  }
+
+  .shero__body > p {
+    max-width: 46ch;
+  }
+
+  .shero__body :global(.shero__actions) {
+    margin-top: var(--s-6);
+  }
+
+  /* Telefonā pogas uzreiz zem foto, lai pirmajā ekrānā ir skaidrs saziņas ceļš */
+  @media (max-width: 43.74rem) {
+    .shero__body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .shero__body :global(.shero__actions) {
+      order: -1;
+      margin: 0 0 var(--s-5);
+    }
+  }
+
+  .shero__info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 22px;
+    margin-top: var(--s-4);
+    font-size: var(--fs-small);
+    line-height: 1.45;
+    color: var(--ink-soft);
+  }
+
+  .shero__info li {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+
+  .shero__info :global(svg) {
+    flex: none;
+    color: var(--thread);
+  }
+
+  @media (min-width: 43.75rem) {
+    .shero__media {
+      width: min(86%, 36rem);
+      margin-inline: auto;
+    }
+
+    .shero--portrait .shero__media {
+      width: min(66%, 26rem);
+    }
+
+    .shero--portrait .shero__photo :global(img) {
+      aspect-ratio: 4 / 5;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .shero {
+      padding-bottom: var(--s-9);
+    }
+
+    .shero__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-template-rows: auto 1fr;
+      gap: 0 var(--s-6);
+    }
+
+    .shero__head {
+      grid-column: 1 / span 6;
+      grid-row: 1;
+      align-self: end;
+    }
+
+    .shero__body {
+      grid-column: 1 / span 6;
+      grid-row: 2;
+      margin-top: var(--s-6);
+    }
+
+    .shero__media {
+      grid-column: 7 / -1;
+      grid-row: 1 / span 2;
+      align-self: center;
+      width: calc(100% - 16px);
+      margin: var(--s-6) 0 0 auto;
+    }
+
+    .shero--portrait .shero__media {
+      grid-column: 8 / span 4;
+      width: 100%;
+      margin-left: 0;
+    }
+  }
+</style>

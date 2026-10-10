@@ -1,0 +1,76 @@
+---
+/**
+ * <Picture> - AVIF/WebP ar srcset, izmēriem un neobligātu art direction.
+ * Lieto ar attēliem no src/data/images.ts.
+ */
+import type { HTMLAttributes } from 'astro/types';
+import { buildPicture, type BuiltPicture, type PictureSourceInput } from '../lib/picture';
+import type { SiteImage } from '../data/images';
+
+interface Props {
+  image: SiteImage;
+  widths?: number[];
+  sizes: string;
+  art?: { media: string; image: SiteImage; widths?: number[]; sizes?: string }[];
+  /** Ja jau aprēķināts (piem. hero preload), padod šeit. */
+  built?: BuiltPicture;
+  alt?: string;
+  loading?: 'lazy' | 'eager';
+  fetchpriority?: 'high' | 'low' | 'auto';
+  class?: string;
+  imgClass?: string;
+  pictureAttrs?: HTMLAttributes<'picture'>;
+  imgAttrs?: HTMLAttributes<'img'>;
+}
+
+const {
+  image,
+  widths = [480, 720, 960, 1280],
+  sizes,
+  art,
+  built,
+  alt = image.alt,
+  loading = 'lazy',
+  fetchpriority,
+  class: className,
+  imgClass,
+  pictureAttrs = {},
+  imgAttrs = {},
+  ...rest
+} = Astro.props;
+
+// Astro nodod vecākkomponenta stila tvēruma atribūtu (data-astro-cid-*) kā prop;
+// to pārsūtām uz <picture> un <img>, lai vecāka scoped CSS tos sasniedz.
+const scope = Object.fromEntries(Object.entries(rest).filter(([k]) => k.startsWith('data-astro-cid')));
+
+const artInputs: PictureSourceInput[] | undefined = art?.map((a) => ({
+  media: a.media,
+  src: a.image.src,
+  widths: a.widths ?? widths,
+  sizes: a.sizes,
+}));
+
+const picture = built ?? (await buildPicture({ src: image.src, widths, sizes, art: artInputs }));
+---
+
+<picture class={className} {...scope} {...pictureAttrs}>
+  {
+    picture.sources.map((s) => (
+      <source media={s.media} type={s.type} srcset={s.srcset} sizes={s.sizes} width={s.width} height={s.height} />
+    ))
+  }
+  <img
+    class={imgClass}
+    src={picture.img.src}
+    srcset={picture.img.srcset}
+    sizes={picture.img.sizes}
+    width={picture.img.width}
+    height={picture.img.height}
+    alt={alt}
+    loading={loading}
+    decoding="async"
+    fetchpriority={fetchpriority}
+    {...scope}
+    {...imgAttrs}
+  />
+</picture>

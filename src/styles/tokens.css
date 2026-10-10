@@ -1,0 +1,123 @@
+/*
+ * DIZAINA ŽETONI - krāsas, tipogrāfija, atstarpes, kustība.
+ * Krāsas no logo (A6). Kontrasts pārbaudīts pēc WCAG AA.
+ */
+:root {
+  /* Krāsas (A6) */
+  --cream: #faf5ee;        /* pamatfons */
+  --linen: #f1e6d8;        /* silti laukumi, papīrs */
+  --blush: #ebd3cc;        /* maigi rozā laukumi */
+  --chocolate: #521b10;    /* logo brūnā: virsraksti, tumšie brīži (12.7:1) */
+  --ink: #3a2a26;          /* pamatteksts (12.6:1 uz cream) */
+  --thread: #b8605a;       /* diegs, sirsniņa, dūrieni - tikai dekoratīvi vai liels teksts (4:1) */
+  --rose-cta: #9e4a45;     /* pogas ar baltu tekstu (6:1) */
+  --rose-cta-hover: #8f3f3a;
+  --kraft: #c9a27e;        /* birkas, knaģīši, sīkas detaļas (dekoratīvi) */
+
+  /* Atvasinātie toņi */
+  --paper: #fffcf7;                 /* birkas, zīmītes */
+  --ink-soft: #5e4740;              /* sekundārais teksts (7.9:1 cream, 6:1 blush) */
+  --rose-ink: #8f3f3a;              /* teksta saites (6.6:1 cream, 5:1 blush) */
+  --kraft-ink: #7a5634;             /* kraft teksts uz gaiša (6:1) */
+  --on-dark: #faf5ee;
+  --on-dark-soft: #e3b5ac;          /* saites uz chocolate (7.5:1) */
+  --hairline: rgb(82 27 16 / 0.14);
+  --hairline-strong: rgb(82 27 16 / 0.24);
+  --focus: #2f5d8a;                 /* fokusa gredzens: skaidri atšķirams no zīmola krāsām */
+
+  /* Fonti */
+  --font-display: 'Fraunces', 'Fraunces Fallback', Georgia, 'Times New Roman', serif;
+  --font-body: 'Mulish', 'Mulish Fallback', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  --font-hand: 'Caveat', 'Segoe Print', 'Bradley Hand', cursive;
+
+  /* Plūstošā tipogrāfijas skala (360 → 1440 px) */
+  --fs-label: 0.8125rem;                                   /* 13 */
+  --fs-small: 1rem;                                        /* 16 */
+  --fs-body: clamp(1.0625rem, 1.03rem + 0.12vw, 1.125rem); /* 17 → 18 */
+  --fs-lead: clamp(1.1875rem, 1.1rem + 0.42vw, 1.4375rem); /* 19 → 23 */
+  --fs-h3: clamp(1.375rem, 1.25rem + 0.55vw, 1.75rem);     /* 22 → 28 */
+  --fs-h2: clamp(2.125rem, 1.62rem + 2.2vw, 3.5rem);       /* 34 → 56 */
+  --fs-h1: clamp(2.875rem, 1.95rem + 4.1vw, 5.5rem);       /* 46 → 88 */
+  --fs-display-num: clamp(9rem, 5rem + 16vw, 17rem);       /* „20” */
+
+  --lh-tight: 1.04;
+  --lh-heading: 1.12;
+  --lh-body: 1.62;
+
+  --measure: 62ch;     /* 55-75 rakstzīmes rindā */
+  --measure-narrow: 44ch;
+
+  /* Atstarpju skala (4 px solis) */
+  --s-1: 0.25rem;  /* 4 */
+  --s-2: 0.5rem;   /* 8 */
+  --s-3: 0.75rem;  /* 12 */
+  --s-4: 1rem;     /* 16 */
+  --s-5: 1.5rem;   /* 24 */
+  --s-6: 2rem;     /* 32 */
+  --s-7: 3rem;     /* 48 */
+  --s-8: 4rem;     /* 64 */
+  --s-9: 6rem;     /* 96 */
+  --s-10: 8rem;    /* 128 */
+  --section: clamp(4.5rem, 3rem + 5.6vw, 8rem);    /* 72 → 128 */
+  --section-tight: clamp(3rem, 2.2rem + 3.4vw, 5.5rem); /* 48 → 88 */
+  --gutter: clamp(1.25rem, 0.8rem + 2vw, 3rem);    /* 20 → 48 */
+  --container: 75rem;      /* 1200 */
+  --container-wide: 86rem; /* 1376 */
+
+  /* Formas */
+  --r-pill: 999px;
+  --r-l: 28px;
+  --r-m: 16px;
+  --r-s: 8px;
+
+  /* Ēnas: siltas, ļoti maigas */
+  --shadow-soft: 0 1px 2px rgb(82 27 16 / 0.05), 0 12px 32px -16px rgb(82 27 16 / 0.22);
+  --shadow-lift: 0 2px 4px rgb(82 27 16 / 0.06), 0 22px 48px -22px rgb(82 27 16 / 0.32);
+  --shadow-paper: 0 1px 1px rgb(82 27 16 / 0.06), 0 6px 14px -8px rgb(82 27 16 / 0.28);
+
+  /* Kustība */
+  --ease-out: cubic-bezier(0.22, 0.7, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 180ms;
+  --dur: 320ms;
+  --dur-slow: 700ms;
+
+  /* Galvene */
+  --header-top: 10px;
+  --header-side: 12px;
+  --header-h: 52px;
+  --bottom-bar-h: 0px;
+
+  /* Drošās malas (iPhone guļus: kamera / noapaļoti stūri) */
+  --safe-l: env(safe-area-inset-left, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+  --page-gutter-l: max(var(--gutter), calc(var(--safe-l) + 12px));
+  --page-gutter-r: max(var(--gutter), calc(var(--safe-r) + 12px));
+
+  /* Graudainums (lina/papīra faktūra) */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .32 0 0 0 0 .2 0 0 0 0 .14 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Mobilajā vieta apakšējai joslai, lai tā nekad neaizsedz saturu */
+@media (max-width: 63.99rem) {
+  :root {
+    --bottom-bar-h: calc(72px + env(safe-area-inset-bottom));
+  }
+}
+
+/* Telefons guļus: kompaktāka galvene un josla, lai paliek vieta saturam */
+@media (orientation: landscape) and (max-height: 32.5rem) and (max-width: 63.99rem) {
+  :root {
+    --header-top: 6px;
+    --header-h: 48px;
+    --bottom-bar-h: calc(60px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --header-top: 18px;
+    --header-side: 24px;
+    --header-h: 64px;
+  }
+}

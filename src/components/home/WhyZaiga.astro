@@ -1,0 +1,272 @@
+---
+/**
+ * 1.3 Kāpēc Zaiga - teksts uz blāvas piegrieztnes lapas (režģis, raustītas
+ * griešanas līnijas, iegriezumi) ar lielu kontūras „20” (A5).
+ */
+import Picture from '../Picture.astro';
+import { images } from '../../data/images';
+import { typo } from '../../lib/typo';
+
+type Reason = { title: string; text: string; strong?: string };
+
+/** Sadala tekstu ap izceļamo teikumu, lai to droši ietītu <strong> (bez set:html). */
+function parts(r: Reason): [string, string, string] {
+  if (!r.strong || !r.text.includes(r.strong)) return [r.text, '', ''];
+  const i = r.text.indexOf(r.strong);
+  return [r.text.slice(0, i), r.strong, r.text.slice(i + r.strong.length)];
+}
+
+const reasons: Reason[] = [
+  {
+    title: 'Vairāk nekā 20 gadu pieredze.',
+    text: 'Šuju un adu vairāk nekā 20 gadus. Esmu strādājusi ar dažādiem audumiem un dzijām. Īpaši patīk uzņemties sarežģītākus darbus.',
+    strong: 'Īpaši patīk uzņemties sarežģītākus darbus.',
+  },
+  {
+    title: 'Strādāju kārtīgi.',
+    text: 'Skatos, lai vīles būtu taisnas un diegi atbilstu audumam. Ķap-ļap strādāt nemāku - katru darbu daru kā sev.',
+    strong: 'katru darbu daru kā sev.',
+  },
+  {
+    title: 'Skaidra cena un godīgs padoms.',
+    text: 'Cenu sarunājam pirms darba. Remontam vajadzīgie materiāli jau ir iekļauti cenā. Ja labot neatmaksājas, pateikšu uzreiz.',
+    strong: 'Ja labot neatmaksājas, pateikšu uzreiz.',
+  },
+  {
+    title: 'Personīga pieeja un uzticami termiņi.',
+    text: 'No pirmās sarunas līdz gatavam darbam par visu rūpējos pati. Gatavības datumu sarunājam jau sākumā, un es to ievēroju.',
+  },
+];
+---
+
+<section class="why tone" aria-labelledby="why-title">
+  <svg class="why__sheet" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid slice" viewBox="0 0 1440 1000">
+    <defs>
+      <pattern id="why-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+        <path d="M24 0H0v24" fill="none" stroke="rgb(82 27 16 / 0.07)" stroke-width="1"></path>
+      </pattern>
+      <pattern id="why-grid-major" width="120" height="120" patternUnits="userSpaceOnUse">
+        <path d="M120 0H0v120" fill="none" stroke="rgb(82 27 16 / 0.07)" stroke-width="1.2"></path>
+      </pattern>
+      <!-- Piegrieztnes līnijas izgaist teksta pusē; aiz teksta paliek tikai režģis -->
+      <linearGradient id="why-fade" x1="0" x2="1440" y1="0" y2="0" gradientUnits="userSpaceOnUse">
+        <stop offset="0.3" stop-color="#fff"></stop>
+        <stop offset="0.44" stop-color="#fff" stop-opacity="0"></stop>
+        <stop offset="0.9" stop-color="#fff" stop-opacity="0"></stop>
+        <stop offset="1" stop-color="#fff" stop-opacity="0.8"></stop>
+      </linearGradient>
+      <mask id="why-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="1440" height="1000">
+        <rect width="1440" height="1000" fill="url(#why-fade)"></rect>
+      </mask>
+    </defs>
+    <rect width="1440" height="1000" fill="url(#why-grid)"></rect>
+    <rect width="1440" height="1000" fill="url(#why-grid-major)"></rect>
+    <g mask="url(#why-mask)" fill="none" stroke="rgb(184 96 90 / 0.3)" stroke-width="1.5" stroke-dasharray="9 7" stroke-linecap="round">
+      <!-- Piedurknes piegrieztne -->
+      <path d="M90 140c90-70 250-80 330 0 30 30 40 90 60 160l60 520H40l50-520c10-70 0-130 0-160Z"></path>
+      <!-- Žaketes priekšas piegrieztne -->
+      <path d="M1190 70c40 30 90 40 140 30l90-20 30 110c-40 40-50 100-40 170l20 380h-240l20-380c10-90 10-190-20-290Z"></path>
+    </g>
+    <g mask="url(#why-mask)" fill="none" stroke="rgb(82 27 16 / 0.18)" stroke-width="1.2">
+      <!-- Iegriezumi (notches) -->
+      <path d="M262 108v16M246 110l4 14M48 520h16M1426 330h-16M1300 820v-16"></path>
+      <!-- Diega virziena bulta -->
+      <path d="M250 300v360m-8-344 8-16 8 16m-16 312 8 16 8-16"></path>
+      <path d="M1320 280v380m-8-364 8-16 8 16m-16 332 8 16 8-16"></path>
+    </g>
+  </svg>
+
+  <div class="container why__grid grid-12">
+    <div class="why__head">
+      <p class="label">Par darbu un attieksmi</p>
+      <h2 id="why-title">Kāpēc klienti uztic savas lietas Zaigai?</h2>
+    </div>
+
+    <div class="why__aside">
+      <p class="why__number" aria-hidden="true">
+        <span class="why__twenty">20</span>
+      </p>
+      <figure class="why__photo">
+        <Picture
+          image={images.zaigaPieSujmasinas}
+          widths={[420, 640, 860, 1100]}
+          sizes="(min-width: 64rem) 36vw, (min-width: 43.75rem) 60vw, 92vw"
+        />
+      </figure>
+    </div>
+
+    <div class="why__main">
+      <ul role="list" class="why__list">
+        {
+          reasons.map((r) => (
+            <li>
+              <h3>{typo(r.title)}</h3>
+              <p>
+                {(() => {
+                  const [before, bold, after] = parts(r);
+                  return (
+                    <>
+                      {typo(before)}
+                      {bold && <strong>{typo(bold)}</strong>}
+                      {typo(after)}
+                    </>
+                  );
+                })()}
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .why {
+    --from: var(--linen);
+    --tone: var(--linen);
+    --to: var(--linen);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: var(--section-tight) 0;
+  }
+
+  @media (min-width: 64rem) {
+    .why {
+      padding-top: var(--section);
+    }
+  }
+
+  .why__sheet {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.9;
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 18%, #000 80%, transparent);
+    mask-image: linear-gradient(180deg, transparent, #000 18%, #000 80%, transparent);
+  }
+
+  .why__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-7);
+  }
+
+  .why__aside {
+    position: relative;
+  }
+
+  .why__number {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--s-3);
+    line-height: 0.8;
+  }
+
+  .why__twenty {
+    font-family: var(--font-display);
+    font-size: var(--fs-display-num);
+    font-weight: 300;
+    font-variation-settings: 'opsz' 144;
+    letter-spacing: -0.06em;
+    color: transparent;
+    -webkit-text-stroke: 1.6px var(--thread);
+    paint-order: stroke;
+  }
+
+  .why__photo {
+    position: relative;
+    margin-top: calc(-1 * clamp(1.75rem, 0.5rem + 3.5vw, 3rem));
+    margin-left: clamp(1.5rem, 8vw, 5rem);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lift);
+    transform: rotate(1.2deg);
+  }
+
+  .why__photo :global(img) {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+
+  .why__head h2 {
+    margin-top: var(--s-3);
+    max-width: 18ch;
+  }
+
+  .why__list {
+    display: grid;
+    gap: var(--s-6) var(--s-7);
+  }
+
+  .why__list li {
+    position: relative;
+    padding-top: var(--s-4);
+    border-top: 1px solid var(--hairline-strong);
+  }
+
+  .why__list h3 {
+    font-size: clamp(1.25rem, 1.15rem + 0.45vw, 1.5rem);
+    font-weight: 480;
+  }
+
+  .why__list p {
+    margin-top: var(--s-2);
+    max-width: 40ch;
+  }
+
+  @media (min-width: 43.75rem) {
+    .why__list {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .why__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-template-rows: auto 1fr;
+      gap: var(--s-7) var(--s-6);
+      align-items: start;
+    }
+
+    .why__head {
+      grid-column: 6 / -1;
+      grid-row: 1;
+    }
+
+    .why__main {
+      grid-column: 6 / -1;
+      grid-row: 2;
+    }
+
+    .why__aside {
+      grid-column: 1 / span 4;
+      grid-row: 1 / span 2;
+      position: sticky;
+      top: calc(var(--header-top) + var(--header-h) + 40px);
+    }
+
+
+    .why__photo {
+      margin-left: 0;
+      margin-right: -1rem;
+    }
+  }
+
+  /* Mazi klēpjdatori: viena kolonna, lai rindas garums 55-75 rakstzīmes */
+  @media (min-width: 64rem) and (max-width: 79.99rem) {
+    .why__list {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .why__list p {
+      max-width: 54ch;
+    }
+  }
+</style>

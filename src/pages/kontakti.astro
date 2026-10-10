@@ -1,0 +1,208 @@
+---
+/**
+ * /kontakti - vizītkarte, darba laika birka, karte pēc klikšķa un forma kā
+ * pasūtījuma zīmīte (lapas zīmīgais brīdis). Teksts: src/data/pages/kontakti.ts.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import InnerHero from '../components/page/InnerHero.astro';
+import AsideImage from '../components/page/AsideImage.astro';
+import PriceTicket from '../components/page/PriceTicket.astro';
+import ListBlock from '../components/page/ListBlock.astro';
+import Button from '../components/Button.astro';
+import ContactCard from '../components/contact/ContactCard.astro';
+import MapPreview from '../components/contact/MapPreview.astro';
+import OrderForm from '../components/contact/OrderForm.astro';
+
+import { contact } from '../config';
+import { kontakti } from '../data/pages/kontakti';
+import { breadcrumbs } from '../lib/schema';
+import { typo } from '../lib/typo';
+
+const schema = [
+  breadcrumbs([
+    { name: 'Sākums', path: '/' },
+    { name: kontakti.name, path: kontakti.path },
+  ]),
+];
+---
+
+<BaseLayout title={kontakti.seo.title} description={kontakti.seo.description} path={kontakti.path} schema={schema}>
+  <InnerHero crumb={kontakti.name} title={kontakti.h1} mediaLast class="contact-hero">
+    <p class="lead">{typo(kontakti.intro)}</p>
+    <ContactCard slot="media" />
+  </InnerHero>
+
+  <div class="visit tone">
+    <div class="container visit__grid">
+      <section class="visit__hours" aria-labelledby="darba-laiks-title">
+        <h2 id="darba-laiks-title">{kontakti.hours.title}</h2>
+        <PriceTicket rows={kontakti.hours.rows} columns={['Diena', 'Laiks']} caption={kontakti.hours.title} />
+        <p class="visit__note">{typo(kontakti.hours.note)}</p>
+      </section>
+
+      <section class="visit__find" aria-labelledby="ka-atrast-title">
+        <h2 id="ka-atrast-title">{kontakti.find.title}</h2>
+        <MapPreview />
+        <p class="visit__text">{typo(kontakti.find.text)}</p>
+        <Button href={contact.mapsUrl} variant="secondary" arrow external class="visit__button">
+          {kontakti.find.mapButton}
+        </Button>
+      </section>
+
+      <AsideImage
+        image="kontaktiMaja"
+        shape="print"
+        class="visit__house"
+        sizes="(min-width: 75rem) 470px, (min-width: 64rem) 38vw, (min-width: 43.75rem) 30rem, 86vw"
+      />
+    </div>
+  </div>
+
+  <ListBlock
+    id="pilsetas"
+    block={{
+      type: 'list',
+      title: kontakti.cities.title,
+      intro: kontakti.cities.intro,
+      items: kontakti.cities.items,
+      note: `${kontakti.cities.tipLead} ${kontakti.cities.tip}`,
+    }}
+    tones={{ from: 'linen', tone: 'cream', to: 'cream' }}
+  />
+
+  <section class="order tone" id="forma" aria-labelledby="forma-title">
+    <div class="container order__grid">
+      <div class="order__head">
+        <h2 id="forma-title">{kontakti.form.title}</h2>
+        <p>{typo(kontakti.form.intro)}</p>
+      </div>
+      <OrderForm />
+    </div>
+  </section>
+
+  <ListBlock
+    id="pirms-ierasanas"
+    block={{ type: 'bullets', title: kontakti.before.title, items: kontakti.before.items }}
+    tones={{ from: 'blush', tone: 'blush', to: 'blush' }}
+  />
+</BaseLayout>
+
+<style>
+  :global(.contact-hero .ihero__media) {
+    width: 100%;
+  }
+
+  @media (min-width: 64rem) {
+    :global(.contact-hero .ihero__media) {
+      align-self: start;
+    }
+  }
+
+  /* Darba laiks + kā atrast vienā joslā */
+  .visit {
+    --from: var(--cream);
+    --tone: var(--linen);
+    --to: var(--linen);
+    padding: var(--section-tight) 0;
+  }
+
+  .visit__grid {
+    display: grid;
+    gap: var(--s-8);
+  }
+
+  .visit h2 {
+    margin-bottom: var(--s-8);
+  }
+
+  .visit__find h2 {
+    margin-bottom: var(--s-6);
+  }
+
+  .visit__note,
+  .visit__text {
+    margin-top: var(--s-5);
+    max-width: 48ch;
+  }
+
+  .visit__note {
+    color: var(--ink-soft);
+  }
+
+  .visit__find :global(.visit__button) {
+    margin-top: var(--s-5);
+  }
+
+  .visit__grid > :global(.visit__house) {
+    width: min(100%, 30rem);
+    margin-inline: auto;
+  }
+
+  @media (min-width: 64rem) {
+    .visit__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-template-rows: auto 1fr;
+      gap: 0 var(--s-6);
+      align-items: start;
+    }
+
+    .visit__hours {
+      grid-column: 1 / span 5;
+      grid-row: 1;
+    }
+
+    .visit__find {
+      grid-column: 7 / -1;
+      grid-row: 1 / span 2;
+    }
+
+    .visit__grid > :global(.visit__house) {
+      grid-column: 1 / span 4;
+      grid-row: 2;
+      width: 100%;
+      margin: var(--s-8) 0 0;
+      --tilt: -1.6deg;
+    }
+  }
+
+  .order {
+    --from: var(--cream);
+    --tone: var(--blush);
+    --to: var(--blush);
+    padding: var(--section-tight) 0;
+  }
+
+  .order__grid {
+    display: grid;
+    gap: var(--s-6);
+  }
+
+  .order__head h2 {
+    max-width: 12ch;
+  }
+
+  .order__head p {
+    margin-top: var(--s-4);
+    max-width: 40ch;
+    font-size: var(--fs-lead);
+    line-height: 1.5;
+  }
+
+  @media (min-width: 64rem) {
+    .order__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 0 var(--s-6);
+      align-items: start;
+    }
+
+    .order__head {
+      grid-column: 1 / span 4;
+      position: sticky;
+      top: calc(var(--header-top) + var(--header-h) + 48px);
+    }
+
+    .order__grid > :global(.slip) {
+      grid-column: 6 / -1;
+    }
+  }
+</style>

@@ -1,0 +1,60 @@
+---
+/**
+ * /apgerbu-remonts: „pirms / pēc” slīdnis (lapas zīmīgākais brīdis) zem cenām,
+ * ar kraft birku kā sākumlapas galerijā.
+ */
+import Compare from '../Compare.astro';
+import type { Tones } from './Section.astro';
+
+interface Props {
+  id: string;
+  tones: Tones;
+  caption?: string;
+}
+
+const { id, tones, caption = 'Ziemas jakai nomainīts rāvējslēdzējs' } = Astro.props;
+const style = `--from: var(--${tones.from}); --tone: var(--${tones.tone}); --to: var(--${tones.to})`;
+---
+
+<div class="cmpb tone" style={style}>
+  <figure class="container cmpb__figure">
+    <Compare id={`${id}-slidnis`} class="cmpb__compare" sizes="(min-width: 64rem) 40rem, 92vw" />
+    <figcaption class="cmpb__tag">{caption}</figcaption>
+  </figure>
+</div>
+
+<style>
+  .cmpb {
+    padding: 0 0 var(--section-tight);
+  }
+
+  .cmpb__figure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cmpb__figure > :global(.cmpb__compare) {
+    width: min(100%, 40rem);
+  }
+
+  .cmpb__tag {
+    position: relative;
+    z-index: 1;
+    align-self: center;
+    margin-top: -22px;
+    padding: 9px 18px 10px 32px;
+    border-radius: 3px 10px 10px 3px;
+    background:
+      radial-gradient(circle at 15px 50%, var(--cream) 0 4px, rgb(82 27 16 / 0.35) 4px 5px, transparent 5.5px),
+      linear-gradient(180deg, #ecdcc7, #e3cdb2);
+    color: var(--chocolate);
+    font-size: 1rem;
+    font-weight: 650;
+    line-height: 1.35;
+    box-shadow: var(--shadow-paper);
+    transform: rotate(-2deg);
+    clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%);
+    text-wrap: balance;
+  }
+</style>

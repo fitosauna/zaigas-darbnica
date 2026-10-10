@@ -1,0 +1,238 @@
+---
+/**
+ * 1.7 Atsauksmes - mierīgs, tipogrāfisks izkārtojums (bez kartītēm).
+ * Kamēr atsauksmes ir paraugi, redzams neliels zīmogs „Paraugs” (A11).
+ * Poga „Atstāt atsauksmi” tikai tad, ja konfigurācijā ir Google saite.
+ */
+import Button from '../Button.astro';
+import SwipeHint from '../SwipeHint.astro';
+import { flags } from '../../config';
+import { reviews, hasSampleReviews } from '../../data/reviews';
+
+const [featured, ...rest] = reviews;
+---
+
+<section class="reviews tone" aria-labelledby="reviews-title">
+  <div class="container reviews__grid grid-12">
+    <div class="reviews__head">
+      <h2 id="reviews-title">Ko saka klienti</h2>
+      {
+        hasSampleReviews && (
+          <p class="stamp">
+            Paraugs<span class="visually-hidden">: atsauksmju paraugi</span>
+          </p>
+        )
+      }
+      {
+        flags.googleReviewUrl && (
+          <div class="reviews__ask">
+            <p>Ja jau esam strādājuši kopā, būšu pateicīga par Jūsu atsauksmi Google.</p>
+            <Button href={flags.googleReviewUrl} variant="secondary" external>
+              Atstāt atsauksmi
+            </Button>
+          </div>
+        )
+      }
+    </div>
+
+    <figure class="quote quote--featured">
+      <blockquote>
+        <p>„{featured.quote}”</p>
+      </blockquote>
+      <figcaption>
+        <span class="quote__name">{featured.name}, {featured.place}</span>
+        <span class="quote__service">{featured.service}</span>
+        {featured.isSample && <span class="quote__sample">Paraugs</span>}
+      </figcaption>
+    </figure>
+
+    <ul role="list" class="reviews__rest" id="atsauksmju-saraksts" aria-label="Citas atsauksmes">
+      {
+        rest.map((r) => (
+          <li>
+            <figure class="quote">
+              <blockquote>
+                <p>„{r.quote}”</p>
+              </blockquote>
+              <figcaption>
+                <span class="quote__name">
+                  {r.name}, {r.place}
+                </span>
+                <span class="quote__service">{r.service}</span>
+                {r.isSample && <span class="quote__sample">Paraugs</span>}
+              </figcaption>
+            </figure>
+          </li>
+        ))
+      }
+    </ul>
+    <SwipeHint target="atsauksmju-saraksts" count={rest.length} />
+  </div>
+</section>
+
+<style>
+  .reviews {
+    --from: var(--cream);
+    --tone: var(--linen);
+    --to: var(--cream);
+    padding: var(--section) 0;
+  }
+
+  .reviews__grid {
+    display: grid;
+    gap: var(--s-7);
+  }
+
+
+
+  /* Gumijas zīmoga stils, diskrēts */
+  .stamp {
+    display: inline-block;
+    margin-top: var(--s-4);
+    padding: 3px 10px 2px;
+    border: 1.5px solid currentColor;
+    border-radius: 5px;
+    color: var(--rose-ink);
+    font-family: var(--font-display);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    font-variation-settings: 'opsz' 12;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transform: rotate(-5deg);
+  }
+
+  .reviews__ask {
+    margin-top: var(--s-6);
+    max-width: 30ch;
+  }
+
+  .reviews__ask :global(.btn) {
+    margin-top: var(--s-4);
+  }
+
+  .quote blockquote p {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.1875rem, 1.1rem + 0.35vw, 1.375rem);
+    line-height: 1.48;
+    color: var(--chocolate);
+    text-indent: -0.42em;
+  }
+
+  .quote--featured blockquote p {
+    font-size: clamp(1.5rem, 1.2rem + 1.3vw, 2.125rem);
+    line-height: 1.32;
+    letter-spacing: -0.008em;
+    max-width: 30ch;
+  }
+
+  .quote figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 0;
+    column-gap: 10px;
+    margin-top: var(--s-4);
+    font-size: var(--fs-small);
+  }
+
+  .quote__name {
+    font-weight: 750;
+    color: var(--ink);
+  }
+
+  .quote__service {
+    color: var(--ink-soft);
+  }
+
+  /* Part B: „Inga, Alūksne · rāvējslēdzēja maiņa” */
+  .quote__service::before {
+    content: '·';
+    margin-right: 10px;
+    color: var(--thread);
+    font-weight: 700;
+  }
+
+  .quote__sample {
+    display: inline-block;
+    padding: 1px 7px 0;
+    border: 1px solid currentColor;
+    border-radius: 4px;
+    color: var(--rose-ink);
+    font-family: var(--font-display);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    font-variation-settings: 'opsz' 12;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    line-height: 1.5;
+  }
+
+  .reviews__rest {
+    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(74vw, 20rem);
+    gap: var(--s-5);
+    margin-inline: calc(-1 * var(--page-gutter-l)) calc(-1 * var(--page-gutter-r));
+    padding: var(--s-2) var(--page-gutter-r) var(--s-2) var(--page-gutter-l);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--page-gutter-l) var(--page-gutter-r);
+    scrollbar-width: none;
+  }
+
+  .reviews__rest:focus-visible {
+    outline-offset: -4px;
+    border-radius: 14px;
+  }
+
+  .reviews__rest::-webkit-scrollbar {
+    display: none;
+  }
+
+  .reviews__rest li {
+    scroll-snap-align: start;
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--hairline-strong);
+  }
+
+  @media (min-width: 43.75rem) {
+    .reviews__rest {
+      grid-auto-flow: row;
+      grid-template-columns: 1fr 1fr;
+      grid-auto-columns: auto;
+      gap: var(--s-7) var(--s-7);
+      margin-inline: 0;
+      padding: 0;
+      overflow: visible;
+    }
+
+    .reviews__rest li:nth-child(even) {
+      margin-top: var(--s-7);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .reviews__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--s-6);
+      row-gap: var(--s-8);
+    }
+
+    .reviews__head {
+      grid-column: 1 / span 4;
+      grid-row: span 2;
+      align-self: start;
+      position: sticky;
+      top: calc(var(--header-top) + var(--header-h) + 40px);
+    }
+
+    .quote--featured,
+    .reviews__rest {
+      grid-column: 6 / -1;
+    }
+  }
+</style>

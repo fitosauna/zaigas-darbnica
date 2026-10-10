@@ -1,0 +1,70 @@
+---
+/**
+ * Pamata izkārtojums visām lapām: <head>, peldošā galvene, kājene,
+ * mobilā apakšējā josla, JSON-LD.
+ */
+import '../styles/fonts.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
+
+import frauncesUrl from '../fonts/fraunces-var.woff2?url';
+import mulishUrl from '../fonts/mulish-var.woff2?url';
+
+import Seo from '../components/Seo.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import BottomBar from '../components/BottomBar.astro';
+import CookieBanner from '../components/CookieBanner.astro';
+import { flags, site } from '../config';
+import { logos } from '../data/images';
+import { jsonLd, localBusiness } from '../lib/schema';
+import { buildLogo } from '../lib/picture';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  /** Papildu JSON-LD objekti (FAQPage, BreadcrumbList). */
+  schema?: unknown[];
+  noindex?: boolean;
+}
+
+const { title, description, path, schema = [], noindex } = Astro.props;
+const schemaLogo = await buildLogo(logos.full.src, 200);
+const structured = [localBusiness(schemaLogo.src), ...schema];
+---
+
+<!doctype html>
+<html lang={site.lang} class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <script is:inline>
+      document.documentElement.classList.replace('no-js', 'js');
+    </script>
+    <Seo title={title} description={description} path={path} noindex={noindex} />
+
+    <link rel="preload" href={frauncesUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={mulishUrl} as="font" type="font/woff2" crossorigin />
+    <slot name="head" />
+
+    <meta name="theme-color" content="#FAF5EE" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    {structured.map((data) => <script type="application/ld+json" set:html={jsonLd(data)} />)}
+  </head>
+  <body>
+    <a class="skip-link" href="#saturs">Pāriet uz saturu</a>
+    <Header />
+    <main id="saturs" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <BottomBar />
+    {flags.ga4Id && <CookieBanner />}
+  </body>
+</html>

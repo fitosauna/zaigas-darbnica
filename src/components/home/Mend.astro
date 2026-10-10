@@ -1,0 +1,82 @@
+---
+/**
+ * 1.4 Ne vienmēr vajag pirkt jaunu - „pirms / pēc” salīdzinājums (Compare.astro).
+ * Darbvirsmā spoguļots (teksts pa kreisi, slīdnis pa labi), lai lapa mijas.
+ */
+import Button from '../Button.astro';
+import Compare from '../Compare.astro';
+import { links } from '../../config';
+---
+
+<section class="mend tone" aria-labelledby="mend-title">
+  <div class="container mend__grid grid-12">
+    <h2 id="mend-title" class="mend__title">Ne vienmēr vajag pirkt jaunu</h2>
+
+    <Compare class="mend__compare" />
+
+    <div class="mend__body">
+      <p>
+        Jakai var nomainīt saplīsušu rāvējslēdzēju, kleitu pielāgot augumam un bikses saīsināt. Bieži pietiek ar nelielu
+        labojumu, lai atkal varētu valkāt apģērbu, kas Jums jau patīk.
+      </p>
+      <Button href={links.whatsapp} icon="whatsapp" variant="secondary" external>Atsūtīt foto un uzzināt cenu</Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .mend {
+    --from: var(--linen);
+    --tone: var(--blush);
+    --to: var(--blush);
+    padding: var(--section-tight) 0;
+  }
+
+  .mend__grid {
+    display: grid;
+    gap: var(--s-6);
+  }
+
+  .mend__title {
+    max-width: 14ch;
+  }
+
+  .mend__body p {
+    max-width: 52ch;
+    font-size: var(--fs-lead);
+    line-height: 1.55;
+  }
+
+  .mend__body :global(.btn) {
+    margin-top: var(--s-6);
+  }
+
+  @media (min-width: 64rem) {
+    .mend__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-template-rows: auto 1fr;
+      gap: 0 var(--s-6);
+      align-items: start;
+    }
+
+    .mend__title {
+      grid-column: 1 / span 5;
+      grid-row: 1;
+      align-self: end;
+      margin-top: var(--s-8);
+    }
+
+    .mend__body {
+      grid-column: 1 / span 5;
+      grid-row: 2;
+      margin-top: var(--s-5);
+    }
+
+    /* Vecāka selektors ir specifiskāks par .compare platumu komponentā */
+    .mend__grid > .mend__compare {
+      grid-column: 7 / -1;
+      grid-row: 1 / span 2;
+      width: 100%;
+    }
+  }
+</style>
