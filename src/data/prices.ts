@@ -34,7 +34,7 @@ export const priceGroups: PriceGroup[] = [
     title: 'Apģērbu remonts',
     column: 'Darbs',
     items: [
-      { id: 'pogas-piesusana', label: 'Pogas piešūšana', amount: 0.5 },
+      { id: 'pogas-piesusana', label: 'Pogas piešūšana', amount: 2 },
       { id: 'slidna-nomaina', label: 'Rāvējslēdzēja slīdņa nomaiņa', amount: 3 },
       { id: 'cauruma-salabosana', label: 'Cauruma salabošana vai ielāps', amount: 3.5 },
       { id: 'viles-salabosana', label: 'Atirušas vīles salabošana', amount: 4 },
