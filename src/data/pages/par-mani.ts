@@ -15,7 +15,7 @@ export const parMani = {
     paragraphs: [
       'Adīt mani jau bērnībā iemācīja mamma. Vakaros sēdējām kopā un adījām, un viņa stāstīja stāstus. No viņas iemācījos arī to, ka katrs darbs jādara rūpīgi. Tie vakari man joprojām ir sirdī.',
       'Vēlāk šūšanas amatu apguvu Rīgā, šūšanas skolā „Burda Rīga”. Kopš tā laika šuju un adu vairāk nekā 20 gadus un joprojām labprāt iemācos ko jaunu.',
-      'Šodien strādāju savā darbnīcā Alūksnē, Tālavas ielā 18. Pie manis brauc klienti no Alūksnes, Gulbenes, Balviem un apkārtnes. Ja kādam nav laika atbraukt, es vai mana meita aizbraucam pēc apģērba paši. Katram darbam veltu tik laika, cik tam vajag, un cenas turu saprātīgas.',
+      'Šodien strādāju savā darbnīcā Alūksnē, Tālavas ielā 18. Pie manis brauc klienti no Alūksnes, Gulbenes, Balviem un apkārtnes. Ja kādam nav laika atbraukt, es vai mana meita aizbraucam pēc apģērba paši, un, kad darbs ir gatavs, to arī atvedam atpakaļ. Katram darbam veltu tik laika, cik tam vajag, un cenas turu saprātīgas.',
     ],
   },
   how: {
