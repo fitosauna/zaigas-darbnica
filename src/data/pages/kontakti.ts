@@ -13,7 +13,7 @@ export const kontakti = {
     title: 'Kontakti - šuvēja Alūksnē | Zaigas darbnīca',
     description: `Zaigas darbnīca, ${contact.address.street}, ${contact.address.city}. Tālrunis un WhatsApp ${contact.phoneDisplay}, ${contact.email}. ${hours.long}.`,
   },
-  h1: 'Sazinieties ar Zaigu Lemeševsku',
+  h1: 'Sazinieties ar Zaigu',
   intro:
     'Ir apģērbs, ko gribētu salabot vai pielāgot, vai ideja, ko uzšūt vai uzadīt? Piezvaniet, uzrakstiet WhatsApp vai atsūtiet foto. Atbildēšu, cik drīz vien varēšu.',
   info: {

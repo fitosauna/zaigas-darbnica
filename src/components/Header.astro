@@ -10,7 +10,7 @@ import { mainNav } from '../data/navigation';
 import { buildLogo } from '../lib/picture';
 import Icon from './Icon.astro';
 
-const logo = await buildLogo(logos.header.src, 44);
+const logo = await buildLogo(logos.header.src, 52);
 // Būvējot ar build.format 'file', ceļš ir „/cenas.html” - noņemam „.html”, „/index” un beigu slīpsvītru.
 const path = Astro.url.pathname.replace(/(\/index)?\.html$/, '').replace(/\/$/, '') || '/';
 const isCurrent = (href: string) => (href === '/' ? path === '/' : path === href);
@@ -71,7 +71,7 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
       </ul>
     </nav>
 
-    <a class="phone" href={links.tel}><Icon name="phone" size={16} />{contact.phoneDisplay}</a>
+    <a class="phone" href={links.whatsapp} target="_blank" rel="noopener noreferrer"><Icon name="whatsapp" size={17} />WhatsApp</a>
 
     <a class="call" href={links.tel}>
       <Icon name="phone" size={19} />
@@ -225,7 +225,7 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
   }
 
   .brand img {
-    height: 34px;
+    height: 40px;
     width: auto;
     transition: height var(--dur) var(--ease-out);
   }
@@ -236,7 +236,7 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
   }
 
   .site-header.is-scrolled .brand img {
-    height: 31px;
+    height: 36px;
   }
 
   .nav,
@@ -295,7 +295,7 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
     }
 
     .brand img {
-      height: 44px;
+      height: 52px;
     }
 
     .site-header.is-scrolled .bar {
@@ -303,7 +303,7 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
     }
 
     .site-header.is-scrolled .brand img {
-      height: 40px;
+      height: 47px;
     }
 
     .mobile-actions {
@@ -611,7 +611,7 @@ const servicesOpenOnPage = mainNav.find((n) => n.children)?.children?.some((c) =
   }
 
   .sheet__top .brand img {
-    height: 34px;
+    height: 40px;
   }
 
   .sheet__nav {
